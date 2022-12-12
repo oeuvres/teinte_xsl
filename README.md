@@ -35,3 +35,14 @@ This is really useful for XML/TEI edition for local file. For security reasons, 
 4. set to false
 
 ![Firefox fileuri](docs/firefox_fileuri.png)
+
+# Bash
+
+Under a linux box, or with a [WSL linux](https://ubuntu.com/wsl) on Microsoft.Windows, install xsltproc.
+
+```bash
+sudo apt install xsltproc
+cd teinte_xsl
+xsltproc tei2html.xsl tests/moliere_misanthrope.xml
+```
+
