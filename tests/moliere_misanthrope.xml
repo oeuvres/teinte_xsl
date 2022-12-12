@@ -2074,7 +2074,7 @@
           <stage>Basque, Célimène, Acaste, Clitandre</stage>
           <sp who="basque" xml:id="III03-1">
             <speaker>Basque</speaker>
-            <l part="F">Arsinoé, Madame,</l>
+            <l part="F" >Arsinoé, Madame,</l>
             <l n="850" xml:id="l850" part="I">Monte ici, pour vous voir.</l>
           </sp>
           <sp who="celimene" xml:id="III03-2">

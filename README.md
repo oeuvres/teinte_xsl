@@ -22,7 +22,16 @@ The magic rely on the XML prolog of the file
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Link to a transformation for the browser -->
-<?xml-stylesheet type="text/xsl" href="http://oeuvres.github.io/teinte_xsl/tei_html.xsl"?>
+<!-- Link to a transformation for the browser over https:// -->
+<?xml-stylesheet type="text/xsl" href="https://oeuvres.github.io/teinte_xsl/tei_html.xsl"?>
 ```
 
+This is really useful for XML/TEI edition for local file. For security reasons, most browsers do not allow you to use XSL transform through the internet (https://) from a local file. This security can be bypassed in Firefox.
+
+
+1. in address bar, type `about:config`
+2. accept security alert
+3. search for the property: security.fileuri.strict_origin_policy
+4. set to false
+
+![Firefox fileuri](docs/firefox_fileuri.png)
