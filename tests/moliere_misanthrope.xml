@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Link to a transformation for the browser -->
-<?xml-stylesheet type="text/xsl" href="http://oeuvres.github.io/teinte_xsl/tei_html.xsl"?>
+<?xml-stylesheet type="text/xsl" href="https://oeuvres.github.io/teinte_xsl/tei_html.xsl"?>
 <!-- Link to a schema for Oxygen XML editor -->
-<?xml-model href="http://oeuvres.github.io/teinte/teinte.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://oeuvres.github.io/teinte/teinte.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <!-- Link to a styling for editing -->
-<?xml-stylesheet type="text/css" href="http://oeuvres.github.io/teinte/author-tei.css"?>
+<?xml-stylesheet type="text/css" href="https://oeuvres.github.io/teinte/author-tei.css"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="fr">
   <teiHeader>
     <fileDesc>

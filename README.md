@@ -14,7 +14,7 @@ This pack ic compatible with xsltproc and other XSLT engine. Tested with
 
 # Browser
 
-All modern browsers has the xsltproc library embedded. This allows to provide direct transformations in the browser. Visit for example this [example XML file](tests/moliere_misanthrope.xml) under a web server, you should see a nicely formatted theatre play, even if it’s an [XML/TEI source](https://github.com/oeuvres/teinte_xsl/tests/moliere_misanthrope.xml).
+All modern browsers has the xsltproc library embedded. This allows to provide direct transformations in the browser. Visit for example this [example XML file](https://oeuvres.github.io/teinte_xsl/tests/moliere_misanthrope.xml) under a web server, you should see a nicely formatted theatre play, even if it’s an [XML/TEI source](https://github.com/oeuvres/teinte_xsl/tests/moliere_misanthrope.xml).
 
 ![Teinte xsl graph](docs/teinte_misanthrope.png)
 
