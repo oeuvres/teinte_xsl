@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Link to a transformation for the browser -->
-<?xml-stylesheet type="text/xsl" href="https://oeuvres.github.io/teinte/tei2html.xsl"?>
+<?xml-stylesheet type="text/xsl" href="https://oeuvres.github.io/teinte_xsl/tei_html.xsl"?>
 <!-- Link to a schema for Oxygen XML editor -->
 <?xml-model href="https://oeuvres.github.io/teinte/teinte.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <!-- Link to a styling for editing -->
