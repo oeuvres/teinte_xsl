@@ -1,5 +1,5 @@
 {
-    "name": "oeuvres/xsl",
+    "name": "oeuvres/xslt",
     "description": "XSLT-1.0 package to transform texts, from and to, TEI",
     "type": "library",
     "license": "BSD-3-Clause",
