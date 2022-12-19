@@ -13,7 +13,7 @@ This pack is compatible with xsltproc and other XSLT engines. Tested with
 
 # Browser
 
-All modern browsers have the xsltproc library embedded. This allows to provide direct transformation in the browser. See this [example XML file](https://oeuvres.github.io/teinte_xsl/examples/moliere_misanthrope.xml) under a web server, you should see a nicely formatted theatre play, even if it’s an [XML/TEI source](https://github.com/oeuvres/teinte_xsl/blob/main/examples/moliere_misanthrope.xml).
+All modern browsers have the xsltproc library embedded. This allows to provide direct transformation in the browser. See this [example XML file](https://oeuvres.github.io/teinte/examples/moliere_misanthrope.xml) under a web server, you should see a nicely formatted theatre play, even if it’s an [XML/TEI source](https://github.com/oeuvres/teinte/blob/main/examples/moliere_misanthrope.xml).
 
 ![Misanthrope](https://oeuvres.github.io/teinte/docs/screens//teinte_misanthrope.png)
 
