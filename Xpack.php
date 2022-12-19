@@ -9,7 +9,7 @@
  */
 namespace Oeuvres\Xsl;
 
-class Tpack
+class Xpack
 {
     /** Where it’s place here */
     static private string $dir;
