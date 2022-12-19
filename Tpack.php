@@ -7,9 +7,9 @@
  * Copyright (c) 2012 frederic.glorieux@fictif.org
  * BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  */
-namespace Oeuvres\Teinte;
+namespace Oeuvres\Xsl;
 
-class Xsl
+class Tpack
 {
     /** Where it’s place here */
     static protected string $dir;
@@ -21,4 +21,4 @@ class Xsl
         self::$dir = __DIR__ . DIRECTORY_SEPARATOR;
     }
 }
-Xsl::init();
+Tpack::init();

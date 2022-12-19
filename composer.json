@@ -9,6 +9,11 @@
             "email": "frederic.glorieux@fictif.org"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Oeuvres\\Xsl\\": ""
+        }
+    },
     "minimum-stability": "dev",
     "require": {}
 }
