@@ -12,13 +12,14 @@ namespace Oeuvres\Xsl;
 class Tpack
 {
     /** Where it’s place here */
-    static protected string $dir;
+    static private string $dir;
     /**
      * Initialize static variable
      */
-    static public function init()
+    static public function dir()
     {
+        if (isset(self::$dir)) return self::$dir;
         self::$dir = __DIR__ . DIRECTORY_SEPARATOR;
+        return self::$dir;
     }
 }
-Tpack::init();
