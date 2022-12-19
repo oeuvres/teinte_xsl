@@ -32,3 +32,5 @@ work/
 *.toc
 *.xdv
 pars.php
+
+/vendor/
