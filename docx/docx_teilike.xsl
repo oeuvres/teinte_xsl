@@ -286,9 +286,8 @@ Seen
   <xsl:template match="w:sectPr"/>
   <!-- spaces -->
   <xsl:template match="w:tab">
-    <space type="tab">
-      <xsl:text>    </xsl:text>
-    </space>
+    <xsl:text> </xsl:text>
+    <space type="tab"/>
   </xsl:template>
   <!-- 
       <w:tblGrid>
@@ -388,4 +387,11 @@ Seen
   </xsl:template>
   <xsl:template match="w:bookmarkStart"/>
   <xsl:template match="w:bookmarkEnd"/>
+  <!-- fields -->
+  <xsl:template match="w:fldChar"/>
+  <xsl:template match="w:instrText">
+    <field>
+      <xsl:apply-templates/>
+    </field>
+  </xsl:template>
 </xsl:transform>
