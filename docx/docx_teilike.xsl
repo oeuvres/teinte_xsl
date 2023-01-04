@@ -276,7 +276,11 @@ Seen
         <xsl:copy-of select="$i"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:element name="{$val}">
+        <xsl:variable name="name">
+          <xsl:if test="translate(substring($val, 0, 1), '0123456789', '') = ''">_</xsl:if>
+          <xsl:value-of select="$val"/>
+        </xsl:variable>
+        <xsl:element name="{$name}">
         <xsl:copy-of select="$i"/>
         </xsl:element>
       </xsl:otherwise>
