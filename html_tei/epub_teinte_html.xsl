@@ -131,7 +131,7 @@ Clean html extracted from epub of some oddities
         <xsl:value-of select="."/>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:value-of select="normalize-space($text)"/>
+    <xsl:value-of select="normalize-space(translate($text, ' ', ''))"/>
   </xsl:template>
 
   <xsl:template name="class">
@@ -211,6 +211,11 @@ Clean html extracted from epub of some oddities
               <xsl:value-of select="$name"/>
             </xsl:otherwise>
           </xsl:choose>
+          <xsl:choose>
+            <xsl:when test="not(@align)"/>
+            <xsl:when test="@align = 'right'"> right</xsl:when>
+            <xsl:when test="@align = 'center'"> center</xsl:when>
+          </xsl:choose>
         </xsl:variable>
         <p>
           <xsl:apply-templates select="@*[name() != 'class']"/>
@@ -260,6 +265,11 @@ Clean html extracted from epub of some oddities
       <xsl:call-template name="class_props">
         <xsl:with-param name="class" select="@class"/>
       </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="not(@align)"/>
+        <xsl:when test="@align = 'right'"> right</xsl:when>
+        <xsl:when test="@align = 'center'"> center</xsl:when>
+      </xsl:choose>
     </xsl:variable>
     <xsl:variable name="count" select="count(*)"/>
     <!-- 
@@ -280,12 +290,8 @@ Clean html extracted from epub of some oddities
       | html:div[text()[normalize-space(.) != '']] 
     )"/>
     <xsl:choose>
-      <!-- mixed content, it’s a para -->
-      <xsl:when test="$mixed != ''">
-        <xsl:call-template name="p"/>
-      </xsl:when>
       <!-- with a title, let’s bet it is a section -->
-      <xsl:when test="$children &gt; 1 and (html:h1 | html:h2 | html:h3  | html:h4  | html:h5  | html:h6 | html:header)">
+      <xsl:when test="$children &gt; 0 and (html:h1 | html:h2 | html:h3  | html:h4  | html:h5  | html:h6 | html:header)">
         <section>
           <xsl:apply-templates select="@*[name() != 'class']"/>
           <xsl:call-template name="class">
@@ -293,6 +299,10 @@ Clean html extracted from epub of some oddities
           </xsl:call-template>
           <xsl:apply-templates/>
         </section>
+      </xsl:when>
+      <!-- mixed content, it’s a para -->
+      <xsl:when test="$mixed != ''">
+        <xsl:call-template name="p"/>
       </xsl:when>
       <!-- no content brothers, seems presentation, go through -->
       <xsl:when test="$bros = 0">
@@ -322,6 +332,9 @@ Clean html extracted from epub of some oddities
   
 
   <xsl:template match="html:template[@id='css']"/>
+
+  <!-- No output -->
+  <xsl:template match="html:p/@align | html:div/@align"/>
 
   <xsl:template match="@class">
     <xsl:variable name="class">

@@ -462,12 +462,6 @@ PHRASES
           <xsl:apply-templates/>
         </author>
       </xsl:when>
-      <!-- empty span, copy, could be interesting -->
-      <xsl:when test=". = ''">
-        <xsl:copy>
-          <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-      </xsl:when>
       <xsl:when test="@lang | @xml:lang">
         <foreign>
           <xsl:apply-templates select="@*"/>
