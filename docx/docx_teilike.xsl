@@ -198,12 +198,72 @@ Seen
   <w:br w:type="page"/>
 </w:r>
 
+      <w:r>
+        <w:rPr>
+          <w:b w:val="0"/>
+          <w:bCs w:val="0"/>
+          <w:i w:val="0"/>
+          <w:iCs w:val="0"/>
+          <w:smallCaps w:val="0"/>
+          <w:u w:val="none"/>
+        </w:rPr>
 -->
     <xsl:variable name="t">
       <xsl:apply-templates/>
     </xsl:variable>
+    
+    <!-- underline -->
+    <xsl:variable name="u">
+      <xsl:variable name="val" select="w:rPr/w:u/@w:val"/>
+      <xsl:choose>
+        <xsl:when test="not(w:rPr/w:u)"/>
+        <xsl:when test="$val = '0' or $val='false' or $val = 'off' or $val = 'none'"/>
+        <xsl:otherwise>
+          <xsl:value-of select="$val"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- small caps -->
+    <xsl:variable name="sc">
+      <xsl:variable name="val" select="w:rPr/w:smallCaps/@w:val"/>
+      <xsl:choose>
+        <xsl:when test="not(w:rPr/w:u)"/>
+        <xsl:when test="$val = '0' or $val='false' or $val = 'off'"/>
+        <xsl:otherwise>
+          <xsl:value-of select="$val"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- italic -->
+    <xsl:variable name="i">
+      <xsl:variable name="val1" select="w:rPr/w:i/@w:val"/>
+      <xsl:variable name="val2" select="w:rPr/w:iCs/@w:val"/>
+      <xsl:choose>
+        <xsl:when test="not(w:rPr/w:i) and not(w:rPr/w:iCs)"/>
+        <xsl:when test="$val1 = '0' or $val1 ='false' or $val1 = 'off'"/>
+        <xsl:when test="$val1 != ''">
+          <xsl:value-of select="$val1"/>
+        </xsl:when>
+        <xsl:otherwise>true</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- bold, dangerous in titles, to think -->
+    <xsl:variable name="b">
+      <xsl:variable name="val1" select="w:rPr/w:b"/>
+      <xsl:variable name="val2" select="w:rPr/w:bCs"/>
+      <xsl:choose>
+        <xsl:when test="not(w:rPr/w:b) and not(w:rPr/w:bCs)"/>
+        <xsl:when test="$val1 = '0' or $val1 ='false' or $val1 = 'off'"/>
+        <xsl:when test="$val1 != ''">
+          <xsl:value-of select="$val1"/>
+        </xsl:when>
+        <xsl:otherwise>true</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
     <xsl:variable name="subsup" select="w:rPr/w:vertAlign/@w:val"/>
-    <xsl:variable name="sup">
+
+    <xsl:variable name="xml1">
       <xsl:choose>
         <!-- probably footnote reference or graphic, do not put in <tag> -->
         <xsl:when test="$t = ''">
@@ -224,35 +284,45 @@ Seen
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="sc">
+    <xsl:variable name="xml2">
       <xsl:choose>
-        <!-- probably footnote reference or graphic, do not put in <tag> -->
-        <xsl:when test="$sup = ''">
-           <xsl:copy-of select="$sup"/>
+        <!-- probably footnote reference or graphic, do not put in <sc> -->
+        <xsl:when test="$xml1 = ''">
+           <xsl:copy-of select="$xml1"/>
         </xsl:when>
-        <xsl:when test="w:rPr/w:smallCaps">
-          <sc>
-            <xsl:copy-of select="$sup"/>
-          </sc>
+        <xsl:when test="$sc = ''">
+          <xsl:copy-of select="$xml1"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:copy-of select="$sup"/>
+          <sc>
+            <xsl:copy-of select="$xml1"/>
+          </sc>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="i">
+    
+    
+    <xsl:variable name="xml3">
       <xsl:choose>
-        <!-- probably footnote reference or graphic, do not put in <tag> -->
-        <xsl:when test="$sc = ''">
-           <xsl:copy-of select="$sc"/>
-        </xsl:when>
-        <xsl:when test="w:rPr/w:i">
-          <hi>
-            <xsl:copy-of select="$sc"/>
-          </hi>
+        <xsl:when test="$i = ''">
+           <xsl:copy-of select="$xml2"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:copy-of select="$sc"/>
+          <hi>
+            <xsl:copy-of select="$xml2"/>
+          </hi>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xml4">
+      <xsl:choose>
+        <xsl:when test="$u = ''">
+           <xsl:copy-of select="$xml3"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <u>
+            <xsl:copy-of select="$xml3"/>
+          </u>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -261,27 +331,23 @@ Seen
     <xsl:variable name="teinte_c" select="key('teinte_c', $val)"/>
     <xsl:choose>
       <xsl:when test="$val = ''">
-        <xsl:copy-of select="$i"/>
+        <xsl:copy-of select="$xml4"/>
       </xsl:when>
       <!-- redundant -->
       <xsl:when test="ancestor::w:hyperlink">
-        <xsl:copy-of select="$i"/>
+        <xsl:copy-of select="$xml4"/>
       </xsl:when>
       <xsl:when test="$teinte_c/@element != ''">
         <xsl:element name="{$teinte_c/@element}">
-        <xsl:copy-of select="$i"/>
+        <xsl:copy-of select="$xml4"/>
         </xsl:element>
       </xsl:when>
       <xsl:when test="key('teinte_0', $val)">
-        <xsl:copy-of select="$i"/>
+        <xsl:copy-of select="$xml4"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="name">
-          <xsl:if test="translate(substring($val, 0, 1), '0123456789', '') = ''">_</xsl:if>
-          <xsl:value-of select="$val"/>
-        </xsl:variable>
-        <xsl:element name="{$name}">
-        <xsl:copy-of select="$i"/>
+        <xsl:element name="{$val}">
+        <xsl:copy-of select="$xml4"/>
         </xsl:element>
       </xsl:otherwise>
     </xsl:choose>
@@ -290,8 +356,9 @@ Seen
   <xsl:template match="w:sectPr"/>
   <!-- spaces -->
   <xsl:template match="w:tab">
-    <xsl:text> </xsl:text>
-    <space type="tab"/>
+    <space type="tab">
+      <xsl:text>    </xsl:text>
+    </space>
   </xsl:template>
   <!-- 
       <w:tblGrid>
