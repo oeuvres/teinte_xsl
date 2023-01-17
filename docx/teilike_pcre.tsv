@@ -3,7 +3,7 @@ search	replace	?comment
 
 ($inline)	(author|b|emph|foreign|em|hi|i|id|phr|ref|sc|seg|strong|sup|tech|title|u)	
 ($atts)	( [^>]*)?	
-($pun)	([^\p{L}<>\n]+)	
+($pun)	([,;:\.!?—–  \s]+)	keep () or [] in inlines
 ($block)	(head|note|p)	
 		
 # variables block ends with the first replacement rule
@@ -21,8 +21,8 @@ search	replace	?comment
 -[\*]\n	-\n	odd chars from OCR
 
 <($inline)($atts)>(\s*)(<lb($atts)/>)(\s*)</\1>	\3\4\6	inline around line break
-</($inline)><\1($atts)>		linked inline
-</($inline)><\1($atts)>		linked inline, 2
+</([\p{L}\d_\-]+)>( *)<\1($atts)>	\2	linked inline, block tags separed by \n
+</([\p{L}\d_\-]+)>( *)<\1($atts)>	\2	linked inline, 2
 <($inline)($atts)>($pun)</\1>	\3	inline without word char
 ($pun)(</($inline)>)	\2\1	put ending pun outside</inline>, 
 <($inline)/>		empty inlines

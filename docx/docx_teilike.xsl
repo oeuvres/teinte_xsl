@@ -208,6 +208,10 @@ Seen
           <w:u w:val="none"/>
         </w:rPr>
 -->
+    <!-- style tag -->
+    <xsl:variable name="w:style" select="key('w:style', w:rPr/w:rStyle/@w:val)"/>
+    <xsl:variable name="class" select="normalize-space(translate(w:rPr/w:rStyle/@w:val, $UC, $lc))"/>
+    <xsl:variable name="teinte_c" select="key('teinte_c', $class)"/>
     <xsl:variable name="t">
       <xsl:apply-templates/>
     </xsl:variable>
@@ -217,10 +221,11 @@ Seen
       <xsl:variable name="val" select="w:rPr/w:u/@w:val"/>
       <xsl:choose>
         <xsl:when test="not(w:rPr/w:u)"/>
+        <xsl:when test="not($w:style) and not($w:style/w:rPr/w:u)"/>
         <xsl:when test="$val = '0' or $val='false' or $val = 'off' or $val = 'none'"/>
-        <xsl:otherwise>
+        <xsl:when test="$val != ''">
           <xsl:value-of select="$val"/>
-        </xsl:otherwise>
+        </xsl:when>
       </xsl:choose>
     </xsl:variable>
     <!-- small caps -->
@@ -326,11 +331,15 @@ Seen
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-        <!-- style tag -->
-    <xsl:variable name="val" select="normalize-space(translate(w:rPr/w:rStyle/@w:val, $UC, $lc))"/>
-    <xsl:variable name="teinte_c" select="key('teinte_c', $val)"/>
+    <xsl:variable name="el">
+      <xsl:choose>
+        <!-- Calibre 0 Text -->
+        <xsl:when test="contains('0123456789', substring($class, 1, 1))">_</xsl:when>
+      </xsl:choose>
+      <xsl:value-of select="$class"/>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$val = ''">
+      <xsl:when test="$class = ''">
         <xsl:copy-of select="$xml4"/>
       </xsl:when>
       <!-- redundant -->
@@ -339,19 +348,37 @@ Seen
       </xsl:when>
       <xsl:when test="$teinte_c/@element != ''">
         <xsl:element name="{$teinte_c/@element}">
-        <xsl:copy-of select="$xml4"/>
+          <xsl:copy-of select="$xml4"/>
         </xsl:element>
       </xsl:when>
-      <xsl:when test="key('teinte_0', $val)">
+      <xsl:when test="key('teinte_0', $class)">
         <xsl:copy-of select="$xml4"/>
+      </xsl:when>
+      <!-- auto style Calibre -->
+      <xsl:when test="substring($el, 1, 1) = '_' and $w:style/w:rPr">
+        <xsl:variable name="val" select="$w:style/w:rPr/w:i/@w:val"/>
+        <xsl:choose>
+          <xsl:when test="$val = '' or $val = '0' or $val ='false' or $val = 'off'">
+            <seg rend="{$class}">
+              <xsl:copy-of select="$xml4"/>
+            </seg>
+          </xsl:when>
+          <xsl:otherwise>
+            <i>
+              <xsl:copy-of select="$xml4"/>
+            </i>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$class != ''">
+        <xsl:element name="{$el}">
+          <xsl:copy-of select="$xml4"/>
+        </xsl:element>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:element name="{$val}">
         <xsl:copy-of select="$xml4"/>
-        </xsl:element>
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
   <xsl:template match="w:sectPr"/>
   <!-- spaces -->

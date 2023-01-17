@@ -196,6 +196,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="abbr" element="abbr" doc="true"/>
   <style level="c" name="add" element="add" doc="true"/>
   <style level="c" name="accentuation" element="emph"/>
+  <style level="c" name="accentuationforte" element="b"/>
   <style level="c" name="actor" element="actor" doc="true"/>
   <style level="c" name="author" element="author" doc="true"/>
   <style level="c" name="affiliation" element="affiliation" doc="true"/>
