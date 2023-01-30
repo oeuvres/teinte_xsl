@@ -16,7 +16,6 @@
   exclude-result-prefixes="a pic pkg r rels teinte w wp"
   >
   <xsl:output encoding="UTF-8" indent="no" omit-xml-declaration="yes"/>
-  <xsl:variable name="sheet" select="document('styles.xml', document(''))"/>
   <xsl:variable name="UC">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
   <xsl:variable name="lc">abcdefghijklmnopqrstuvwxyz</xsl:variable>
   <xsl:key name="footnotes" match="//w:footnotes/w:footnote" use="@w:id"/>
@@ -101,7 +100,7 @@
           <xsl:apply-templates select="w:hyperlink | w:r"/>
         </head>
       </xsl:when>
-      <xsl:when test="$sheet/*/teinte:style[@level='0'][@name=$val] or $val = ''">
+      <xsl:when test="$val = '' or key('teinte_0', $val)">
         <p>
           <xsl:if test="$rend != ''">
             <xsl:attribute name="rend">
