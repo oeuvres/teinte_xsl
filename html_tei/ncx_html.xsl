@@ -14,8 +14,21 @@
   <xsl:key name="spine" match="opf:spine/opf:itemref" use="@idref"/>
   
   <xsl:template match="/">
-    <!-- ncx found -->
-    <xsl:apply-templates select="/*/ncx:ncx"/>
+    <!-- Choose here between ncx:toc or opf:spine -->
+    <xsl:variable name="toc-points" select="count(/*/ncx:ncx//ncx:navPoint/ncx:content[@src])"/>
+    <xsl:variable name="spine-points" select="count(/*/opf:package/opf:spine/opf:itemref)"/>
+    <body>
+      <xsl:choose>
+        <xsl:when test="(number($spine-points) div number($toc-points)) &gt; 1.5">
+          <xsl:comment>spine</xsl:comment>
+          <xsl:apply-templates select="/*/opf:package/opf:spine/opf:itemref"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:comment>toc.ncx</xsl:comment>
+          <xsl:apply-templates select="/*/ncx:ncx"></xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
+    </body>
   </xsl:template>
   
   <xsl:template match="*">
@@ -28,9 +41,7 @@
     <xsl:apply-templates select="ncx:navMap"/>
   </xsl:template>
   <xsl:template match="ncx:navMap">
-    <body>
-      <xsl:apply-templates/>
-    </body>
+    <xsl:apply-templates/>
   </xsl:template>
   <xsl:template match="ncx:navPoint">
     <xsl:variable name="src" select="ncx:content/@src"/>
@@ -70,6 +81,7 @@
       </xsl:if>
     </content>
     <!-- check spine if next file is nanother -->
+    <!-- 
     <xsl:if test="$file != $next-file">
       <xsl:variable name="id" select="key('href', $file)/@id"/>
       <xsl:for-each select="key('spine', $id)">
@@ -78,7 +90,22 @@
         </xsl:apply-templates>
       </xsl:for-each>
     </xsl:if>
+    -->
   </xsl:template>
+
+  <xsl:template match="opf:itemref">
+    <xsl:variable name="href" select="key('manifest', @idref)/@href"/>
+    <xsl:variable name="file" select="substring-before(concat($href, '#'), '#')"/>
+    <section data-src="{$href}">
+      <content>
+        <xsl:attribute name="src">
+          <xsl:value-of select="$file"/>
+        </xsl:attribute>
+      </content>
+    </section>
+  </xsl:template>
+  
+
 
   <xsl:template match="opf:itemref" mode="next">
     <xsl:param name="next-file"/>
