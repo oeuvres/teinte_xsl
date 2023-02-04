@@ -9,6 +9,8 @@
    exclude-result-prefixes="ncx"
 >
   <xsl:output indent="yes" encoding="UTF-8" omit-xml-declaration="yes"/>
+  <xsl:param name="ncx_dir"/>
+  <xsl:param name="opf_dir"/>
   <xsl:key name="manifest" match="opf:manifest/opf:item" use="@id"/>
   <xsl:key name="href" match="opf:manifest/opf:item" use="@href"/>
   <xsl:key name="spine" match="opf:spine/opf:itemref" use="@idref"/>
@@ -47,7 +49,7 @@
     <xsl:variable name="src" select="ncx:content/@src"/>
     <!-- Child may repeat entry -->
     <xsl:variable name="child1-src" select="ncx:navPoint[1]/ncx:content/@src"/>
-    <section data-src="{$src}">
+    <section data-src="{$ncx_dir}{$src}">
       <xsl:if test="ncx:navLabel">
         <xsl:attribute name="title">
           <xsl:value-of select="normalize-space(ncx:navLabel)"/>
@@ -71,11 +73,13 @@
     <xsl:variable name="next-file" select="substring-before(concat($next/@src, '#'), '#')"/>
     <content>
       <xsl:attribute name="src">
+        <xsl:value-of select="$ncx_dir"/>
         <xsl:value-of select="@src"/>
       </xsl:attribute>
       <!-- if same file, hope with an id, for end of text to extract -->
       <xsl:if test="$file = $next-file">
         <xsl:attribute name="to">
+          <xsl:value-of select="$ncx_dir"/>
           <xsl:value-of select="$next/@src"/>
         </xsl:attribute>
       </xsl:if>
@@ -96,9 +100,10 @@
   <xsl:template match="opf:itemref">
     <xsl:variable name="href" select="key('manifest', @idref)/@href"/>
     <xsl:variable name="file" select="substring-before(concat($href, '#'), '#')"/>
-    <section data-src="{$href}">
+    <section data-src="{$opf_dir}{$href}">
       <content>
         <xsl:attribute name="src">
+          <xsl:value-of select="$opf_dir"/>
           <xsl:value-of select="$file"/>
         </xsl:attribute>
       </content>
