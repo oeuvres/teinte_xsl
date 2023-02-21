@@ -610,9 +610,11 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
   
   <!-- simplify some  -->
   <xsl:template match="tei:p">
-    <xsl:variable name="mixed" select="text()[normalize-space(.) != '']"/>
+    <xsl:variable name="mixed">
+      <xsl:call-template name="mixed"/>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test="$mixed">
+      <xsl:when test="$mixed != ''">
         <xsl:copy>
           <xsl:apply-templates select="@* | node()"/>
         </xsl:copy>
@@ -794,6 +796,24 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
     </xsl:copy>
   </xsl:template>
   <xsl:template match="tei:head/tei:space"/>
+  <xsl:template match="tei:cell">
+    <xsl:variable name="mixed">
+      <xsl:call-template name="mixed"/>
+    </xsl:variable>
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:choose>
+        <!-- if only one para in cell, go through -->
+        <xsl:when test="$mixed = '' and count(*) = 1 and tei:p">
+          <xsl:apply-templates select="*/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:copy>
+  </xsl:template>
+  
   <!-- Should I wash some anchors ? -->
   <xsl:template match="tei:anchor">
     <xsl:choose>
@@ -820,6 +840,19 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
       </index>
     </xsl:if>
   </xsl:template>
+  
+  
+  <!-- != '' if mixed content -->
+  <xsl:template name="mixed">
+    <xsl:variable name="text">
+      <xsl:for-each select="text()">
+        <!-- tested, normalize is faster here -->
+        <xsl:value-of select="translate(normalize-space(.), ' ', '')"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:value-of select="$text"/>
+  </xsl:template>
+  
   <!--
   <xsl:template match="tei:teiHeader">
     <xsl:variable name="terms" select="/tei:TEI/tei:text/*[1]/tei:index/tei:term"/>
