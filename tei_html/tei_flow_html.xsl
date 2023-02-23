@@ -117,13 +117,7 @@ Sections
   <xsl:template match="tei:div | tei:div0 | tei:div1 | tei:div2 | tei:div3 | tei:div4 | tei:div5 | tei:div6 | tei:div7 | tei:epilogue | tei:preface | tei:group | tei:prologue">
     <xsl:param name="from"/>
     <xsl:param name="level" select="count(ancestor::*) - 2"/>
-    <xsl:param name="el">
-      <xsl:choose>
-        <xsl:when test="self::tei:group">div</xsl:when>
-        <xsl:otherwise>section</xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
-    <xsl:element name="{$el}" namespace="http://www.w3.org/1999/xhtml">
+    <section>
       <xsl:attribute name="id">
         <xsl:call-template name="id"/>
       </xsl:attribute>
@@ -174,7 +168,7 @@ Sections
         <xsl:with-param name="level" select="$level + 1"/>
         <xsl:with-param name="from" select="$from"/>
       </xsl:call-template>
-    </xsl:element>
+    </section>
   </xsl:template>
   <!-- 
   Sections, group opening infos in a <header> element
@@ -199,11 +193,29 @@ Sections
       [not(self::tei:signed)])[1]
       "/>
     <xsl:choose>
-      <xsl:when test="$first and $first/preceding-sibling::*">
+      <!-- Candidates for section title -->
+      <xsl:when test="$first and 
+        $first/preceding-sibling::*[
+           self::tei:argument 
+        or self::tei:byline 
+        or self::tei:dateline
+        or self::tei:docAuthor
+        or self::tei:docDate
+        or self::tei:epigraph
+        or self::tei:head
+        or self::tei:opener
+        or self::tei:salute
+        or self::tei:signed
+        ]">
+        <xsl:text> </xsl:text>
         <header>
-          <xsl:apply-templates select="$first/preceding-sibling::*"/>
+          <xsl:apply-templates select="$first/preceding-sibling::node()">
+            <xsl:with-param name="level" select="$level"/>
+            <xsl:with-param name="from" select="$from"/>
+          </xsl:apply-templates>
         </header>
-        <xsl:apply-templates select="$first | $first/following-sibling::*">
+        <xsl:text>&#10;</xsl:text>
+        <xsl:apply-templates select="$first | $first/following-sibling::node()">
           <xsl:with-param name="level" select="$level + 1"/>
           <xsl:with-param name="from" select="$from"/>
         </xsl:apply-templates>
