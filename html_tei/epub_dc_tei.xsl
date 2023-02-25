@@ -60,15 +60,17 @@ XSLT 1.0, compatible browser, PHP, Python, Java…
               </xsl:if>
             </xsl:for-each>
             <xsl:apply-templates select="dc:publisher"/>
-          </bibl>
-          <!-- 
+            <!-- 
           <dc:rights>© Alma, éditeur. Paris, 2018.</dc:rights>
           -->
-          <xsl:if test="dc:rights">
-            <licence>
-              <xsl:value-of select="dc:rights"/>
-            </licence>
-          </xsl:if>
+            <xsl:if test="dc:rights">
+              <availability>
+                <p>
+                  <xsl:value-of select="dc:rights"/>
+                </p>
+              </availability>
+            </xsl:if>
+          </bibl>
         </sourceDesc>
       </fileDesc>
       <profileDesc>
