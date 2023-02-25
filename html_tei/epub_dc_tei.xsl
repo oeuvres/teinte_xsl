@@ -48,17 +48,46 @@ XSLT 1.0, compatible browser, PHP, Python, Java…
         <sourceDesc>
           <bibl>
             <xsl:for-each select="dc:date">
-              <date><xsl:apply-templates select="." mode="year"/></date>
-              <xsl:text>, </xsl:text>
+              <xsl:variable name="year">
+                <xsl:apply-templates select="." mode="year"/>
+              </xsl:variable>
+              <!-- bad Calibre -->
+              <xsl:if test="$year != '0101'">
+                <date>
+                  <xsl:value-of select="$year"/>
+                </date>
+                <xsl:text>, </xsl:text>
+              </xsl:if>
             </xsl:for-each>
             <xsl:apply-templates select="dc:publisher"/>
           </bibl>
+          <!-- 
+          <dc:rights>© Alma, éditeur. Paris, 2018.</dc:rights>
+          -->
+          <xsl:if test="dc:rights">
+            <licence>
+              <xsl:value-of select="dc:rights"/>
+            </licence>
+          </xsl:if>
         </sourceDesc>
       </fileDesc>
       <profileDesc>
         <xsl:apply-templates select="dc:language"/>
         <xsl:variable name="year">
-          <xsl:apply-templates select="dc:date[1]" mode="year"/>
+          <xsl:variable name="v1">
+            <xsl:apply-templates select="dc:rights[1]" mode="year"/>
+          </xsl:variable>
+          <xsl:variable name="v2">
+            <xsl:apply-templates select="dc:date[1]" mode="year"/>
+          </xsl:variable>
+          <xsl:choose>
+            <xsl:when test="$v1 != ''">
+              <xsl:value-of select="$v1"/>
+            </xsl:when>
+            <xsl:when test="$v2 != '' and $v2 != '0101'">
+              <xsl:value-of select="$v2"/>
+            </xsl:when>
+          </xsl:choose>
         </xsl:variable>
         <xsl:if test="$year != ''">
           <creation>
@@ -69,8 +98,10 @@ XSLT 1.0, compatible browser, PHP, Python, Java…
     </teiHeader>
   </xsl:template>
 
+
+
   <!-- Give year -->
-  <xsl:template match="dc:date" mode="year">
+  <xsl:template match="*" mode="year">
   <!--
     <date>
       <xsl:value-of select="substring(., 1, 4)"/>
