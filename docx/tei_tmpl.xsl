@@ -286,6 +286,7 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
           <xsl:value-of select="$target"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
   
