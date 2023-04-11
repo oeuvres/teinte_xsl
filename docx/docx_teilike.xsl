@@ -51,15 +51,17 @@
   </xsl:template>
   <!-- root element -->
   <xsl:template match="w:document">
-      <xsl:apply-templates/>
+    <xsl:apply-templates/>
   </xsl:template>
   <xsl:template match="w:body">
     <body>
+      <!-- 1 page -->
+      <xsl:if test=".//w:br[@w:type='page']">
+        <pb/>
+      </xsl:if>
       <xsl:apply-templates/>
     </body>
   </xsl:template>
-  <!-- Stripped elements -->
-  <xsl:template match="w:lastRenderedPageBreak"/>
   <!-- block -->
   <xsl:template match="w:p">
     <xsl:variable name="val" select="normalize-space(translate(w:pPr/w:pStyle/@w:val, $UC, $lc))"/>
@@ -156,6 +158,9 @@
     <pb/>
     <xsl:text>&#10;</xsl:text>
   </xsl:template>
+  <!-- Do not output auto page break but only explicit page breaks -->
+  <xsl:template match="w:lastRenderedPageBreak">
+  </xsl:template>
   <xsl:template match="w:t">
     <xsl:value-of select="."/>
   </xsl:template>
@@ -206,11 +211,13 @@ Seen
           <w:smallCaps w:val="0"/>
           <w:u w:val="none"/>
         </w:rPr>
+        
 -->
     <!-- style tag -->
     <xsl:variable name="w:style" select="key('w:style', w:rPr/w:rStyle/@w:val)"/>
     <xsl:variable name="class" select="normalize-space(translate(w:rPr/w:rStyle/@w:val, $UC, $lc))"/>
     <xsl:variable name="teinte_c" select="key('teinte_c', $class)"/>
+    <!-- process children in order, for line breaks, see <w:br/> in LibreOffice -->
     <xsl:variable name="t">
       <xsl:apply-templates/>
     </xsl:variable>
@@ -337,6 +344,7 @@ Seen
       </xsl:choose>
       <xsl:value-of select="$class"/>
     </xsl:variable>
+    <!-- before text,  -->
     <xsl:choose>
       <xsl:when test="$class = ''">
         <xsl:copy-of select="$xml4"/>
