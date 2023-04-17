@@ -3,6 +3,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   
   xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
   xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"
   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -13,7 +14,7 @@
   xmlns:teinte="https://oeuvres.github.io/teinte"
 
   xmlns="http://www.tei-c.org/ns/1.0"
-  exclude-result-prefixes="a pic pkg r rels teinte w wp"
+  exclude-result-prefixes="a mc pic pkg r rels teinte w wp"
   >
   <xsl:output encoding="UTF-8" indent="no" omit-xml-declaration="yes"/>
   <xsl:variable name="UC">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
@@ -61,6 +62,10 @@
       </xsl:if>
       <xsl:apply-templates/>
     </body>
+  </xsl:template>
+  <!-- Go through -->
+  <xsl:template match="mc:AlternateContent | mc:Choice | mc:Fallback">
+    <xsl:apply-templates select="*"/>
   </xsl:template>
   <!-- block -->
   <xsl:template match="w:p">
@@ -219,7 +224,7 @@ Seen
     <xsl:variable name="teinte_c" select="key('teinte_c', $class)"/>
     <!-- process children in order, for line breaks, see <w:br/> in LibreOffice -->
     <xsl:variable name="t">
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </xsl:variable>
     
     <!-- underline -->
