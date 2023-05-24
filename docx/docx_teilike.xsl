@@ -174,6 +174,9 @@
     <pb/>
     <xsl:text>&#10;</xsl:text>
   </xsl:template>
+  <xsl:template match="w:noBreakHyphen">
+    <xsl:text>‑</xsl:text>
+  </xsl:template>
   <!-- Do not output auto page break but only explicit page breaks -->
   <xsl:template match="w:lastRenderedPageBreak">
   </xsl:template>
