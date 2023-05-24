@@ -30,8 +30,8 @@ search	replace	?comment
 
 
 (<($block)($atts)>) +	\1	<block>   spaces
-<note($atts)> *[\[\(]?(nde|NdE)[\]\) ] *	"<note\1 resp=""editor"">"	note, editor
-<note($atts)> *[\[\(]?(nda|NdA)[\]\) ] *	"<note\1 resp=""author"">"	note, author
+<note($atts)>(\s*<p>)?\s*[\[\(]?(nde|NdE)[\]\)\. ] *	"<note\1 resp=""editor"">\2"	note, editor
+<note($atts)>(\s*<p>)?\s*[\[\(]?(nda|NdA)[\]\)\. ] *	"<note\1 resp=""author"">\2"	note, author
 \s*(<pb($atts)/>)\s*(</($block)>)	\n\3\n\1	ending <pb/> out of blocks
 [——\-]\s*(<lb($atts)/>) *([^\s<>]+) *	\3\n\1	caesura, 
 (\s*)(<lb($atts)/>)(</($inline)>)([^ \p{L}<>]*) *	\4\6\1\2	<lb/></hi>.
