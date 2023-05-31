@@ -309,7 +309,7 @@
         <w:pStyle w:val="{$style}"/>
       </w:pPr>
       <xsl:call-template name="anchor"/>
-      <xsl:if test="@n">
+      <xsl:if test="parent::*/@n">
         <w:r>
           <w:rPr>
             <w:rStyle w:val="num"/>
