@@ -954,13 +954,12 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           <xsl:value-of select="@unit"/>
           <xsl:text>:</xsl:text>
           <xsl:value-of select="@n"/>
-          <xsl:text>] </xsl:text>
+          <xsl:text>]</xsl:text>
         </w:t>
       </w:r>
     </xsl:variable>
     <xsl:choose>
-      <!-- <milestone> without info -->
-      <xsl:when test="$xml = ''"/>
+      <!-- <milestone> without info ? -->
       <!-- <pb> as para -->
       <xsl:when test="parent::tei:body | parent::tei:cit | parent::tei:div | parent::tei:div1 | parent::tei:div2 | parent::tei:div3 | parent::tei:div4 | parent::tei:div5 | parent::tei:div6 | parent::tei:div7 | parent::tei:div8 | parent::tei:div9 | parent::tei:list | parent::tei:listBibl | parent::tei:quote[tei:l|tei:lg|tei:p] | parent::tei:sp">
         <xsl:value-of select="$lf"/>
@@ -1038,7 +1037,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
             </w:t>
           </w:r>
         </xsl:when>
-        <xsl:when test="self::tei:note | self::tei:lb | self::tei:pb">
+        <xsl:when test="self::tei:lb | self::tei:milestone | self::tei:note | self::tei:pb">
           <xsl:apply-templates select="."/>
         </xsl:when>
         <!-- if element contains elements, recall with somestyle inheritence -->
