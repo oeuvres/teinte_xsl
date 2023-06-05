@@ -128,17 +128,17 @@
   </xsl:template>
   <xsl:template match="tei:fileDesc/tei:titleStmt/*" priority="-1"/>
   <xsl:template match="tei:fileDesc/tei:titleStmt/tei:title">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">title</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
   <xsl:template match="tei:fileDesc/tei:titleStmt/tei:author">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">creator</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
   <xsl:template match="tei:fileDesc/tei:titleStmt/tei:editor">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">editor</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -147,7 +147,7 @@
   </xsl:template>
   <xsl:template match="tei:editionStmt/*" priority="-1"/>
   <xsl:template match="tei:editionStmt/tei:respStmt">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">copyeditor</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -156,17 +156,17 @@
   </xsl:template>
   <xsl:template match="tei:publicationStmt/*" priority="-1"/>
   <xsl:template match="tei:publicationStmt/tei:publisher">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">publisher</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
   <xsl:template match="tei:publicationStmt/tei:date">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">issued</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
   <xsl:template match="tei:publicationStmt/tei:idno">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">idno</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -176,7 +176,7 @@
   </xsl:template>
   <xsl:template match="tei:sourceDesc/*" priority="-1"/>
   <xsl:template match="tei:sourceDesc/tei:bibl">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">source</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -188,7 +188,7 @@
     <xsl:apply-templates select="tei:date"/>
   </xsl:template>
   <xsl:template match="tei:profileDesc/tei:creation/tei:date">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">created</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -196,7 +196,7 @@
     <xsl:apply-templates select="tei:language"/>
   </xsl:template>
   <xsl:template match="tei:language">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">language</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -207,19 +207,19 @@
     <xsl:apply-templates select="tei:term"/>
   </xsl:template>
   <xsl:template match="tei:textClass/tei:keywords/tei:term">
-    <xsl:call-template name="term">
+    <xsl:call-template name="meta">
       <xsl:with-param name="key">subject</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
-  <xsl:template name="term">
+  <xsl:template name="meta">
     <xsl:param name="key">Key</xsl:param>
     <xsl:value-of select="$lf"/>
     <w:p>
       <w:pPr>
         <xsl:variable name="style">
           <xsl:choose>
-            <xsl:when test="$libreO != ''">Term</xsl:when>
-            <xsl:otherwise>term</xsl:otherwise>
+            <xsl:when test="$libreO != ''">Meta</xsl:when>
+            <xsl:otherwise>meta</xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
         <w:pStyle w:val="{$style}"/>
@@ -538,6 +538,19 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
       </xsl:call-template>
     </w:p>
   </xsl:template>
+
+  <xsl:template match="tei:entry">
+    <xsl:value-of select="$lf"/>
+    <w:p/>
+    <xsl:value-of select="$lf"/>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="entry"/>
+      </w:pPr>
+      <xsl:call-template name="char"/>
+    </w:p>
+  </xsl:template>
+
   <xsl:template match="tei:l" name="l">
     <xsl:param name="rend"/>
     <xsl:value-of select="$lf"/>
@@ -982,7 +995,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
     <xsl:param name="style"/>
     <!-- rend inherits -->
     <xsl:param name="rend"/>
-    <xsl:for-each select="node()|text()">
+    <xsl:for-each select="node()">
       <xsl:variable name="rStyle">
         <xsl:choose>
           <xsl:when test="self::tei:hi">
