@@ -4,17 +4,19 @@
   
   xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
   xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
   xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage"
   xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
   xmlns:rels="http://schemas.openxmlformats.org/package/2006/relationships"
+  xmlns:v="urn:schemas-microsoft-com:vml"
   xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
   xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
 
   xmlns:teinte="https://github.com/oeuvres/teinte_xsl"
 
   xmlns="http://www.tei-c.org/ns/1.0"
-  exclude-result-prefixes="a mc pic pkg r rels teinte w wp"
+  exclude-result-prefixes="a mc pic pkg r rels teinte o v w wp"
   >
   <xsl:output encoding="UTF-8" indent="no" omit-xml-declaration="yes"/>
   <xsl:variable name="UC">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:variable>
@@ -183,23 +185,89 @@
   <xsl:template match="w:t">
     <xsl:value-of select="."/>
   </xsl:template>
-  <xsl:template match="w:drawing">
+  <!-- image 
+
+<w:drawing>
+  <wp:inline distT="0" distB="0" distL="0" distR="0" wp14:anchorId="46B9EEF1" wp14:editId="3570CC40">
+    <wp:extent cx="4558430" cy="3237230"/>
+    <wp:effectExtent l="0" t="0" r="1270" b="1270"/>
+    <wp:docPr id="4" name="Image 4"/>
+    <wp:cNvGraphicFramePr/>
+    <a:graphic>
+      <a:graphicData>
+        <pic:pic>
+          <pic:nvPicPr>
+            <pic:cNvPr id="1" name="Picture 1"/>
+            <pic:cNvPicPr/>
+          </pic:nvPicPr>
+          <pic:blipFill rotWithShape="1">
+
+            <a:blip r:embed="rId8"/>
+
+            <a:srcRect l="1094"/>
+            <a:stretch/>
+          </pic:blipFill>
+        </pic:pic>
+      </a:graphicData>
+    </a:graphic>
+  </wp:inline>
+</w:drawing>
+
+
+<w:pict>
+  <v:shape id="Image 1" o:spid="_x0000_i1025" type="#_x0000_t75" alt=":::Graphique cercle des sciences" style="width:159.2pt;height:37.1pt;visibility:visible;mso-wrap-style:square">
+    <v:imagedata r:id="rId7" o:title="Graphique cercle des sciences"/>
+  </v:shape>
+</w:pict>
+-->
+  <xsl:template match="w:drawing | w:pict">
     <xsl:text>&#10;</xsl:text>
     <figure>
       <xsl:text>&#10;  </xsl:text>
       <graphic>
         <xsl:variable name="target">
-          <xsl:call-template name="target">
-            <xsl:with-param name="id" select=".//a:blip/@r:embed"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="v:shape/v:imagedata">
+              <xsl:call-template name="target">
+                <xsl:with-param name="id" select="v:shape/v:imagedata/@r:id"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="wp:inline/a:graphic/a:graphicData/pic:pic/pic:blipFill/a:blip">
+              <xsl:call-template name="target">
+                <xsl:with-param name="id" select="wp:inline/a:graphic/a:graphicData/pic:pic/pic:blipFill/a:blip/@r:embed"/>
+              </xsl:call-template>
+            </xsl:when>
+          </xsl:choose>
         </xsl:variable>
         <xsl:attribute name="url">
           <xsl:value-of select="$target"/>
         </xsl:attribute>
+        <xsl:apply-templates select="wp:inline/wp:extent"/>
       </graphic>
+      <xsl:apply-templates select="v:shape/v:imagedata/@o:title"/>
       <xsl:text>&#10;</xsl:text>
     </figure>
     <xsl:text>&#10;</xsl:text>
+  </xsl:template>
+
+  <!-- Image size
+  <wp:extent cx="4558430" cy="3237230"/>
+ -->
+  <xsl:template match="wp:extent">
+    <xsl:attribute name="width">
+      <xsl:value-of select="@cx"/>
+    </xsl:attribute>
+    <xsl:attribute name="height">
+      <xsl:value-of select="@cy"/>
+    </xsl:attribute>
+    <xsl:attribute name="subtype">unit:EMU</xsl:attribute>
+  </xsl:template>
+
+  <xsl:template match="v:imagedata/@o:title">
+    <xsl:text>&#10;  </xsl:text>
+    <head>
+      <xsl:value-of select="."/>
+    </head>
   </xsl:template>
   <!-- Do nothing with that -->
   <xsl:template match="w:rPr"/>
