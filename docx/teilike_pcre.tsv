@@ -5,18 +5,19 @@ search	replace	?comment
 ($atts)	( [^>]*)?	
 ($pun)	([,;:\.!?—–  \s]+)	keep () or [] in inlines
 ($block)	(head|note|p)	
+($parent)	(address|argument|castItem|castList|entryFree|epigraph|index|lg|notep|postscript|quote|set)	
 		
-# variables block ends with the first replacement rule
+# variables ends with the first replacement rule
 
 &lt;	‹	
 &gt;	›	
-&amp;	＆
+&amp;	＆	special unicode amp
 
 # SECTIONS
 
 <\?(div|list)\?>	<\1>	generated hierarchy
 <\?(div|list) /\?>	</\1>	generated hierarchy
-
+\n* *</($parent)>\s*<($parent)[^>]*> *\n*	\n\n
 
 -[\*]\n	-\n	odd chars from OCR
 

@@ -95,6 +95,8 @@
     <xsl:variable name="_rend">
       <xsl:if test="number(w:pPr/w:ind/@w:hanging) &gt; 150"> hanging </xsl:if>
       <xsl:if test="number(w:pPr/w:ind/@w:firstLine) &gt; 150"> indent </xsl:if>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="w:pPr/w:jc/@w:val"/>
     </xsl:variable>
     <xsl:variable name="rend" select="normalize-space($_rend)"/>
     <xsl:choose>
@@ -121,7 +123,13 @@
       </xsl:when>
       <xsl:when test="$teinte_p/@parent != ''">
         <xsl:element name="{$teinte_p/@parent}">
+          <xsl:text>&#10;  </xsl:text>
           <xsl:element name="{$teinte_p/@element}">
+            <xsl:if test="$rend != ''">
+              <xsl:attribute name="rend">
+                <xsl:value-of select="$rend"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:if test="$teinte_p/@attribute">
               <xsl:attribute name="{$teinte_p/@attribute}">
                 <xsl:value-of select="$teinte_p/@value"/>
@@ -129,6 +137,7 @@
             </xsl:if>
             <xsl:apply-templates select="w:hyperlink | w:r"/>
           </xsl:element>
+          <xsl:text>&#10;</xsl:text>
         </xsl:element>
       </xsl:when>
       <xsl:when test="$teinte_p/@element">
