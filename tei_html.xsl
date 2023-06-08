@@ -23,7 +23,7 @@ XSLT 1.0, compatible browser, PHP, Python, Java…
   <!-- 
   https://oeuvres.github.io/teinte_theme/
   -->
-  <xsl:param name="theme">../teinte_theme/</xsl:param>
+  <xsl:param name="theme">https://oeuvres.github.io/teinte_theme/</xsl:param>
   <!-- used as a body class -->
   <xsl:param name="folder"/>
   <!--  -->
