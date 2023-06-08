@@ -98,7 +98,7 @@
     </xsl:variable>
     <xsl:variable name="rend" select="normalize-space($_rend)"/>
     <xsl:choose>
-      <xsl:when test="$lvl != '' and not(ancestor::w:tc|ancestor::w:footnote|ancestor::w:footnote)">
+      <xsl:when test="$lvl != '' and not(ancestor::w:tc|ancestor::w:footnote)">
         <head level="{$lvl+1}">
           <xsl:apply-templates select="w:hyperlink | w:r"/>
         </head>
