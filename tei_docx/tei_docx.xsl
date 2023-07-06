@@ -1224,39 +1224,10 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <!-- Utile ou parasite ? -->
+  <!-- Better to hide in source, not relevant for  -->
   <xsl:template match="comment()">
     <xsl:comment>
       <xsl:value-of select="."/>
     </xsl:comment>
-    <xsl:choose>
-      <xsl:when test="ancestor::*[text()[normalize-space(.) != '']]">
-        <w:r>
-          <w:rPr>
-            <w:rStyle w:val="Marquedecommentaire"/>
-          </w:rPr>
-          <w:commentReference>
-            <xsl:attribute name="w:id">
-              <xsl:call-template name="id"/>
-            </xsl:attribute>
-          </w:commentReference>
-        </w:r>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$lf"/>
-        <w:p>
-          <w:pPr>
-            <w:pStyle w:val="Marquedecommentaire"/>
-          </w:pPr>
-          <w:r>
-            <w:commentReference>
-              <xsl:attribute name="w:id">
-                <xsl:call-template name="id"/>
-              </xsl:attribute>
-            </w:commentReference>
-          </w:r>
-        </w:p>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 </xsl:transform>
