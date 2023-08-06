@@ -268,25 +268,7 @@ Sections
 <h3>Titres</h3>
 
   -->
-  <!-- Titre en entête -->
-  <xsl:template match="tei:titleStmt/tei:title">
-    <xsl:param name="from"/>
-    <h1>
-      <xsl:choose>
-        <xsl:when test="@type">
-          <xsl:attribute name="class">
-            <xsl:value-of select="@type"/>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:when test="../tei:title[@type='main']">
-          <xsl:attribute name="class">notmain</xsl:attribute>
-        </xsl:when>
-      </xsl:choose>
-      <xsl:apply-templates>
-        <xsl:with-param name="from" select="$from"/>
-      </xsl:apply-templates>
-    </h1>
-  </xsl:template>
+
   <!-- Page de titre -->
   <xsl:template match="tei:titlePage">
     <xsl:param name="from"/>
