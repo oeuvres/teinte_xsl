@@ -19,6 +19,7 @@ https://github.com/TEIC/Stylesheets/tree/dev/latex
 A light version for XSLT1, with local improvements.
 2021, frederic.glorieux@fictif.org
   -->
+  <xsl:param name="tableMaxWidth">0.85</xsl:param>
   <xsl:template match="tei:cell">
     <xsl:variable name="rend" select="concat(' ', normalize-space(@rend), ' ')"/>
     <!-- \tabcellsep -->
@@ -130,6 +131,7 @@ A light version for XSLT1, with local improvements.
     <xsl:if test="@width">
       <xsl:variable name="unit" select="translate(@width, '  0123456789', '')"/>
       <xsl:choose>
+        <xsl:when test="@subtype='unit:EMU'"/>
         <xsl:when test="$unit = '%'">
           <xsl:text>width=</xsl:text>
           <xsl:value-of select="number(substring-before(@width,'%')) div 100"/>
@@ -161,6 +163,7 @@ A light version for XSLT1, with local improvements.
     <xsl:if test="@height">
       <xsl:variable name="unit" select="translate(@height, '  0123456789', '')"/>
       <xsl:choose>
+        <xsl:when test="@subtype='unit:EMU'"/>
         <xsl:when test="$unit = '%'">
           <xsl:text>height=</xsl:text>
           <xsl:value-of select="number(substring-before(@height,'%')) div 100"/>
@@ -323,7 +326,7 @@ A light version for XSLT1, with local improvements.
     </xsl:if>
     <xsl:choose>
       <xsl:when test="tei:head and not(contains(@rend, 'display'))">
-        <xsl:if test="not(ancestor::tei:table or $longtables='false')">
+        <xsl:if test="not(ancestor::tei:table)">
           <xsl:text>\endfirsthead </xsl:text>
           <xsl:text>\multicolumn{</xsl:text>
           <xsl:value-of select="count(tei:row[1]/tei:cell)"/>
@@ -345,7 +348,7 @@ A light version for XSLT1, with local improvements.
   </xsl:template>
   <xsl:template name="tableHline">
     <xsl:choose>
-      <xsl:when test="ancestor::tei:table or $longtables='false' or contains(@rend,'display')"> \hline </xsl:when>
+      <xsl:when test="ancestor::tei:table or contains(@rend,'display')"> \hline </xsl:when>
       <xsl:otherwise> \hline\endfoot\hline\endlastfoot </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

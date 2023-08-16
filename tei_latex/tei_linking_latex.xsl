@@ -16,7 +16,10 @@ A light version for XSLT1, with local improvements.
 2021, frederic.glorieux@fictif.org
   -->
   <xsl:template match="tei:anchor">
+    <!--
     <xsl:call-template name="tei:makeHyperTarget"/>
+    -->
+    <xsl:message>TOD BUG</xsl:message>
   </xsl:template>
   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
     <desc>[latex] <param name="where">where</param> </desc>
@@ -55,7 +58,7 @@ A light version for XSLT1, with local improvements.
   <xsl:template name="makeInternalLink">
     <xsl:param name="target"/>
     <xsl:param name="class"/>
-    <xsl:param name="ptr" as="xs:boolean" select="false()"/>
+    <xsl:param name="ptr" select="false()"/>
     <xsl:param name="dest"/>
     <xsl:param name="body"/>
     <xsl:choose>
@@ -112,9 +115,11 @@ A light version for XSLT1, with local improvements.
                   <xsl:text>\textit{\hyperref[</xsl:text>
                   <xsl:value-of select="$dest"/>
                   <xsl:text>]{</xsl:text>
-                  <xsl:apply-templates mode="xref" select=".">
+                  <xsl:message>TODO, BUG</xsl:message>
+                  <!-- 
                     <xsl:with-param name="minimal" select="$minimalCrossRef"/>
-                  </xsl:apply-templates>
+                  -->
+                  <xsl:apply-templates mode="xref" select="."/>
                   <xsl:text>}}</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
@@ -122,9 +127,11 @@ A light version for XSLT1, with local improvements.
                   <xsl:value-of select="$dest"/>
                   <xsl:text>]{</xsl:text>
                   <xsl:value-of select="$body"/>
-                  <xsl:apply-templates mode="xref" select=".">
+                  <xsl:message>TODO, BUG</xsl:message>
+                  <!-- 
                     <xsl:with-param name="minimal" select="$minimalCrossRef"/>
-                  </xsl:apply-templates>
+                  -->
+                  <xsl:apply-templates mode="xref" select="."/>
                   <xsl:text>}</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>

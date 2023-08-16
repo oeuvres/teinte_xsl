@@ -319,81 +319,77 @@ for example: abstract.
       </xsl:apply-templates>
     </xsl:param>
     <xsl:variable name="zerend" select="concat(' ', normalize-space($rend), ' ')"/>
+    <xsl:variable name="decls">
+      <xsl:choose>
+        <xsl:when test="contains($zerend, ' i ')">\itshape</xsl:when>
+        <xsl:when test="contains($zerend, ' it ')">\itshape</xsl:when>
+        <xsl:when test="contains($zerend, ' ital ')">\itshape</xsl:when>
+        <xsl:when test="contains($zerend, ' italics ')">\itshape</xsl:when>
+        <xsl:when test="contains($zerend, ' italique ')">\itshape</xsl:when>
+        <xsl:when test="self::tei:hi and not(@rend)">\itshape</xsl:when>
+      </xsl:choose>
+      <xsl:if test="contains($zerend, ' center ')">\centering</xsl:if>
+      <xsl:if test="contains($zerend, ' tt ')">\ttfamily</xsl:if>
+      <xsl:if test="contains($zerend, ' sc ')">\scshape</xsl:if>
+      <xsl:if test="contains($zerend, ' large ')">\large</xsl:if>
+      <xsl:if test="contains($zerend, ' larger ')">\larger</xsl:if>
+      <xsl:if test="contains($zerend, ' right ')">\raggedleft</xsl:if>
+      <xsl:if test="contains($zerend, ' small ')">\small</xsl:if>
+      <xsl:if test="contains($zerend, ' smaller ')">\smaller</xsl:if>
+      <xsl:if test="contains($zerend, ' color')">
+        <xsl:variable name="color" select="substring-before(substring-after($zerend, ' color'), ' ')"/>
+        <xsl:text>\color{</xsl:text>
+        <xsl:value-of select="translate($color, '(}', '')"/>
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="cmd">
+      <xsl:if test="contains($zerend, ' allcaps ')">\uppercase{</xsl:if>
+      <xsl:if test="contains($zerend, ' b ')">\textbf{</xsl:if>
+      <xsl:if test="contains($zerend, ' bold ')">\textbf{</xsl:if>
+      <xsl:if test="contains($zerend, ' gothic ')">\textgothic{</xsl:if>
+      <xsl:if test="contains($zerend, ' noindex ')">\textrm{</xsl:if>
+      <xsl:if test="contains($zerend, ' plain ')">\textrm{</xsl:if>
+      <xsl:if test="contains($zerend, ' strong ')">\textbf{</xsl:if>
+      <xsl:if test="contains($zerend, ' sub ')">\textsubscript{</xsl:if>
+      <xsl:if test="contains($zerend, ' subscript ')">\textsubscript{</xsl:if>
+      <xsl:if test="contains($zerend, ' sup ')">\textsuperscript{</xsl:if>
+      <xsl:if test="contains($zerend, ' superscript ')">\textsuperscript{</xsl:if>
+      <xsl:if test="contains($zerend, ' uc ')">\MakeUppercase{</xsl:if>
+      <xsl:if test="contains($zerend, ' underline ')">\uline{</xsl:if>
+      <xsl:if test="contains($zerend, ' uppercase ')">\MakeUppercase{</xsl:if>
+        <!-- 
+        <xsl:when test=". = 'strike'">\sout{</xsl:when>
+        <xsl:when test=". = 'overbar'">\textoverbar{</xsl:when>
+        <xsl:when test=". = 'doubleunderline'">\uuline{</xsl:when>
+        <xsl:when test=". = 'wavyunderline'">\uwave{</xsl:when>
+        <xsl:when test=". = 'quoted'">\textquoted{</xsl:when>
+        <xsl:when test=". = 'calligraphic'">\textcal{</xsl:when>
+
+        -->
+    </xsl:variable>
+    <xsl:value-of select="$cmd"/>
     <xsl:choose>
-      <xsl:when test="normalize-space($zerend) = ''">
+      <xsl:when test="$decls = ''">
         <xsl:copy-of select="$cont"/>
       </xsl:when>
+      <!-- declaration to enclose -->
       <xsl:otherwise>
-        <xsl:variable name="decls">
-          <xsl:if test="contains($zerend, ' center ')">\centering</xsl:if>
-          <xsl:if test="contains($zerend, ' i ')">\itshape</xsl:if>
-          <xsl:if test="contains($zerend, ' it ')">\itshape</xsl:if>
-          <xsl:if test="contains($zerend, ' ital ')">\itshape</xsl:if>
-          <xsl:if test="contains($zerend, ' italics ')">\itshape</xsl:if>
-          <xsl:if test="contains($zerend, ' italique ')">\itshape</xsl:if>
-          <xsl:if test="contains($zerend, ' tt ')">\ttfamily</xsl:if>
-          <xsl:if test="contains($zerend, ' sc ')">\scshape</xsl:if>
-          <xsl:if test="contains($zerend, ' large ')">\large</xsl:if>
-          <xsl:if test="contains($zerend, ' larger ')">\larger</xsl:if>
-          <xsl:if test="contains($zerend, ' right ')">\raggedleft</xsl:if>
-          <xsl:if test="contains($zerend, ' small ')">\small</xsl:if>
-          <xsl:if test="contains($zerend, ' smaller ')">\smaller</xsl:if>
-          <xsl:if test="contains($zerend, ' color')">
-            <xsl:variable name="color" select="substring-before(substring-after($zerend, ' color'), ' ')"/>
-            <xsl:text>\color{</xsl:text>
-            <xsl:value-of select="translate($color, '(}', '')"/>
-            <xsl:text>}</xsl:text>
-          </xsl:if>
-        </xsl:variable>
-        <xsl:variable name="cmd">
-          <xsl:if test="contains($zerend, ' allcaps ')">\uppercase{</xsl:if>
-          <xsl:if test="contains($zerend, ' b ')">\textbf{</xsl:if>
-          <xsl:if test="contains($zerend, ' bold ')">\textbf{</xsl:if>
-          <xsl:if test="contains($zerend, ' gothic ')">\textgothic{</xsl:if>
-          <xsl:if test="contains($zerend, ' noindex ')">\textrm{</xsl:if>
-          <xsl:if test="contains($zerend, ' plain ')">\textrm{</xsl:if>
-          <xsl:if test="contains($zerend, ' strong ')">\textbf{</xsl:if>
-          <xsl:if test="contains($zerend, ' sub ')">\textsubscript{</xsl:if>
-          <xsl:if test="contains($zerend, ' subscript ')">\textsubscript{</xsl:if>
-          <xsl:if test="contains($zerend, ' sup ')">\textsuperscript{</xsl:if>
-          <xsl:if test="contains($zerend, ' superscript ')">\textsuperscript{</xsl:if>
-          <xsl:if test="contains($zerend, ' uc ')">\MakeUppercase{</xsl:if>
-          <xsl:if test="contains($zerend, ' underline ')">\uline{</xsl:if>
-          <xsl:if test="contains($zerend, ' uppercase ')">\MakeUppercase{</xsl:if>
-            <!-- 
-            <xsl:when test=". = 'strike'">\sout{</xsl:when>
-            <xsl:when test=". = 'overbar'">\textoverbar{</xsl:when>
-            <xsl:when test=". = 'doubleunderline'">\uuline{</xsl:when>
-            <xsl:when test=". = 'wavyunderline'">\uwave{</xsl:when>
-            <xsl:when test=". = 'quoted'">\textquoted{</xsl:when>
-            <xsl:when test=". = 'calligraphic'">\textcal{</xsl:when>
-
-            -->
-        </xsl:variable>
-        <xsl:value-of select="$cmd"/>
-        <xsl:choose>
-          <xsl:when test="$decls = ''">
-            <xsl:copy-of select="$cont"/>
-          </xsl:when>
-          <!-- declaration to enclose -->
-          <xsl:otherwise>
-            <xsl:if test="$cmd = ''">
-              <xsl:text>{</xsl:text>
-            </xsl:if>
-            <xsl:value-of select="$decls"/>
-            <!-- matches($decls, '[a-z]$') ? -->
-            <xsl:text> </xsl:text>
-            <xsl:copy-of select="$cont"/>
-            <xsl:if test="$cmd = ''">
-              <xsl:text>}</xsl:text>
-            </xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="$cmd != ''">
-          <xsl:value-of select="substring('}}}}}}}}}}}}}}}}}}}}}}}}}', 1, string-length($cmd) - string-length(translate($cmd, '{', '')))"/>
+        <xsl:if test="$cmd = ''">
+          <xsl:text>{</xsl:text>
+        </xsl:if>
+        <xsl:value-of select="$decls"/>
+        <!-- matches($decls, '[a-z]$') ? -->
+        <xsl:text> </xsl:text>
+        <xsl:copy-of select="$cont"/>
+        <xsl:if test="$cmd = ''">
+          <xsl:text>}</xsl:text>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="$cmd != ''">
+      <xsl:value-of select="substring('}}}}}}}}}}}}}}}}}}}}}}}}}', 1, string-length($cmd) - string-length(translate($cmd, '{', '')))"/>
+    </xsl:if>
   </xsl:template>
   
   <xsl:template match="tei:hi[starts-with(@rend, 'initial')]">

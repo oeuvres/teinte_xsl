@@ -129,16 +129,18 @@ TEI to LaTeX, metadata for preamble
     <xsl:text>\def\elbibl{</xsl:text>
     <xsl:if test="$latexAuthor != ''">
       <xsl:value-of select="$latexAuthor"/>
-      <xsl:text>. </xsl:text>
+      <xsl:text> </xsl:text>
     </xsl:if>
     <xsl:if test="$latexDate != ''">
+      <xsl:text>(</xsl:text>
       <xsl:value-of select="$latexDate"/>
-      <xsl:text>. </xsl:text>
+      <xsl:text>) </xsl:text>
     </xsl:if>
     <xsl:text>\emph{</xsl:text>
     <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[not(@type) or @type='main'][1]/node()" mode="meta"/>
     <xsl:text>}</xsl:text>
     <xsl:text>}&#10;</xsl:text>
+
     <!--
     <xsl:variable name="author1">
       <xsl:for-each select="(/*/tei:teiHeader/tei:fileDesc/tei:titleStmt)[1]">
@@ -168,7 +170,7 @@ TEI to LaTeX, metadata for preamble
 
     <xsl:if test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl">
       <xsl:text>\def\elsource{</xsl:text>
-      <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl/node()"/>
+      <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl[1]/node()"/>
       <xsl:text>}&#10;</xsl:text>
     </xsl:if>
     
@@ -318,7 +320,7 @@ TEI to LaTeX, metadata for preamble
     <xsl:value-of select="normalize-space(.)"/>
     <xsl:text>}</xsl:text>
   </xsl:template>
-  <xsl:template match="tei:emph | tei:hi[starts-with(@rend, 'i')] | tei:title" mode="meta">
+  <xsl:template match="tei:emph | tei:hi[starts-with(@rend, 'i')] | tei:hi[not(@rend)] | tei:title" mode="meta">
     <xsl:text>\emph{</xsl:text>
     <xsl:apply-templates mode="meta"/>
     <xsl:text>}</xsl:text>
