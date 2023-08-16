@@ -13,9 +13,9 @@ Should work as an import (or include) to generate flow latex,
 for example: abstract.
 2021, frederic.glorieux@fictif.org
   -->
-  <xsl:import href="../xsl/common.xsl"/>
+  <xsl:import href="../tei_common.xsl"/>
   <xsl:import href="tei_common.xsl"/>
-  <xsl:import href="latex_common.xsl"/>
+  <xsl:import href="tei_common_latex.xsl"/>
   <xsl:param name="quoteEnv">quoteblock</xsl:param>
   <!-- TODO hadle LaTeX side -->
   <xsl:param name="pbStyle"/>

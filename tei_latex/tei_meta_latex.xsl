@@ -5,11 +5,11 @@
   exclude-result-prefixes="tei"
 >
   <!-- 
-Latex from TEI, metadata for preamble
+TEI to LaTeX, metadata for preamble
 
 2021, frederic.glorieux@fictif.org
   -->
-  <xsl:import href="latex_flow.xsl"/>
+  <xsl:import href="tei_flow_latex.xsl"/>
   <xsl:output method="text" encoding="utf8" indent="no"/>
   
   
