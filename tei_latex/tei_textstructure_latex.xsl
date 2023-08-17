@@ -176,6 +176,39 @@ A light version for XSLT1, with local improvements.
       </xsl:when>
       <!-- Open sectionning for LaTeX -->
       <xsl:otherwise>
+
+        <xsl:variable name="kicker">
+          <xsl:variable name="raw">
+            <xsl:apply-templates select="preceding-sibling::tei:head[@type='kicker']" mode="title"/>
+          </xsl:variable>
+          <xsl:value-of select="normalize-space($raw)"/>
+        </xsl:variable>
+        <xsl:variable name="title">
+          <xsl:apply-templates select="." mode="title"/>
+        </xsl:variable>
+
+        <xsl:variable name="kicker-sep">
+          <xsl:if test="$kicker != ''">
+            <xsl:call-template name="head-pun">
+              <xsl:with-param name="prev" select="$kicker"/>
+              <xsl:with-param name="next" select="$title"/>
+            </xsl:call-template>
+            <xsl:text> </xsl:text>
+          </xsl:if>
+        </xsl:variable>
+        
+        <!-- Update letf mark manual. We want some typo but no notes -->
+        <xsl:if test="../parent::tei:front | ../parent::tei:body | ../parent::tei:back">
+          <xsl:text>&#10;\renewcommand{\leftmark}{</xsl:text>
+          <xsl:value-of select="$kicker"/>
+          <xsl:value-of select="$kicker-sep"/>
+          <xsl:apply-templates>
+            <xsl:with-param name="message">nonote</xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text>}</xsl:text>
+        </xsl:if>
+        
+        
         <xsl:text>&#10;\</xsl:text>
         <xsl:choose>
           <xsl:when test="$documentclass = 'book'">
@@ -216,24 +249,6 @@ or parent::tei:div[contains(@rend, 'nonumber')]
 
 [{a title may contain [brackets]}]
         -->
-        <xsl:variable name="kicker">
-          <xsl:variable name="raw">
-            <xsl:apply-templates select="preceding-sibling::tei:head[@type='kicker']" mode="title"/>
-          </xsl:variable>
-          <xsl:value-of select="normalize-space($raw)"/>
-        </xsl:variable>
-        <xsl:variable name="title">
-          <xsl:apply-templates select="." mode="title"/>
-        </xsl:variable>
-        <xsl:variable name="kicker-sep">
-          <xsl:if test="$kicker != ''">
-            <xsl:call-template name="head-pun">
-              <xsl:with-param name="prev" select="$kicker"/>
-              <xsl:with-param name="next" select="$title"/>
-            </xsl:call-template>
-            <xsl:text> </xsl:text>
-          </xsl:if>
-        </xsl:variable>
         <xsl:text>[{</xsl:text>
         <xsl:variable name="raw">
           <xsl:value-of select="$kicker"/>
@@ -247,16 +262,7 @@ or parent::tei:div[contains(@rend, 'nonumber')]
         <xsl:value-of select="$kicker-sep"/>
         <xsl:apply-templates/>
         <xsl:text>}</xsl:text>
-        <!-- Update letf mark manual. We want some typo but no notes -->
-        <xsl:if test="../parent::tei:front | ../parent::tei:body | ../parent::tei:back">
-          <xsl:text>&#10;\renewcommand{\leftmark}{</xsl:text>
-          <xsl:value-of select="$kicker"/>
-          <xsl:value-of select="$kicker-sep"/>
-          <xsl:apply-templates>
-            <xsl:with-param name="message">nonote</xsl:with-param>
-          </xsl:apply-templates>
-          <xsl:text>}</xsl:text>
-        </xsl:if>
+        
         <xsl:if test="../@xml:id">
           <!-- Keep it there fo bookmarks (tested) -->
           <xsl:call-template name="tei:makeHyperTarget">
