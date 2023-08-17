@@ -22,7 +22,7 @@
 \usepackage{float}
 \usepackage{fontspec} % XeLaTeX mandatory for fonts
 \usepackage{footnote} % used to capture notes in minipage (ex: quote)
-\usepackage{graphicx}
+\usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
 \usepackage{lettrine} % drop caps
 \usepackage{lipsum} % generate text for testing
 \usepackage{relsize} % \smaller \larger (ex: quotes in body and footnotes)
@@ -31,7 +31,7 @@
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
 \usepackage{pdftexcmds} % needed for tests expressions
 \usepackage{poetry} % <l>, bad for theater
-\usepackage{polyglossia} % bug Warning: "Failed to patch part"
+\usepackage{babel} % better than polyglossia
 \usepackage[%
   indentfirst=false,
   vskip=1em,
@@ -52,9 +52,6 @@
 \usepackage[normalem]{ulem} % breakable \uline, normalem is absolutely necessary to keep \emph
 \usepackage{xcolor} % named colors
 \usepackage{xparse} % @ifundefined
-\XeTeXdefaultencoding "iso-8859-1" % bad encoding of xstring
-\usepackage{xstring} % string tests
-\XeTeXdefaultencoding "utf-8"
 
 \defaultfontfeatures{
   % Mapping=tex-text, % no effect seen
@@ -69,17 +66,6 @@
 \colorprovide{rubric}{red}
 \colorprovide{silver}{lightgray}
 \@ifundefined{syms}{\newfontfamily\syms{DejaVu Sans}}{}
-\newif\ifdev
-\@ifundefined{elbibl}{% No meta defined, maybe dev mode
-  \newcommand{\elbibl}{Titre court ?}
-  \newcommand{\elbook}{Titre du livre source ?}
-  \newcommand{\elabstract}{Résumé\par}
-  \newcommand{\elurl}{http://oeuvres.github.io/elbook/2}
-  \author{Éric Lœchien}
-  \title{Un titre de test assez long pour vérifier le comportement d’une maquette}
-  \date{1566}
-  \devtrue
-}{}
 \let\eltitle\@title
 \let\elauthor\@author
 \let\eldate\@date

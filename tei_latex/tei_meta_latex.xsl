@@ -78,7 +78,10 @@ TEI to LaTeX, metadata for preamble
         </xsl:choose>
         <xsl:choose>
           <xsl:when test="normalize-space(.) != ''">
-            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:variable name="txt">
+              <xsl:apply-templates mode="meta"/>
+            </xsl:variable>
+            <xsl:value-of select="normalize-space($txt)"/>
           </xsl:when>
           <xsl:when test="contains(@key, '(')">
             <xsl:value-of select="normalize-space(substring-before(@key, '('))"/>
@@ -305,8 +308,9 @@ TEI to LaTeX, metadata for preamble
   </xsl:template>
 
   <xsl:template match="tei:surname" mode="meta">
-    <!-- Small caps are usually bad in modern TeX -->
+    <xsl:text>\textsc{</xsl:text>
     <xsl:apply-templates mode="meta"/>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <!-- Default, do nothing -->
