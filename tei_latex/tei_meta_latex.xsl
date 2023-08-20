@@ -18,19 +18,29 @@ TEI to LaTeX, metadata for preamble
   </xsl:template>
   
   <xsl:template name="latexTitle">
-    <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title">
-      <xsl:choose>
-        <xsl:when test="not(@type) or @type='main'"><xsl:apply-templates mode="meta"/></xsl:when>
-        <xsl:when test="@type='sub'">\emph{<xsl:apply-templates mode="meta"/>}</xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates mode="meta"/>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:if test="following-sibling::tei:title">
-        <xsl:text>\par&#10;</xsl:text>
-      </xsl:if>
-      <xsl:if test="position() != last()">\medskip&#10;</xsl:if>
-    </xsl:for-each>
+    <xsl:choose>
+      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic/tei:title">
+        <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]/tei:title[1]/node()" mode="meta"/>
+      </xsl:when>
+      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title">
+        <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]/tei:title[1]/node()" mode="meta"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title">
+          <xsl:choose>
+            <xsl:when test="not(@type) or @type='main'"><xsl:apply-templates mode="meta"/></xsl:when>
+            <xsl:when test="@type='sub'">\emph{<xsl:apply-templates mode="meta"/>}</xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates mode="meta"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="following-sibling::tei:title">
+            <xsl:text>\par&#10;</xsl:text>
+          </xsl:if>
+          <xsl:if test="position() != last()">\medskip&#10;</xsl:if>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="latexDate">
@@ -97,12 +107,13 @@ TEI to LaTeX, metadata for preamble
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template name="latexAuthor1">
+  <xsl:template name="latexAuthorshort">
     <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
       <xsl:for-each select="(tei:author|tei:principal)[1]">
         <xsl:apply-templates select="." mode="meta">
           <xsl:with-param name="short" select="true()"/>
         </xsl:apply-templates>
+        <xsl:if test="count(tei:author|tei:principal) &gt; 2">\emph{&amp; al.}</xsl:if>
       </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
@@ -129,6 +140,9 @@ TEI to LaTeX, metadata for preamble
     <xsl:text>}&#10;</xsl:text>
     
     <!-- Short title for runing head -->
+    <xsl:text>\def\elauthorshort{</xsl:text>
+    <xsl:call-template name="latexAuthorshort"/>
+    <xsl:text>}&#10;</xsl:text>
     <xsl:text>\def\elbibl{</xsl:text>
     <xsl:if test="$latexAuthor != ''">
       <xsl:value-of select="$latexAuthor"/>
@@ -177,10 +191,6 @@ TEI to LaTeX, metadata for preamble
       <xsl:text>}&#10;</xsl:text>
     </xsl:if>
     
-
-    <xsl:text>\def\eltitlepage{%&#10;</xsl:text>
-    <xsl:call-template name="titlePage"/>
-    <xsl:text>&#10;}&#10;</xsl:text>
   </xsl:template>
   
   <xsl:template name="titlePage">
@@ -251,8 +261,14 @@ TEI to LaTeX, metadata for preamble
         <xsl:variable name="key" select="normalize-space(substring-before(concat(@key, '('), '('))"/>
         <xsl:value-of select="substring-before(concat($key, ','), ',')"/>
       </xsl:when>
+      <xsl:when test="$short and tei:surname">
+        <xsl:apply-templates select="tei:surname" mode="meta"/>
+      </xsl:when>
       <xsl:when test="normalize-space(.) != ''">
-        <xsl:apply-templates mode="meta"/>
+        <xsl:variable name="txt">
+          <xsl:apply-templates mode="meta"/>
+        </xsl:variable>
+        <xsl:value-of select="normalize-space($txt)"/>
       </xsl:when>
       <xsl:when test="@key">
         <xsl:variable name="key" select="normalize-space(substring-before(concat(@key, '('), '('))"/>
