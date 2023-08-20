@@ -16,9 +16,10 @@ for example: abstract.
   <xsl:import href="../tei_common.xsl"/>
   <xsl:import href="tei_common.xsl"/>
   <xsl:import href="tei_common_latex.xsl"/>
+  <xsl:param name="latex_parnoindent">\parnoindent </xsl:param>
   <xsl:param name="quoteEnv">quoteblock</xsl:param>
-  <!-- TODO hadle LaTeX side -->
-  <xsl:param name="pbStyle"/>
+  <xsl:param name="pbStyle">visible</xsl:param>
+  <xsl:param name="latex_pb">\pb</xsl:param>
   <!-- TODO, move params -->
   <xsl:variable name="preQuote">« </xsl:variable>
   <xsl:variable name="postQuote"> »</xsl:variable>
@@ -320,14 +321,7 @@ for example: abstract.
     </xsl:param>
     <xsl:variable name="zerend" select="concat(' ', normalize-space($rend), ' ')"/>
     <xsl:variable name="decls">
-      <xsl:choose>
-        <xsl:when test="contains($zerend, ' i ')">\itshape</xsl:when>
-        <xsl:when test="contains($zerend, ' it ')">\itshape</xsl:when>
-        <xsl:when test="contains($zerend, ' ital ')">\itshape</xsl:when>
-        <xsl:when test="contains($zerend, ' italics ')">\itshape</xsl:when>
-        <xsl:when test="contains($zerend, ' italique ')">\itshape</xsl:when>
-        <xsl:when test="self::tei:hi and not(@rend)">\itshape</xsl:when>
-      </xsl:choose>
+      <!-- command \itshap will strip initial space in italic, ex (1)<hi> ital<hi> (1){\itshape  ital} -->
       <xsl:if test="contains($zerend, ' center ')">\centering</xsl:if>
       <xsl:if test="contains($zerend, ' tt ')">\ttfamily</xsl:if>
       <xsl:if test="contains($zerend, ' sc ')">\scshape</xsl:if>
@@ -344,6 +338,14 @@ for example: abstract.
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="cmd">
+      <xsl:choose>
+        <xsl:when test="contains($zerend, ' i ')">\textit{</xsl:when>
+        <xsl:when test="contains($zerend, ' it ')">\textit{</xsl:when>
+        <xsl:when test="contains($zerend, ' ital ')">\textit{</xsl:when>
+        <xsl:when test="contains($zerend, ' italics ')">\textit{</xsl:when>
+        <xsl:when test="contains($zerend, ' italique ')">\textit{</xsl:when>
+        <xsl:when test="self::tei:hi and not(@rend)">\textit{</xsl:when>
+      </xsl:choose>
       <xsl:if test="contains($zerend, ' allcaps ')">\uppercase{</xsl:if>
       <xsl:if test="contains($zerend, ' b ')">\textbf{</xsl:if>
       <xsl:if test="contains($zerend, ' bold ')">\textbf{</xsl:if>
@@ -1094,15 +1096,13 @@ for example: abstract.
     <xsl:param name="message"/>
     <xsl:variable name="rend" select="concat(' ', normalize-space(@rend), ' ')"/>
     <xsl:call-template name="tei:makeHyperTarget"/>
+    <!-- Why ? -->
     <xsl:variable name="pb1">
       <xsl:if test="name(*[1]) = 'pb' and normalize-space(*[1]/preceding-sibling::text()) = ''">pb1</xsl:if>
     </xsl:variable>
     <xsl:variable name="noindent">
       <xsl:call-template name="noindent"/>
     </xsl:variable>
-    <xsl:if test="$pb1 != ''">
-      <xsl:apply-templates select="tei:pb[1]"/>
-    </xsl:if>
     <xsl:variable name="cont">
       <xsl:choose>
         <xsl:when test="@n != ''">
@@ -1113,7 +1113,7 @@ for example: abstract.
           <xsl:text>} </xsl:text>
         </xsl:when>
         <xsl:when test="$noindent != ''">
-          <xsl:text>\noindent </xsl:text>
+          <xsl:value-of select="$latex_parnoindent"/>
         </xsl:when>
       </xsl:choose>
       <!-- Ideas of Sebastian , pending
@@ -1124,18 +1124,9 @@ for example: abstract.
         <xsl:text>&#10;\pend&#10;</xsl:text>
       </xsl:if>
       -->
-      <xsl:choose>
-        <xsl:when test="$pb1 != ''">
-          <xsl:apply-templates select="node()[not(self::tei:pb[1])]">
-            <xsl:with-param name="message" select="$message"/>
-          </xsl:apply-templates>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates>
-            <xsl:with-param name="message" select="$message"/>
-          </xsl:apply-templates>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:apply-templates>
+        <xsl:with-param name="message" select="$message"/>
+      </xsl:apply-templates>
       <!-- Especially at the end of a footnote or a quote, \par produce a bad empty line -->
       <xsl:if test="following-sibling::* or contains($rend, ' center ') or contains($rend, ' right ')">
         <xsl:text>\par</xsl:text>
@@ -1177,38 +1168,24 @@ for example: abstract.
         <xsl:text> </xsl:text>
       </xsl:if>
     </xsl:variable>
-    <!-- string " Page " is now managed through the i18n file -->
     <xsl:choose>
+      <!-- facsimile -->
       <xsl:when test="$pbStyle = 'active'">
         <xsl:text>\clearpage </xsl:text>
       </xsl:when>
-      <xsl:when test="$pbStyle = 'visible'">
-        <xsl:text>✁[</xsl:text>
-        <xsl:value-of select="@unit"/>
-        <xsl:text> </xsl:text>
-        <xsl:call-template name="tei:i18n">
-          <xsl:with-param name="code">p.</xsl:with-param>
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
+      <!-- default control by a command -->
+      <xsl:when test="$pbStyle = 'visible' and $latex_pb!= ''">
+        <xsl:value-of select="$latex_pb"/>
+        <xsl:text>{</xsl:text>
+        <xsl:choose>
+          <xsl:when test="@unit">
+            <xsl:value-of select="@unit"/>
+            <xsl:text> </xsl:text>
+          </xsl:when>
+          <xsl:when test="substring(@n, 1, 1) != 'p'">p. </xsl:when>
+        </xsl:choose>
         <xsl:value-of select="@n"/>
-        <xsl:text>]✁</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pbStyle = 'bracketsonly'">
-        <!-- To avoid trouble with the scisssors character "✁" -->
-        <xsl:text>[</xsl:text>
-        <xsl:value-of select="@unit"/>
-        <xsl:text> </xsl:text>
-        <xsl:call-template name="tei:i18n">
-          <xsl:with-param name="code">p.</xsl:with-param>
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@n"/>
-        <xsl:text>]</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pbStyle = 'plain'">
-        <xsl:text>\vspace{1ex}&#10;\par&#10;</xsl:text>
-        <xsl:value-of select="@n"/>
-        <xsl:text>\vspace{1ex}&#10;</xsl:text>
+        <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:when test="$pbStyle = 'sidebyside'">
         <xsl:text>\cleartoleftpage&#10;\begin{figure}[ht!]\makebox[\textwidth][c]{</xsl:text>
@@ -1517,5 +1494,10 @@ for example: abstract.
     <xsl:text>\par&#10;</xsl:text>
   </xsl:template>
   
+  <xsl:template match="tei:formula">
+    <xsl:text>\[</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>\]</xsl:text>
+  </xsl:template>
 
 </xsl:transform>
