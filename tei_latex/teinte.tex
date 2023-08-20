@@ -6,32 +6,30 @@
 
 \makeatletter % <@@@
 
-\setlength{\parskip}{0pt} % 1pt allow better vertical justification
+\setlength{\parskip}{1pt} % 1pt allow better vertical justification
 \setlength{\parindent}{1.5em}
 
 \usepackage{alphalph} % for alph couter z, aa, ab…
 \usepackage{blindtext} % generate text for testing
-\usepackage{booktabs} % for tables: \toprule, \midrule…
+\usepackage{booktabs, multirow, colortbl} % for tables: \toprule, \midrule…
 \usepackage[strict]{changepage} % for modulo 4
 \usepackage{contour} % rounding words
 \usepackage[nodayofweek]{datetime}
 \usepackage{enumitem} % <list>
 \usepackage{etoolbox} % patch commands
 \usepackage{fancyvrb}
-\usepackage{fancyhdr}
-\usepackage{float}
+\usepackage{fancyhdr} % control runing heads
+\usepackage{float} % supposed a better positionning of tables
 \usepackage{fontspec} % XeLaTeX mandatory for fonts
 \usepackage{footnote} % used to capture notes in minipage (ex: quote)
 \usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
 \usepackage{lettrine} % drop caps
 \usepackage{lipsum} % generate text for testing
-\usepackage{relsize} % \smaller \larger (ex: quotes in body and footnotes)
 \usepackage{manyfoot} % for parallel footnote numerotation
 \usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
 \usepackage{pdftexcmds} % needed for tests expressions
 \usepackage{poetry} % <l>, bad for theater
-\usepackage{babel} % better than polyglossia
 \usepackage[%
   indentfirst=false,
   vskip=1em,
@@ -41,13 +39,13 @@
   rightmargin=0pt,
 ]{quoting}
 \usepackage{ragged2e}
+\usepackage{relsize} % \smaller \larger (ex: quotes in body and footnotes)
 \usepackage{setspace} % \setstretch for <quote>
 \usepackage{scrextend} % KOMA-common, used for addmargin
-\usepackage{tabularx} % <table>
 \usepackage[explicit]{titlesec} % wear titles, !NO implicit
 \usepackage{tikz} % ornaments
 \usepackage{tocloft} % styling tocs
-\usepackage[fit]{truncate} % used im runing titles
+\usepackage[fit]{truncate} % used in runing titles
 \usepackage{unicode-math}
 \usepackage[normalem]{ulem} % breakable \uline, normalem is absolutely necessary to keep \emph
 \usepackage{xcolor} % named colors
@@ -60,7 +58,9 @@
 }
 
 % Metadata inserted by a program, from the TEI source, for title page and runing heads
+
 %meta%
+
 % Default metas
 \newcommand{\colorprovide}[2]{\@ifundefinedcolor{#1}{\colorlet{#1}{#2}}{}}
 \colorprovide{rubric}{red}
@@ -69,8 +69,6 @@
 \let\eltitle\@title
 \let\elauthor\@author
 \let\eldate\@date
-
-
 
 
 % generic typo commands
@@ -159,6 +157,8 @@
 \newcommand\name[1]{#1}
 \newcommand\orig[1]{#1}
 \newcommand\orgName[1]{#1}
+\newcommand\parnoindent{\noindent} % special para
+\newcommand\pb[1]{{\small\sffamily [#1]}} % special para
 \newcommand\persName[1]{#1}
 \newcommand\placeName[1]{#1}
 \newcommand{\pn}[1]{\IfSubStr{-—–¶}{#1}% <p n="3"/>
@@ -180,7 +180,7 @@
 
 \newcommand{\byline}[1]{\bigskip{\RaggedLeft{#1}\par}\bigskip}
 % \setlength{\RaggedLeftLeftskip}{2em plus \leftskip}
-\newcommand{\bibl}[1]{{\RaggedLeft\normalfont #1\par}}
+\newcommand{\bibl}[1]{{\RaggedLeft\upshape #1\par}}
 \newcommand{\biblitem}[1]{{\noindent\hangindent=\parindent   #1\par}}
 \newcommand{\castItem}[1]{{\noindent\hangindent=\parindent #1\par}}
 \newcommand{\dateline}[1]{\medskip{\RaggedLeft{#1}\par}\bigskip}
@@ -244,45 +244,12 @@
   {}
 
 
-
-
-
-
-% table () is preceded and finished by custom command
-\renewcommand\tabularxcolumn[1]{m{#1}}% for vertical centering text in X column
-\newcommand{\tableopen}[1]{%
-  \ifnum\strcmp{#1}{wide}=0{%
-    \begin{center}
-  }
-  \else\ifnum\strcmp{#1}{long}=0{%
-    \begin{center}
-  }
-  \else{%
-    \begin{center}
-  }
-  \fi\fi
-}
-\newcommand{\tableclose}[1]{%
-  \ifnum\strcmp{#1}{wide}=0{%
-    \end{center}
-  }
-  \else\ifnum\strcmp{#1}{long}=0{%
-    \end{center}
-  }
-  \else{%
-    \end{center}
-  }
-  \fi\fi
-}
-
-
 % text structure
 \newcommand\chapteropen{} % before chapter title
 \newcommand\chaptercont{} % after title, argument, epigraph…
 \newcommand\chapterclose{} % maybe useful for multicol settings
 \setcounter{secnumdepth}{-2} % no counters for hierarchy titles
 \setcounter{tocdepth}{5} % deep toc
-\renewcommand\tableofcontents{\@starttoc{toc}}
 % toclof format
 % \renewcommand{\@tocrmarg}{0.1em} % Useless command?
 % \renewcommand{\@pnumwidth}{0.5em} % {1.75em}
@@ -294,17 +261,17 @@
 }{%
   \renewcommand{\cftchapfont}{}
   \renewcommand{\cftchapdotsep}{\cftdotsep}
-  \renewcommand{\cftchapleader}{\normalfont\cftdotfill{\cftchapdotsep}}
-  \renewcommand{\cftchappagefont}{\bfseries}
+  \renewcommand{\cftchapleader}{\mdseries\cftdotfill{\cftchapdotsep}}
+  \renewcommand{\cftchappagefont}{\mdseries}
   \setlength{\cftbeforechapskip}{0pt}
   \setlength{\cftchapnumwidth}{1em}
 }
-\renewcommand{\cftsecfont}{\normalfont}
-\renewcommand{\cftsecpagefont}{\normalfont}
-% \renewcommand{\cftsubsecfont}{\small\relax}
+\renewcommand{\cftsecfont}{\mdseries}
+\renewcommand{\cftsubsecfont}{}
+\renewcommand{\cftsecpagefont}{\mdseries}
 \renewcommand{\cftsecdotsep}{\cftdotsep}
-\renewcommand{\cftsecpagefont}{\normalfont}
-\renewcommand{\cftsecleader}{\normalfont\cftdotfill{\cftsecdotsep}}
+\renewcommand{\cftsecpagefont}{\mdseries}
+\renewcommand{\cftsecleader}{\mdseries\cftdotfill{\cftsecdotsep}}
 \setlength{\cftsecindent}{1em}
 \setlength{\cftsubsecindent}{2em}
 \setlength{\cftsubsubsecindent}{3em}
@@ -318,7 +285,6 @@
 \renewcommand\footnoterule{\vspace*{0.3cm}\hrule height \arrayrulewidth width 3cm \vspace*{0.3cm}}
 \setlength\footnotesep{1.5\footnotesep} % footnote separator
 \renewcommand\@makefntext[1]{\parindent 1.5em \noindent \hb@xt@1.8em{\hss{\normalfont\@thefnmark . }}#1} % no superscipt in foot
-\patchcmd{\@footnotetext}{\footnotesize}{\footnotesize\sffamily}{}{} % before scrextend, hyperref
 \DeclareNewFootnote{A}[alph] % for editor notes
 \renewcommand*{\thefootnoteA}{\alphalph{\value{footnoteA}}} % z, aa, ab…
 
@@ -344,8 +310,11 @@
 \displaywidowpenalty=1602
 \hyphenpenalty=400
 % report h or v overfull ?
-\hbadness=4000
-\vbadness=4000
+% \hbadness=4000
+% \vbadness=4000
+% https://tex.stackexchange.com/questions/62296/how-to-suppress-underfull-vbox-badness-10000-while-output-is-active
+\def\@textbottom{\vskip \z@ \@plus 1pt}
+\let\@texttop\relax
 % good to avoid lines too wide
 \emergencystretch 3em
 \pretolerance=750
