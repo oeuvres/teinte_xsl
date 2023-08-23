@@ -142,11 +142,12 @@ A light version for XSLT1, with local improvements.
   </xsl:template>
 
   <xsl:template match="tei:body/tei:head">
-    <!-- What should be done with that ? -->
+    <!-- What should be done with th -->
   </xsl:template>
 
   <xsl:template match="
       tei:back/tei:head
+    | tei:body/tei:head
     | tei:div/tei:head
     | tei:div1/tei:head
     | tei:div2/tei:head

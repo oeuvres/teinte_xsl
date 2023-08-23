@@ -26,9 +26,92 @@ A light version for XSLT1, with local improvements.
         <xsl:text>\midrule&#10;</xsl:text>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:choose>
+          <!-- nothing done for merged cells here, see after row content -->
+          <xsl:when test="tei:cell[@cols]"/>
+          <!-- probably bottom labels, top borders -->
+          <xsl:when test="
+            @role = 'label'
+            and preceding-sibling::tei:row[1][not(@role) or @role != 'label']
+            ">
+            <xsl:for-each select="tei:cell">
+              <xsl:if test="normalize-space(.) !=''">
+                <xsl:text>\cmidrule</xsl:text>
+                <xsl:choose>
+                  <xsl:when test="position() = 1">(r)</xsl:when>
+                  <xsl:when test="position() = last()">(l)</xsl:when>
+                  <xsl:otherwise>(rl)</xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>{</xsl:text>
+                <xsl:value-of select="position()"/>
+                <xsl:text>-</xsl:text>
+                <xsl:value-of select="position()"/>
+                <xsl:text>} </xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>&#10;</xsl:text>
+          </xsl:when>
+        </xsl:choose>
         <xsl:apply-templates select="tei:cell"/>
         <!-- for booktabs, all row needs a \\ -->
         <xsl:text> \\&#10;</xsl:text>
+        <xsl:choose>
+          <xsl:when test="tei:cell[@cols]">
+            <xsl:for-each select="tei:cell">
+              <xsl:if test="normalize-space(.) != ''">
+                <xsl:variable name="pos">
+                  <xsl:for-each select="preceding-sibling::tei:cell">
+                    <xsl:text>-</xsl:text>
+                    <xsl:value-of select="substring('--------------------------', 1, number(@cols) - 1)"/>
+                  </xsl:for-each>
+                </xsl:variable>
+                <xsl:variable name="from" select="string-length($pos) + 1"/>
+                <xsl:variable name="to">
+                  <xsl:choose>
+                    <xsl:when test="number(@cols) &gt; 1">
+                      <xsl:value-of select="$from + number(@cols) - 1"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="$from"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
+                  
+                <xsl:text>\cmidrule(rl){</xsl:text>
+                <xsl:value-of select="$from"/>
+                <xsl:text>-</xsl:text>
+                <xsl:value-of select="$to"/>
+                <xsl:text>} </xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>&#10;</xsl:text>
+          </xsl:when>
+          <!-- Head row, or middle row, with label 
+          and not(preceding-sibling::tei:row[not(@role) or @role != 'label'])
+          -->
+          <xsl:when test="
+            @role = 'label' 
+            and following-sibling::tei:row[1][not(@role) or @role != 'label']
+            
+            ">
+            <xsl:for-each select="tei:cell">
+              <xsl:if test="normalize-space(.) !=''">
+                <xsl:text>\cmidrule</xsl:text>
+                <xsl:choose>
+                  <xsl:when test="position() = 1">(r)</xsl:when>
+                  <xsl:when test="position() = last()">(l)</xsl:when>
+                  <xsl:otherwise>(rl)</xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>{</xsl:text>
+                <xsl:value-of select="position()"/>
+                <xsl:text>-</xsl:text>
+                <xsl:value-of select="position()"/>
+                <xsl:text>} </xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>&#10;</xsl:text>
+          </xsl:when>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -47,21 +130,6 @@ A light version for XSLT1, with local improvements.
   
   <xsl:template match="tei:cell">
     <xsl:variable name="rend" select="concat(' ', normalize-space(@rend), ' ')"/>
-    <xsl:variable name="cmd">
-      <xsl:choose>
-        <xsl:when test="floor(@cols) &gt; 0">
-          <xsl:text>\multicolumn{</xsl:text>
-          <xsl:value-of select="floor(@cols)"/>
-          <xsl:text>}</xsl:text>
-        </xsl:when>
-        <xsl:when test="floor(@rows) &gt; 0">
-          <xsl:text>\multirow{</xsl:text>
-          <xsl:value-of select="floor(@rows)"/>
-          <xsl:text>}</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>\multicolumn{1}</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
     <xsl:variable name="length" select="string-length(normalize-space(.))"/>
     <xsl:variable name="isnum" select="string-length(translate(., '0123456789', '')) &lt; $length"/>
     <xsl:variable name="nonumbers" select="translate(., '0123456789', '') = ."/>
@@ -72,66 +140,56 @@ A light version for XSLT1, with local improvements.
           <xsl:apply-templates/>
           <xsl:text>}</xsl:text>
         </xsl:when>
+        <!--
         <xsl:when test="$nonumbers and $length &gt; 4">
           <xsl:text>{\footnotesize </xsl:text>
           <xsl:apply-templates/>
           <xsl:text>}</xsl:text>
         </xsl:when>
+        -->
         <xsl:otherwise>
           <xsl:apply-templates/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="floor(@rows) &gt; 0">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{*}</xsl:text>
+      <xsl:when test="floor(@cols) &gt; 1">
+        <xsl:text>\multicolumn{</xsl:text>
+        <xsl:value-of select="floor(@cols)"/>
+        <xsl:text>}</xsl:text>
+        <xsl:text>{c}</xsl:text>
+        <xsl:text>{</xsl:text>
+        <xsl:copy-of select="$content"/>
+        <xsl:text>}</xsl:text>
+      </xsl:when>
+      <xsl:when test="floor(@rows) &gt; 1">
+        <xsl:text>\multirow{</xsl:text>
+        <xsl:value-of select="floor(@rows)"/>
+        <xsl:text>}</xsl:text>
+        <xsl:text>{c}</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:copy-of select="$content"/>
         <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:when test="contains($rend, ' right ')">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{r}</xsl:text>
-        <xsl:text>{</xsl:text>
+        <xsl:text>\raggedleft\arraybackslash </xsl:text>
         <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:when test="contains($rend, ' center ')">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{c}</xsl:text>
-        <xsl:text>{</xsl:text>
+        <xsl:text>\centering\arraybackslash </xsl:text>
         <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:when test="contains($rend, ' left ')">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{l}</xsl:text>
-        <xsl:text>{</xsl:text>
         <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
       </xsl:when>
-      <!-- center label ? -->
-      <xsl:when test="@role = 'label' and count(../tei:cell[@role = 'label']) &gt; 1">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{c}</xsl:text>
-        <xsl:text>{</xsl:text>
+      <!-- center label -->
+      <xsl:when test="@role = 'label'">
+        <xsl:text>\centering\arraybackslash </xsl:text>
         <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
-      </xsl:when>
-      <xsl:when test="@role = 'label' and position() = 1">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{r}</xsl:text>
-        <xsl:text>{</xsl:text>
-        <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:when test="$isnum != ''">
-        <xsl:value-of select="$cmd"/>
-        <xsl:text>{r}</xsl:text>
-        <xsl:text>{</xsl:text>
+        <xsl:text>\raggedleft\arraybackslash </xsl:text>
         <xsl:copy-of select="$content"/>
-        <xsl:text>}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy-of select="$content"/>
@@ -321,140 +379,39 @@ A light version for XSLT1, with local improvements.
     <xsl:call-template name="tei:makeHyperTarget"/>
     <!-- package float for table position  -->
     <xsl:text>\begin{table}[H]&#10;</xsl:text>
-    <xsl:text>\centering&#10;</xsl:text>
-    <xsl:text>\begin{tabular}</xsl:text>
-    <!-- Find the longest row used as template -->
-    <xsl:text>{</xsl:text>
-    <xsl:for-each select="tei:row">
-      <xsl:sort data-type="number" order="descending" select="count(tei:cell)"/>
-      <xsl:if test="position() = 1">
-        <xsl:for-each select="tei:cell">
-          <xsl:choose>
-            <xsl:when test="contains(@rend, 'right')">r</xsl:when>
-            <xsl:when test="contains(@rend, 'center')">c</xsl:when>
-            <xsl:otherwise>l</xsl:otherwise>
-          </xsl:choose>
+    <xsl:text>\tablestart&#10;</xsl:text>
+    <xsl:text>\begin{tabularx}{1 \linewidth}</xsl:text>
+    <xsl:text>{@{} </xsl:text>
+    <xsl:choose>
+      <!-- colspec in cols attribute -->
+      <xsl:when test="@cols and string(number(@cols)) = 'NaN'">
+        <xsl:value-of select="@cols"/>
+      </xsl:when>
+      <!-- Find the longest row used as template -->
+      <xsl:otherwise>
+        <xsl:for-each select="tei:row">
+          <xsl:sort data-type="number" order="descending" select="count(tei:cell[not(@cols)])"/>
+          <xsl:sort data-type="number" order="ascending" select="count(tei:cell[@role])"/>
+          <xsl:if test="position() = 1">
+            <xsl:for-each select="tei:cell">
+              <xsl:choose>
+                <xsl:when test="true()">X</xsl:when>
+                <xsl:when test="contains(@rend, 'right')">r</xsl:when>
+                <xsl:when test="contains(@rend, 'center')">c</xsl:when>
+                <xsl:otherwise>l</xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
-      </xsl:if>
-    </xsl:for-each>
-    <xsl:text>}&#10;</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text> @{}}&#10;</xsl:text>
     <xsl:text>\toprule&#10;</xsl:text>
     <xsl:apply-templates select="tei:row"/>
     <xsl:text>&#10;\bottomrule&#10;</xsl:text>
-    <xsl:text>\end{tabular}&#10;</xsl:text>
+    <xsl:text>\end{tabularx}&#10;</xsl:text>
+    <xsl:text>\parnotes&#10;</xsl:text>
     <xsl:text>\end{table}&#10;</xsl:text>
   </xsl:template>
   
-
-  
-
-  
-
-  <xsl:template name="makeTable">
-    <xsl:variable name="r">
-      <xsl:value-of select="@rend"/>
-    </xsl:variable>
-    <xsl:text>{</xsl:text>
-    <xsl:if test="contains($r,'rules')">|</xsl:if>
-    <xsl:choose>
-      <xsl:when test="@preamble">
-        <xsl:value-of select="@preamble"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="makePreamble-complex">
-          <xsl:with-param name="r" select="$r"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>}&#10;</xsl:text>
-    <xsl:if test="contains($r,'rules') or tei:head">
-      <xsl:call-template name="tableHline"/>
-    </xsl:if>
-    <xsl:choose>
-      <xsl:when test="tei:head and not(contains(@rend, 'display'))">
-        <xsl:if test="not(ancestor::tei:table)">
-          <xsl:text>\endfirsthead </xsl:text>
-          <xsl:text>\multicolumn{</xsl:text>
-          <xsl:value-of select="count(tei:row[1]/tei:cell)"/>
-          <xsl:text>}{c}{</xsl:text>
-          <xsl:apply-templates mode="ok" select="tei:head"/>
-          <xsl:text>(cont.)}\\\hline \endhead </xsl:text>
-        </xsl:if>
-        <xsl:text>\caption{</xsl:text>
-        <xsl:apply-templates mode="ok" select="tei:head"/>
-        <xsl:text>}\\ </xsl:text>
-      </xsl:when>
-      <xsl:otherwise> </xsl:otherwise>
-    </xsl:choose>
-    <xsl:if test="contains($r,'rules') or tei:row[1][@role='label']">\hline </xsl:if>
-    <xsl:apply-templates/>
-    <xsl:if test="contains($r,'rules')">
-      <xsl:text>\\ \hline </xsl:text>
-    </xsl:if>
-  </xsl:template>
-  <xsl:template name="tableHline">
-    <xsl:choose>
-      <xsl:when test="ancestor::tei:table or contains(@rend,'display')"> \hline </xsl:when>
-      <xsl:otherwise> \hline\endfoot\hline\endlastfoot </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <xsl:template name="makePreamble-complex">
-    <xsl:param name="r"/>
-    <xsl:variable name="valign">
-      <xsl:choose>
-        <xsl:when test="contains($r,'bottomAlign')">B</xsl:when>
-        <xsl:when test="contains($r,'midAlign')">M</xsl:when>
-        <xsl:otherwise>P</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="tds">
-      <xsl:for-each select="tei:row">
-        <xsl:variable name="row">
-          <xsl:for-each select="tei:cell">
-            <xsl:variable name="stuff">
-              <xsl:apply-templates/>
-            </xsl:variable>
-            <cell>
-              <xsl:value-of select="string-length($stuff)"/>
-            </cell>
-            <xsl:if test="@cols">
-              <xsl:variable name="c" select="round(@cols) - 1 "/>
-              <xsl:for-each select="(//*)[position() &lt; $c]">
-                <cell>0</cell>
-              </xsl:for-each>
-            </xsl:if>
-          </xsl:for-each>
-        </xsl:variable>
-        <!-- Careful, may not  -->
-        <xsl:for-each select="$row/cell">
-          <cell col="{position()}">
-            <xsl:value-of select="."/>
-          </cell>
-        </xsl:for-each>
-      </xsl:for-each>
-    </xsl:variable>
-    <xsl:variable name="total">
-      <xsl:value-of select="sum($tds/cell)"/>
-    </xsl:variable>
-    <xsl:for-each select="$tds/cell">
-      <xsl:variable name="c" select="@col"/>
-      <xsl:if test="not(preceding-sibling::cell[$c=@col])">
-        <xsl:variable name="len">
-          <xsl:value-of select="sum(following-sibling::cell[$c=@col]) + current()"/>
-        </xsl:variable>
-        <xsl:value-of select="$valign"/>
-        <xsl:text>{</xsl:text>
-        <xsl:value-of select="($len div $total) * $tableMaxWidth"/>
-        <xsl:text>\textwidth}</xsl:text>
-        <xsl:if test="contains($r,'rules')">|</xsl:if>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:template>
-  <xsl:template name="makePreamble-simple">
-    <xsl:param name="r"/>
-    <xsl:for-each select="tei:row[1]/tei:cell">
-      <xsl:text>l</xsl:text>
-      <xsl:if test="contains($r,'rules')">|</xsl:if>
-    </xsl:for-each>
-  </xsl:template>
 </xsl:transform>

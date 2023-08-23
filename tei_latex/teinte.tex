@@ -11,7 +11,6 @@
 
 \usepackage{alphalph} % for alph couter z, aa, ab…
 \usepackage{blindtext} % generate text for testing
-\usepackage{booktabs, multirow, colortbl} % for tables: \toprule, \midrule…
 \usepackage[strict]{changepage} % for modulo 4
 \usepackage{contour} % rounding words
 \usepackage[nodayofweek]{datetime}
@@ -28,6 +27,7 @@
 \usepackage{manyfoot} % for parallel footnote numerotation
 \usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
+\usepackage[roman]{parnotes} % notes attaches to tables
 \usepackage{pdftexcmds} % needed for tests expressions
 \usepackage{poetry} % <l>, bad for theater
 \usepackage[%
@@ -44,9 +44,11 @@
 \usepackage{scrextend} % KOMA-common, used for addmargin
 \usepackage[explicit]{titlesec} % wear titles, !NO implicit
 \usepackage{tikz} % ornaments
+\usepackage[most]{tcolorbox}
 \usepackage{tocloft} % styling tocs
 \usepackage[fit]{truncate} % used in runing titles
-\usepackage{unicode-math}
+\usepackage{tabularx, booktabs, multirow, colortbl} % for tables
+\usepackage{unicode-math} % math for XeLaTeX or LuaLaTeX
 \usepackage[normalem]{ulem} % breakable \uline, normalem is absolutely necessary to keep \emph
 \usepackage{xcolor} % named colors
 \usepackage{xparse} % @ifundefined
@@ -56,6 +58,13 @@
   Scale=MatchLowercase,
   Ligatures={TeX,Common},
 }
+
+% tabularx 
+\renewcommand\tabularxcolumn[1]{m{#1}} % for vertical centering text in X column
+\setlength{\cmidrulewidth}{0.2pt} 
+% \setlength{\tabcolsep}{3pt} % ?
+\renewcommand{\arraystretch}{1.3} % space between rows
+\newcommand{\tablestart}{\centering\setstretch{0.8}\sffamily}
 
 % Metadata inserted by a program, from the TEI source, for title page and runing heads
 
@@ -158,7 +167,7 @@
 \newcommand\orig[1]{#1}
 \newcommand\orgName[1]{#1}
 \newcommand\parnoindent{\noindent} % special para
-\newcommand\pb[1]{{\small\sffamily [#1]}} % special para
+\newcommand\pb[1]{{\small\sffamily [#1]}} 
 \newcommand\persName[1]{#1}
 \newcommand\placeName[1]{#1}
 \newcommand{\pn}[1]{\IfSubStr{-—–¶}{#1}% <p n="3"/>
@@ -207,6 +216,7 @@
 % environments for block containers
 \newenvironment{argument}{\itshape\parindent0pt}{\bigskip}
 \newenvironment{biblfree}{}{\ifvmode\par\fi }
+% memoir has already bibitemlist
 \newenvironment{bibitemlist}[1]{%
   \list{\@biblabel{\@arabic\c@enumiv}}%
   {%
