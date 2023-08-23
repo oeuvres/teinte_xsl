@@ -361,7 +361,10 @@ Seen
         <xsl:when test="$val1 != ''">
           <xsl:value-of select="$val1"/>
         </xsl:when>
-        <xsl:otherwise>true</xsl:otherwise>
+        <xsl:when test="$val2 = '0' or $val2 ='false' or $val2 = 'off'"/>
+        <xsl:when test="$val2 != ''">
+          <xsl:value-of select="$val2"/>
+        </xsl:when>
       </xsl:choose>
     </xsl:variable>
     <!-- bold, dangerous in titles, to think -->
@@ -374,9 +377,10 @@ Seen
         <xsl:when test="$val1 != ''">
           <xsl:value-of select="$val1"/>
         </xsl:when>
-        <xsl:when test="w:rPr/w:b">true</xsl:when>
         <xsl:when test="$val2 = '0' or $val2 ='false' or $val2 = 'off'"/>
-        <xsl:otherwise/>
+        <xsl:when test="$val2 != ''">
+          <xsl:value-of select="$val2"/>
+        </xsl:when>
       </xsl:choose>
     </xsl:variable>
     
