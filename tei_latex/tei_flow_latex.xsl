@@ -1054,6 +1054,8 @@ for example: abstract.
     <xsl:call-template name="tei:makeHyperTarget"/>
     <xsl:variable name="command">
       <xsl:choose>
+        <xsl:when test="ancestor::tei:table">\parnote{</xsl:when>
+        <xsl:when test="ancestor::tei:table and @resp='editor'">\parnoteA{</xsl:when>
         <xsl:when test="@resp='editor'">\footnoteA{</xsl:when>
         <xsl:otherwise>\footnote{</xsl:otherwise>
       </xsl:choose>
@@ -1127,10 +1129,11 @@ for example: abstract.
       <xsl:apply-templates>
         <xsl:with-param name="message" select="$message"/>
       </xsl:apply-templates>
-      <!-- Especially at the end of a footnote or a quote, \par produce a bad empty line -->
-      <xsl:if test="following-sibling::* or contains($rend, ' center ') or contains($rend, ' right ')">
-        <xsl:text>\par</xsl:text>
-      </xsl:if>
+      <xsl:choose>
+        <!-- Especially at the end of a footnote or a quote (?), \par produce a bad empty line -->
+        <xsl:when test="parent::note and not(following-sibling::*)"/>
+        <xsl:otherwise>\par</xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:choose>
       <!-- empty para used as a spacer -->
@@ -1177,6 +1180,7 @@ for example: abstract.
       <xsl:when test="$pbStyle = 'visible' and $latex_pb!= ''">
         <xsl:value-of select="$latex_pb"/>
         <xsl:text>{</xsl:text>
+        <!--
         <xsl:choose>
           <xsl:when test="@unit">
             <xsl:value-of select="@unit"/>
@@ -1184,6 +1188,7 @@ for example: abstract.
           </xsl:when>
           <xsl:when test="substring(@n, 1, 1) != 'p'">p. </xsl:when>
         </xsl:choose>
+        -->
         <xsl:value-of select="@n"/>
         <xsl:text>}</xsl:text>
       </xsl:when>
@@ -1495,9 +1500,18 @@ for example: abstract.
   </xsl:template>
   
   <xsl:template match="tei:formula">
-    <xsl:text>\[</xsl:text>
-    <xsl:apply-templates/>
-    <xsl:text>\]</xsl:text>
+    <xsl:choose>
+      <xsl:when test="parent::tei:figure">
+        <xsl:text>\[</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>\]</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>$</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>$</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:transform>
