@@ -9,8 +9,8 @@
 \setlength{\parskip}{1pt} % 1pt allow better vertical justification
 \setlength{\parindent}{1.5em}
 
+
 \usepackage{alphalph} % for alph couter z, aa, ab…
-\usepackage{blindtext} % generate text for testing
 \usepackage[strict]{changepage} % for modulo 4
 \usepackage{contour} % rounding words
 \usepackage[nodayofweek]{datetime}
@@ -23,7 +23,6 @@
 \usepackage{footnote} % used to capture notes in minipage (ex: quote)
 \usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
 \usepackage{lettrine} % drop caps
-\usepackage{lipsum} % generate text for testing
 \usepackage{manyfoot} % for parallel footnote numerotation
 \usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
@@ -53,6 +52,12 @@
 \usepackage{xcolor} % named colors
 \usepackage{xparse} % @ifundefined
 
+% do not retry those packages
+% \usepackage{footnotebackref} % seems lost
+\usepackage{blindtext} % generate text for testing
+\usepackage{lipsum} % generate text for testing
+
+
 \defaultfontfeatures{
   % Mapping=tex-text, % no effect seen
   Scale=MatchLowercase,
@@ -70,14 +75,12 @@
 
 %meta%
 
+
 % Default metas
 \newcommand{\colorprovide}[2]{\@ifundefinedcolor{#1}{\colorlet{#1}{#2}}{}}
 \colorprovide{rubric}{red}
 \colorprovide{silver}{lightgray}
 \@ifundefined{syms}{\newfontfamily\syms{DejaVu Sans}}{}
-\let\eltitle\@title
-\let\elauthor\@author
-\let\eldate\@date
 
 
 % generic typo commands
@@ -167,7 +170,7 @@
 \newcommand\orig[1]{#1}
 \newcommand\orgName[1]{#1}
 \newcommand\parnoindent{\noindent} % special para
-\newcommand\pb[1]{{\small\sffamily [#1]}} 
+\newcommand\pb[1]{{\small\sffamily [p. #1]}} 
 \newcommand\persName[1]{#1}
 \newcommand\placeName[1]{#1}
 \newcommand{\pn}[1]{\IfSubStr{-—–¶}{#1}% <p n="3"/>
@@ -276,23 +279,32 @@
   \setlength{\cftbeforechapskip}{0pt}
   \setlength{\cftchapnumwidth}{1em}
 }
+% section
 \renewcommand{\cftsecfont}{\mdseries}
-\renewcommand{\cftsubsecfont}{}
-\renewcommand{\cftsecpagefont}{\mdseries}
 \renewcommand{\cftsecdotsep}{\cftdotsep}
 \renewcommand{\cftsecpagefont}{\mdseries}
 \renewcommand{\cftsecleader}{\mdseries\cftdotfill{\cftsecdotsep}}
 \setlength{\cftsecindent}{1em}
-\setlength{\cftsubsecindent}{2em}
-\setlength{\cftsubsubsecindent}{3em}
 \setlength{\cftsecnumwidth}{1em}
+
+% sub section
+\renewcommand{\cftsubsecfont}{}
+\renewcommand{\cftsubsecpagefont}{}
+\setlength{\cftsubsecindent}{2em}
 \setlength{\cftsubsecnumwidth}{1em}
+
+% sub sub section
+\setlength{\cftsubsubsecindent}{3em}
 \setlength{\cftsubsubsecnumwidth}{1em}
 
 % footnotes
 \newif\ifheading
 \newcommand*{\fnmarkscale}{\ifheading 0.70 \else 1 \fi}
-\renewcommand\footnoterule{\vspace*{0.3cm}\hrule height \arrayrulewidth width 3cm \vspace*{0.3cm}}
+\renewcommand\footnoterule{
+  \vspace*{0.5em}
+  {\color{gray}\hrule height \arrayrulewidth width .2\linewidth} 
+  \vspace*{0.5em}
+}
 \setlength\footnotesep{1.5\footnotesep} % footnote separator
 \renewcommand\@makefntext[1]{\parindent 1.5em \noindent \hb@xt@1.8em{\hss{\normalfont\@thefnmark . }}#1} % no superscipt in foot
 \DeclareNewFootnote{A}[alph] % for editor notes
@@ -332,7 +344,9 @@
 \def\Gin@extensions{.pdf,.png,.jpg,.jpeg,.mps,.tif}
 
 \PassOptionsToPackage{hyphens}{url} % before hyperref and biblatex, which load url package
-\usepackage{hyperref} % supposed to be the last one, :o) except for the ones to follow
+\usepackage[
+  linkbordercolor={0 0 0}, % hyperlink borderscolor
+]{hyperref} % supposed to be the last one, :o) except for the ones to follow
 \hypersetup{
   % pdftex, % no effect
   pdftitle={\elbibl},
