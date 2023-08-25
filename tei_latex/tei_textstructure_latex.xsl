@@ -142,12 +142,11 @@ A light version for XSLT1, with local improvements.
   </xsl:template>
 
   <xsl:template match="tei:body/tei:head">
-    <!-- What should be done with th -->
+    <!-- What should be done with that ? -->
   </xsl:template>
 
   <xsl:template match="
       tei:back/tei:head
-    | tei:body/tei:head
     | tei:div/tei:head
     | tei:div1/tei:head
     | tei:div2/tei:head
@@ -252,7 +251,7 @@ or parent::tei:div[contains(@rend, 'nonumber')]
 \chapter[{toc-title text only}]{title with maybe notes}
 
 [{a title may contain [brackets]}]
-        -->
+-->
         <xsl:text>[{</xsl:text>
         <xsl:variable name="raw">
           <xsl:value-of select="$kicker"/>
