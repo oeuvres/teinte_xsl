@@ -22,6 +22,7 @@
 \usepackage{fontspec} % XeLaTeX mandatory for fonts
 \usepackage{footnote} % used to capture notes in minipage (ex: quote)
 \usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
+\usepackage{lastpage} % p. # of ## 
 \usepackage{lettrine} % drop caps
 \usepackage{manyfoot} % for parallel footnote numerotation
 \usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
@@ -195,7 +196,13 @@
 \newcommand{\bibl}[1]{{\RaggedLeft\upshape #1\par}}
 \newcommand{\biblitem}[1]{{\noindent\hangindent=\parindent   #1\par}}
 \newcommand{\castItem}[1]{{\noindent\hangindent=\parindent #1\par}}
-\newcommand{\dateline}[1]{\medskip{\RaggedLeft{#1}\par}\bigskip}
+\newcommand{\dateline}[1]{
+  \widowpenalty=-5000\nopagebreak[4]
+  \medskip
+  {\RaggedLeft{#1}\par}
+  \pagebreak[0]
+  \bigskip
+}
 \newcommand{\docAuthor}[1]{{\large\bigskip #1 \par\bigskip}}
 \newcommand{\docDate}[1]{#1 \ifvmode\par\fi }
 \newcommand{\docImprint}[1]{\ifvmode\medskip\fi #1 \ifvmode\par\fi }
