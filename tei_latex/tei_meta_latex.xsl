@@ -78,45 +78,52 @@ TEI to LaTeX, metadata for preamble
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="latexAuthor">
-    <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
-      <xsl:for-each select="tei:author|tei:principal">
-        <xsl:choose>
-          <xsl:when test="position() = 1"/>
-          <xsl:when test="position() = last()"> \&amp; </xsl:when>
-          <xsl:otherwise>, </xsl:otherwise>
-        </xsl:choose>
-        <xsl:choose>
-          <xsl:when test="normalize-space(.) != ''">
-            <xsl:variable name="txt">
-              <xsl:apply-templates mode="meta"/>
-            </xsl:variable>
-            <xsl:value-of select="normalize-space($txt)"/>
-          </xsl:when>
-          <xsl:when test="contains(@key, '(')">
-            <xsl:value-of select="normalize-space(substring-before(@key, '('))"/>
-          </xsl:when>
-          <xsl:when test="contains(@key, ',')">
-            <xsl:value-of select="normalize-space(substring-before(@key, ','))"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="normalize-space(@key)"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
+  <xsl:template name="authors">
+    <xsl:param name="short"/>
+    <xsl:choose>
+      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic">
+        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]">
+          <xsl:call-template name="_authors">
+            <xsl:with-param name="short" select="$short"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr">
+        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]">
+          <xsl:call-template name="_authors">
+            <xsl:with-param name="short" select="$short"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
+          <xsl:call-template name="_authors">
+            <xsl:with-param name="short" select="$short"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="_authors">
+    <xsl:param name="short"/>
+    <xsl:for-each select="tei:author|tei:principal">
+      <xsl:choose>
+        <xsl:when test="position() = 1"/>
+        <xsl:when test="position() = last()"> \&amp; </xsl:when>
+        <xsl:otherwise>, </xsl:otherwise>
+      </xsl:choose>
+      <xsl:choose>
+        <xsl:when test="position() &lt; 4">
+          <xsl:apply-templates select="." mode="meta">
+            <xsl:with-param name="short" select="$short"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:when test="position() = last()">\emph{al.}</xsl:when>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template name="latexAuthorshort">
-    <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
-      <xsl:for-each select="(tei:author|tei:principal)[1]">
-        <xsl:apply-templates select="." mode="meta">
-          <xsl:with-param name="short" select="true()"/>
-        </xsl:apply-templates>
-        <xsl:if test="count(tei:author|tei:principal) &gt; 2">\emph{&amp; al.}</xsl:if>
-      </xsl:for-each>
-    </xsl:for-each>
-  </xsl:template>
   
 
   <xsl:template name="meta">
@@ -126,22 +133,33 @@ TEI to LaTeX, metadata for preamble
     <xsl:text>\title{</xsl:text>
     <xsl:value-of select="$latexTitle"/>
     <xsl:text>}&#10;</xsl:text>
+    <xsl:text>\def\eltitle{</xsl:text>
+    <xsl:value-of select="$latexTitle"/>
+    <xsl:text>}&#10;</xsl:text>
     <xsl:variable name="latexDate">
       <xsl:call-template name="latexDate"/>
     </xsl:variable>
     <xsl:text>\date{</xsl:text>
     <xsl:value-of select="$latexDate"/>
     <xsl:text>}&#10;</xsl:text>
+    <xsl:text>\def\eldate{</xsl:text>
+    <xsl:value-of select="$latexDate"/>
+    <xsl:text>}&#10;</xsl:text>
     <xsl:variable name="latexAuthor">
-      <xsl:call-template name="latexAuthor"/>
+      <xsl:call-template name="authors"/>
     </xsl:variable>
     <xsl:text>\author{</xsl:text>
+    <xsl:value-of select="$latexAuthor"/>
+    <xsl:text>}&#10;</xsl:text>
+    <xsl:text>\def\elauthor{</xsl:text>
     <xsl:value-of select="$latexAuthor"/>
     <xsl:text>}&#10;</xsl:text>
     
     <!-- Short title for runing head -->
     <xsl:text>\def\elauthorshort{</xsl:text>
-    <xsl:call-template name="latexAuthorshort"/>
+    <xsl:call-template name="authors">
+      <xsl:with-param name="short" select="true()"/>
+    </xsl:call-template>
     <xsl:text>}&#10;</xsl:text>
     <xsl:text>\def\elbibl{</xsl:text>
     <xsl:if test="$latexAuthor != ''">
@@ -193,30 +211,6 @@ TEI to LaTeX, metadata for preamble
     
   </xsl:template>
   
-  <xsl:template name="titlePage">
-    <xsl:text>{\centering\parindent0pt&#10;</xsl:text>
-    <xsl:variable name="author">
-      <xsl:call-template name="latexAuthor"/>
-    </xsl:variable>
-    <xsl:if test="$author != ''">
-      <xsl:text>  {\LARGE\addfontfeature{LetterSpace=25}\bfseries </xsl:text>
-      <xsl:value-of select="$author"/>
-      <xsl:text>\par}\bigskip&#10;</xsl:text>
-    </xsl:if>
-    <xsl:variable name="date">
-      <xsl:call-template name="latexDate"/>
-    </xsl:variable>
-    <xsl:if test="$date != ''">
-      <xsl:text>  {\Large </xsl:text>
-      <xsl:value-of select="$date"/>
-      <xsl:text>\par}\bigskip&#10;</xsl:text>
-    </xsl:if>
-    <xsl:text>  {\LARGE&#10;</xsl:text>
-    <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
-    <xsl:text>&#10;  }&#10;</xsl:text>
-    <xsl:text>}&#10;</xsl:text>
-  </xsl:template>
-  
   <!-- no notes in a title page -->
   <xsl:template match="tei:fileDesc/tei:titleStmt/tei:title/tei:note"/>
   
@@ -257,12 +251,12 @@ TEI to LaTeX, metadata for preamble
   <xsl:template match="tei:author | tei:principal" mode="meta">
     <xsl:param name="short"/>
     <xsl:choose>
+      <xsl:when test="$short and tei:surname">
+        <xsl:apply-templates select="tei:surname" mode="meta"/>
+      </xsl:when>
       <xsl:when test="$short and @key">
         <xsl:variable name="key" select="normalize-space(substring-before(concat(@key, '('), '('))"/>
         <xsl:value-of select="substring-before(concat($key, ','), ',')"/>
-      </xsl:when>
-      <xsl:when test="$short and tei:surname">
-        <xsl:apply-templates select="tei:surname" mode="meta"/>
       </xsl:when>
       <xsl:when test="normalize-space(.) != ''">
         <xsl:variable name="txt">
