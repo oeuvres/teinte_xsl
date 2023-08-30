@@ -16,10 +16,7 @@ A light version for XSLT1, with local improvements.
 2021, frederic.glorieux@fictif.org
   -->
   <xsl:template match="tei:anchor">
-    <!--
     <xsl:call-template name="tei:makeHyperTarget"/>
-    -->
-    <xsl:message>TOD BUG</xsl:message>
   </xsl:template>
   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
     <desc>[latex] <param name="where">where</param> </desc>

@@ -16,7 +16,7 @@ for example: abstract.
   <xsl:import href="../tei_common.xsl"/>
   <xsl:import href="tei_common.xsl"/>
   <xsl:import href="tei_common_latex.xsl"/>
-  <xsl:param name="latex_parnoindent">\parnoindent </xsl:param>
+  <xsl:param name="latex_parnoindent"/>
   <xsl:param name="quoteEnv">quoteblock</xsl:param>
   <xsl:param name="pbStyle">visible</xsl:param>
   <xsl:param name="latex_pb">\pb</xsl:param>
@@ -1286,7 +1286,6 @@ for example: abstract.
       <!-- Block or multi block -->
       <xsl:otherwise>
         <xsl:call-template name="tei:makeHyperTarget"/>
-        <xsl:if test="$prevblock and local-name($prevblock) != 'quote'">\quoteskip</xsl:if>
         <xsl:text>\begin{quoteblock}&#10;</xsl:text>
         <xsl:if test="not(tei:p|tei:list)">\noindent </xsl:if>
         <xsl:apply-templates>
@@ -1294,7 +1293,6 @@ for example: abstract.
         </xsl:apply-templates>
         <xsl:if test="not(tei:p|tei:l|tei:list)">&#10;</xsl:if>
         <xsl:text>\end{quoteblock}</xsl:text>
-        <xsl:if test="$nextblock">\quoteskip</xsl:if>
         <xsl:text>&#10;</xsl:text>
       </xsl:otherwise>
     </xsl:choose>

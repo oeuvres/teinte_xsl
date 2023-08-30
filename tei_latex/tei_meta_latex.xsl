@@ -26,21 +26,25 @@ TEI to LaTeX, metadata for preamble
         <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]/tei:title[1]/node()" mode="meta"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title">
-          <xsl:choose>
-            <xsl:when test="not(@type) or @type='main'"><xsl:apply-templates mode="meta"/></xsl:when>
-            <xsl:when test="@type='sub'">\emph{<xsl:apply-templates mode="meta"/>}</xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates mode="meta"/>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="following-sibling::tei:title">
-            <xsl:text>\par&#10;</xsl:text>
-          </xsl:if>
-          <xsl:if test="position() != last()">\medskip&#10;</xsl:if>
-        </xsl:for-each>
+        <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[1]" mode="meta"/>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="titlefull">
+    <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title">
+      <xsl:choose>
+        <xsl:when test="not(@type) or @type='main'"><xsl:apply-templates mode="meta"/></xsl:when>
+        <xsl:when test="@type='sub'">\emph{<xsl:apply-templates mode="meta"/>}</xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="meta"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="following-sibling::tei:title">
+        <xsl:text>\par&#10;</xsl:text>
+      </xsl:if>
+      <xsl:if test="position() != last()">\medskip&#10;</xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template name="latexDate">
@@ -135,6 +139,9 @@ TEI to LaTeX, metadata for preamble
     <xsl:text>}&#10;</xsl:text>
     <xsl:text>\def\eltitle{</xsl:text>
     <xsl:value-of select="$latexTitle"/>
+    <xsl:text>}&#10;</xsl:text>
+    <xsl:text>\def\eltitlefull{</xsl:text>
+    <xsl:call-template name="titlefull"/>
     <xsl:text>}&#10;</xsl:text>
     <xsl:variable name="latexDate">
       <xsl:call-template name="latexDate"/>

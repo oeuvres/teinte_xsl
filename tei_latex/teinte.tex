@@ -6,11 +6,11 @@
 
 \makeatletter % <@@@
 
-\setlength{\parskip}{1pt} % 1pt allow better vertical justification
 \setlength{\parindent}{1.5em}
 
-
+\usepackage{adjustbox} % powerful 
 \usepackage{alphalph} % for alph couter z, aa, ab…
+\usepackage{booktabs} % better table border
 \usepackage[strict]{changepage} % for modulo 4
 \usepackage{contour} % rounding words
 \usepackage[nodayofweek]{datetime}
@@ -20,18 +20,19 @@
 \usepackage{fancyhdr} % control runing heads
 \usepackage{float} % supposed a better positionning of tables
 \usepackage{fontspec} % XeLaTeX mandatory for fonts
-\usepackage{footnote} % used to capture notes in minipage (ex: quote)
+\usepackage{footnotehyper} % \savenotes \spewnotes
 \usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
 \usepackage{lastpage} % p. # of ## 
 \usepackage{lettrine} % drop caps
 \usepackage{manyfoot} % for parallel footnote numerotation
 \usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
+\usepackage{multirow} % table, for colspan and rowspan 
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
 \usepackage[roman]{parnotes} % notes attaches to tables
 \usepackage{pdftexcmds} % needed for tests expressions
 \usepackage{poetry} % <l>, bad for theater
 \usepackage[%
-  indentfirst=false,
+  indentfirst=true,
   vskip=1em,
   noorphanfirst=true,
   noorphanafter=true,
@@ -42,19 +43,21 @@
 \usepackage{relsize} % \smaller \larger (ex: quotes in body and footnotes)
 \usepackage{setspace} % \setstretch for <quote>
 \usepackage{scrextend} % KOMA-common, used for addmargin
-\usepackage[explicit]{titlesec} % wear titles, !NO implicit
+\usepackage{tabularx, colortbl} % for tables
 \usepackage{tikz} % ornaments
+\usetikzlibrary{tikzmark} % to point tikzmarknode
 \usepackage[most]{tcolorbox}
+\usepackage[explicit]{titlesec} % wear titles, !NO implicit
 \usepackage{tocloft} % styling tocs
 \usepackage[fit]{truncate} % used in runing titles
-\usepackage{tabularx, booktabs, multirow, colortbl} % for tables
 \usepackage{unicode-math} % math for XeLaTeX or LuaLaTeX
 \usepackage[normalem]{ulem} % breakable \uline, normalem is absolutely necessary to keep \emph
 \usepackage{xcolor} % named colors
+\usepackage[dvipsnames]{xcolor} % colors
 \usepackage{xparse} % @ifundefined
+\usepackage{xstring} % needed for tests, ex \pn
 
-% do not retry those packages
-% \usepackage{footnotebackref} % seems lost
+% for testing, not production
 \usepackage{blindtext} % generate text for testing
 \usepackage{lipsum} % generate text for testing
 
@@ -250,15 +253,23 @@
 \newenvironment{docTitle}{\LARGE\bigskip\bfseries\onehalfspacing}{\bigskip}
 % leftskip makes big bugs in Lexmark printing \sffamily
 \newenvironment{epigraph}{\begin{addmargin}[2\parindent]{0em}\sffamily\large\setstretch{0.95}}{\end{addmargin}\bigskip}
+
+% tcolorbox is bad for footnotes in quotes
+\definecolor{bordercolor}{HTML}{CCCCCC}
+
 \newenvironment{quoteblock}
-  {\begin{quoting}\setstretch{0.9}} %
-  {\end{quoting}}
+  {
+    \medskip
+    \sffamily
+  }
+  {
+    \medskip
+  }
+
 \newenvironment{frametext}
   {\begin{mdframed}[default]} %
   {\end{mdframed}}
 
-\quotingsetup{vskip=0pt}
-\newcommand{\quoteskip}{\medskip}
 \newenvironment{titlePage}
   {\Centering}
   {}
@@ -306,14 +317,14 @@
 
 % footnotes
 \newif\ifheading
-\newcommand*{\fnmarkscale}{\ifheading 0.70 \else 1 \fi}
+% \newcommand*{\fnmarkscale}{\ifheading 0.70 \else 1 \fi}
 \renewcommand\footnoterule{
   \vspace*{0.5em}
   {\color{gray}\hrule height \arrayrulewidth width .2\linewidth} 
   \vspace*{0.5em}
 }
 \setlength\footnotesep{1.5\footnotesep} % footnote separator
-\renewcommand\@makefntext[1]{\parindent 1.5em \noindent \hb@xt@1.8em{\hss{\normalfont\@thefnmark . }}#1} % no superscipt in foot
+\DeclareNewFootnote{N}[arabic]
 \DeclareNewFootnote{A}[alph] % for editor notes
 \renewcommand*{\thefootnoteA}{\alphalph{\value{footnoteA}}} % z, aa, ab…
 
@@ -373,7 +384,6 @@
   % linktocpage=true, % NO, toc, link only on page no
 }
 \urlstyle{same} % after hyperref
-
 
 
 \makeatother % /@@@>
