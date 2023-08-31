@@ -169,8 +169,13 @@ TEI to LaTeX, metadata for preamble
     </xsl:call-template>
     <xsl:text>}&#10;</xsl:text>
     <xsl:text>\def\elbibl{</xsl:text>
-    <xsl:if test="$latexAuthor != ''">
-      <xsl:value-of select="$latexAuthor"/>
+    <xsl:variable name="auths">
+      <xsl:call-template name="authors">
+        <xsl:with-param name="short" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="$auths != ''">
+      <xsl:value-of select="$auths"/>
       <xsl:text> </xsl:text>
     </xsl:if>
     <xsl:if test="$latexDate != ''">
@@ -179,7 +184,7 @@ TEI to LaTeX, metadata for preamble
       <xsl:text>) </xsl:text>
     </xsl:if>
     <xsl:text>\emph{</xsl:text>
-    <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[not(@type) or @type='main'][1]/node()" mode="meta"/>
+    <xsl:value-of select="$latexTitle"/>
     <xsl:text>}</xsl:text>
     <xsl:text>}&#10;</xsl:text>
 
