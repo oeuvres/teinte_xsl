@@ -19,13 +19,14 @@
 \usepackage{fancyvrb}
 \usepackage{fancyhdr} % control runing heads
 \usepackage{float} % supposed a better positionning of tables
+\usepackage[stable]{footmisc} % maybe perpage footnote counter
 \usepackage{fontspec} % XeLaTeX mandatory for fonts
 \usepackage{footnotehyper} % \savenotes \spewnotes
 \usepackage{graphicx} % needed for LuaLaTex to transmit a5paper
 \usepackage{lastpage} % p. # of ## 
 \usepackage{lettrine} % drop caps
 \usepackage{manyfoot} % for parallel footnote numerotation
-\usepackage[framemethod=tikz,]{mdframed} % maybe used for frame with footnotes inside
+\usepackage[framemethod=tikz,]{mdframed} % maybe used for frame, but with footnotes inside
 \usepackage{multirow} % table, for colspan and rowspan 
 \usepackage[defaultlines=2,all]{nowidow} % at least 2 lines by par (works well!)
 \usepackage[roman]{parnotes} % notes attaches to tables
@@ -53,7 +54,6 @@
 \usepackage{unicode-math} % math for XeLaTeX or LuaLaTeX
 \usepackage[normalem]{ulem} % breakable \uline, normalem is absolutely necessary to keep \emph
 \usepackage{xcolor} % named colors
-\usepackage[dvipsnames]{xcolor} % colors
 \usepackage{xparse} % @ifundefined
 \usepackage{xstring} % needed for tests, ex \pn
 
@@ -174,7 +174,7 @@
 \newcommand\orig[1]{#1}
 \newcommand\orgName[1]{#1}
 \newcommand\parnoindent{\noindent} % special para
-\newcommand\pb[1]{{\small\sffamily [p. #1]}} 
+\newcommand\pb[1]{{\small\sffamily\normalfont [p. #1]}} 
 \newcommand\persName[1]{#1}
 \newcommand\placeName[1]{#1}
 \newcommand{\pn}[1]{\IfSubStr{-—–¶}{#1}% <p n="3"/>
@@ -276,11 +276,10 @@
 
 
 % text structure
-\newcommand\chapteropen{} % before chapter title
-\newcommand\chaptercont{} % after title, argument, epigraph…
-\newcommand\chapterclose{} % maybe useful for multicol settings
+\newenvironment{chapterhead}{}{} % a container for chapter headings and more
 \setcounter{secnumdepth}{-2} % no counters for hierarchy titles
 \setcounter{tocdepth}{5} % deep toc
+\def\chaptermark#1{\markboth{#1}{}} % no upper case for running header
 % toclof format
 % \renewcommand{\@tocrmarg}{0.1em} % Useless command?
 % \renewcommand{\@pnumwidth}{0.5em} % {1.75em}
@@ -385,6 +384,14 @@
 }
 \urlstyle{same} % after hyperref
 
+% uppercase fallback if small caps not available in font
+% https://tex.stackexchange.com/questions/233569
+\newcommand\detectsc{%
+  \setbox0=\hbox{\textsc{i}}%
+  \setbox2=\hbox{\textup{i}}%
+  % \let\textsc\svtextsc%
+  \ifdim\wd0=\wd2\ifdim\ht0=\ht2\let\textsc\uppercase\fi\fi
+}
 
 \makeatother % /@@@>
 %%%%%%%%%%%%%%

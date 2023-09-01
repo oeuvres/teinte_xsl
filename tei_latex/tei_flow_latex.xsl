@@ -16,7 +16,7 @@ for example: abstract.
   <xsl:import href="../tei_common.xsl"/>
   <xsl:import href="tei_common.xsl"/>
   <xsl:import href="tei_common_latex.xsl"/>
-  <xsl:param name="latex_parnoindent"/>
+  <xsl:param name="latex_parnoindent">{\parnoindent}</xsl:param>
   <xsl:param name="quoteEnv">quoteblock</xsl:param>
   <xsl:param name="pbStyle">visible</xsl:param>
   <xsl:param name="latex_pb">\pb</xsl:param>
@@ -303,21 +303,19 @@ for example: abstract.
   
   
   <xsl:template match="tei:hi">
-    <xsl:param name="message"/>
     <xsl:call-template name="rendering">
-      <xsl:with-param name="message" select="$message"/>
+      <xsl:with-param name="cont">
+        <xsl:apply-templates/>
+      </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
   
   <xsl:template name="rendering">
-    <xsl:param name="message"/>
+    <xsl:param name="cont">
+      <xsl:apply-templates/>
+    </xsl:param>
     <xsl:param name="rend">
       <xsl:value-of select="@rend"/>
-    </xsl:param>
-    <xsl:param name="cont">
-      <xsl:apply-templates>
-        <xsl:with-param name="message" select="$message"/>
-      </xsl:apply-templates>
     </xsl:param>
     <xsl:variable name="zerend" select="concat(' ', normalize-space($rend), ' ')"/>
     <xsl:variable name="decls">
@@ -352,6 +350,8 @@ for example: abstract.
       <xsl:if test="contains($zerend, ' gothic ')">\textgothic{</xsl:if>
       <xsl:if test="contains($zerend, ' noindex ')">\textrm{</xsl:if>
       <xsl:if test="contains($zerend, ' plain ')">\textrm{</xsl:if>
+      <xsl:if test="contains($zerend, ' sc ')">\textsc{</xsl:if>
+      <xsl:if test="contains($zerend, ' small-caps ')">\textsc{</xsl:if>
       <xsl:if test="contains($zerend, ' strong ')">\textbf{</xsl:if>
       <xsl:if test="contains($zerend, ' sub ')">\textsubscript{</xsl:if>
       <xsl:if test="contains($zerend, ' subscript ')">\textsubscript{</xsl:if>
@@ -978,16 +978,6 @@ for example: abstract.
     </xsl:choose>
   </xsl:template>
   
-  <!-- Note problems in <head> -->
-  <xsl:template match="tei:head//tei:note">
-    <xsl:param name="message"/>
-    <xsl:choose>
-      <xsl:when test="contains($message, 'nonote')"/>
-      <xsl:otherwise>
-        <xsl:text>\protect\footnotemark </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
   
   <xsl:template name="marginalNote">
     <xsl:param name="message"/>
@@ -1053,6 +1043,7 @@ for example: abstract.
     <xsl:param name="message"/>
     <xsl:call-template name="tei:makeHyperTarget"/>
     <xsl:variable name="command">
+      <xsl:if test="ancestor-or-self::tei:head">\protect</xsl:if>
       <xsl:choose>
         <xsl:when test="ancestor::tei:table">\parnote{</xsl:when>
         <xsl:when test="ancestor::tei:table and @resp='editor'">\parnoteA{</xsl:when>
