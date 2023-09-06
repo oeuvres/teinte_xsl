@@ -149,8 +149,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="listcontents" element="item" parent="dl"/>
   <style level="p" name="lg" element="l" parent="lg" doc="true"/>
   <style level="p" name="note" element="p" parent="notep"/>
-  <style level="p" name="obs" element="p" attribute="rend" value="observation"/>
-  <style level="p" name="observation" element="p" attribute="rend" value="observation"/>
+  <style level="p" name="obs" element="p" parent="quote" rend="keep"/>
+  <style level="p" name="observation" element="p" parent="quote" rend="keep"/>
   <style level="p" name="opener" element="opener" doc="true"/>
   <style level="p" name="p" element="p" rend="keep" doc="true"/>
   <style level="p" name="pb" element="pb" doc="true"/>
