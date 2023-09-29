@@ -19,11 +19,11 @@ TEI to LaTeX, metadata for preamble
   
   <xsl:template name="latexTitle">
     <xsl:choose>
-      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic/tei:title">
-        <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]/tei:title[1]/node()" mode="meta"/>
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic/tei:title">
+        <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]/tei:title[1]/node()" mode="meta"/>
       </xsl:when>
-      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title">
-        <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]/tei:title[1]/node()" mode="meta"/>
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title">
+        <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]/tei:title[1]/node()" mode="meta"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[1]" mode="meta"/>
@@ -85,22 +85,22 @@ TEI to LaTeX, metadata for preamble
   <xsl:template name="authors">
     <xsl:param name="short"/>
     <xsl:choose>
-      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic">
-        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]">
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic">
+        <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:analytic[1]">
           <xsl:call-template name="_authors">
             <xsl:with-param name="short" select="$short"/>
           </xsl:call-template>
         </xsl:for-each>
       </xsl:when>
-      <xsl:when test="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr">
-        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]">
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr">
+        <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct[1]/tei:monogr[1]">
           <xsl:call-template name="_authors">
             <xsl:with-param name="short" select="$short"/>
           </xsl:call-template>
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
+        <xsl:for-each select="/*/tei:teiHeader/tei:fileDesc/tei:titleStmt[1]">
           <xsl:call-template name="_authors">
             <xsl:with-param name="short" select="$short"/>
           </xsl:call-template>
