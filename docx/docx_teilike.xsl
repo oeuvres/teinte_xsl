@@ -95,8 +95,17 @@
     <xsl:variable name="_rend">
       <xsl:if test="number(w:pPr/w:ind/@w:hanging) &gt; 150"> hanging </xsl:if>
       <xsl:if test="number(w:pPr/w:ind/@w:firstLine) &gt; 150"> indent </xsl:if>
-      <xsl:text> </xsl:text>
-      <xsl:value-of select="w:pPr/w:jc/@w:val"/>
+      <xsl:variable name="jc" select="normalize-space(w:pPr/w:jc/@w:val)"/>
+      <xsl:choose>
+        <xsl:when test="$jc = ''"/>
+        <xsl:when test="$jc = 'both'"/>
+        <xsl:when test="$jc = 'left'"/>
+        <xsl:when test="$jc = 'right'"> right</xsl:when>
+        <xsl:otherwise>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="$jc"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:variable name="rend" select="normalize-space($_rend)"/>
     <xsl:choose>
@@ -365,6 +374,8 @@ Seen
         <xsl:when test="$val2 != ''">
           <xsl:value-of select="$val2"/>
         </xsl:when>
+        <!-- silent presence -->
+        <xsl:when test="w:rPr/w:i">i</xsl:when>
       </xsl:choose>
     </xsl:variable>
     <!-- bold, dangerous in titles, to think -->
@@ -381,6 +392,8 @@ Seen
         <xsl:when test="$val2 != ''">
           <xsl:value-of select="$val2"/>
         </xsl:when>
+        <!-- silent presence -->
+        <xsl:when test="w:rPr/w:b">b</xsl:when>
       </xsl:choose>
     </xsl:variable>
     

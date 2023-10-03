@@ -130,6 +130,10 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
   </xsl:template>
   <!-- Strip meta -->
   <xsl:template match="/*/tei:index"/>
+  <!-- Strip bold in label -->
+  <xsl:template match="tei:label//tei:b">
+    <xsl:apply-templates/>
+  </xsl:template>
   <!-- typo inlines -->
   <xsl:template match="tei:b | tei:strong | tei:sup | tei:sc | tei:u">
     <hi>
