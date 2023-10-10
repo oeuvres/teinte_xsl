@@ -308,7 +308,12 @@ or parent::tei:div[contains(@rend, 'nonumber')]
       <xsl:when test="parent::tei:group">
         <xsl:apply-templates/>
       </xsl:when>
-      <xsl:otherwise>\hrule \begin{quote} \begin{small} <xsl:apply-templates mode="innertext"/> \end{small} \end{quote} \hrule \par&#10;</xsl:otherwise>
+      <xsl:when test="true()">
+        <xsl:apply-templates/>
+      </xsl:when>
+      <!-- What that for? -->
+      <xsl:otherwise>
+        \hrule \begin{quote} \begin{small} <xsl:apply-templates mode="innertext"/> \end{small} \end{quote} \hrule \par&#10;</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 

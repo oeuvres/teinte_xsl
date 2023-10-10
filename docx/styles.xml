@@ -44,6 +44,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="corpsdetexte2"/>
   <style level="0" name="corpsdetexte3"/>
   <style level="0" name="defaultparagraphfont"/>
+  <style level="0" name="footnotereference"/>
   <style level="0" name="normal"/>
   <style level="0" name="normal1"/>
   <style level="0" name="notedebasdepage"/>
@@ -120,6 +121,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="endnote" element="note"/>
   <style level="p" name="entry" element="entry" doc="true"/>
   <style level="p" name="espce" element="label" attribute="type" value="species"/>
+  <style level="p" name="espece" element="label" attribute="type" value="species"/>
   <style level="p" name="exemple" element="quote" parent="entryFree"/>
   <style level="p" name="figure" element="figure"/>
   <style level="p" name="footnote" element="p"/><!-- in odt, used inside notes -->
