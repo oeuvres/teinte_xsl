@@ -738,8 +738,18 @@ Sections
       </xsl:choose>
     </li>
   </xsl:template>
+  <!-- label in list, let CSS work for numbering -->
+  <xsl:template match="tei:list/tei:label">
+    <xsl:param name="from"/>
+    <li>
+      <xsl:call-template name="atts"/>
+      <xsl:apply-templates>
+        <xsl:with-param name="from" select="$from"/>
+      </xsl:apply-templates>
+    </li>
+  </xsl:template>
   <!-- term list -->
-  <xsl:template match="tei:list[@type='gloss' or tei:label]">
+  <xsl:template match="tei:list[@type='gloss']">
     <xsl:param name="from"/>
     <xsl:choose>
       <!-- liste titrée à mettre dans un conteneur-->
@@ -768,7 +778,7 @@ Sections
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <xsl:template match="tei:list[@type='gloss' or tei:label]/tei:label">
+  <xsl:template match="tei:list[@type='gloss']/tei:label">
     <xsl:param name="from"/>
     <dt>
       <xsl:call-template name="atts"/>
@@ -777,7 +787,7 @@ Sections
       </xsl:apply-templates>
     </dt>
   </xsl:template>
-  <xsl:template match="tei:list[@type='gloss' or tei:label]/tei:item">
+  <xsl:template match="tei:list[@type='gloss']/tei:item">
     <xsl:param name="from"/>
     <dd>
       <xsl:call-template name="atts"/>
