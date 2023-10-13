@@ -1618,7 +1618,7 @@ Tables
     <xsl:variable name="id">
       <xsl:call-template name="id"/>
     </xsl:variable>
-    <img alt="{normalize-space(.)}" id="{$id}" src="{$images}{@url}">
+    <img alt="{normalize-space(.)}" id="{$id}" src="{$images}{@url}" width="25%">
       <xsl:if test="@style|@scale">
         <xsl:variable name="style">
           <xsl:if test="@scale &gt; 0 and @scale &lt; 1">

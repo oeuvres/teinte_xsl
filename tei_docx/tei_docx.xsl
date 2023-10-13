@@ -309,6 +309,7 @@
         <w:pStyle w:val="{$style}"/>
       </w:pPr>
       <xsl:call-template name="anchor"/>
+      <!-- hide @n ?
       <xsl:if test="parent::*/@n">
         <w:r>
           <w:rPr>
@@ -321,6 +322,7 @@
           </w:t>
         </w:r>
       </xsl:if>
+      -->
       <xsl:for-each select="preceding-sibling::tei:head[@type='kicker']">
         <xsl:call-template name="char"/>
         <w:r>
