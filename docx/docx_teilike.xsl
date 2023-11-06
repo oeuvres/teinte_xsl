@@ -20,6 +20,7 @@
   exclude-result-prefixes="a mc pic pkg r rels teinte o v w wp wps"
   >
   <xsl:output encoding="UTF-8" indent="no" omit-xml-declaration="yes"/>
+  <xsl:param name="file"/>
   <xsl:variable name="idfrom" >ABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊÏÎÔÖÛÜÇàâäéèêëïîöôüûÆŒ</xsl:variable>
   <xsl:variable name="idto"   >abcdefghijklmnopqrstuvwxyzaaaeeeiioouucaaaeeeeiioouuee</xsl:variable>
   <xsl:variable name="idchars">abcdefghijklmnopqrstuvwxyz0123456789</xsl:variable>
@@ -283,6 +284,11 @@
           <graphic>
             <xsl:apply-templates select="wp:*/wp:extent"/>
             <xsl:attribute name="url">
+              <xsl:if test="$file != ''">
+                <xsl:text>zip://</xsl:text>
+                <xsl:value-of select="$file"/>
+                <xsl:text>#</xsl:text>
+              </xsl:if>
               <xsl:call-template name="target">
                 <xsl:with-param name="id" select="v:shape/v:imagedata/@r:id"/>
               </xsl:call-template>
@@ -293,6 +299,11 @@
           <graphic>
             <xsl:apply-templates select="wp:*/wp:extent"/>
             <xsl:attribute name="url">
+              <xsl:if test="$file != ''">
+                <xsl:text>zip://</xsl:text>
+                <xsl:value-of select="$file"/>
+                <xsl:text>#</xsl:text>
+              </xsl:if>
               <xsl:call-template name="target">
                 <xsl:with-param name="id" select="wp:*/a:graphic/a:graphicData/pic:pic/pic:blipFill/a:blip/@r:embed"/>
               </xsl:call-template>
