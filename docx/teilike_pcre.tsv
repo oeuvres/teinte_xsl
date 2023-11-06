@@ -9,6 +9,7 @@ search	replace	?comment
 		
 # variables ends with the first replacement rule
 
+(http|xmlns):	$1£
 &lt;	‹	
 &gt;	›	
 &amp;	＆	special unicode amp
@@ -41,5 +42,16 @@ search	replace	?comment
 \s+([;:?!])	 \1	unbreakable space before caesura resolution
 [——\-]\s*(<lb($atts)/>)\s*([^ <>]+) *	\3\n\1	caesura, /\s/u will match nbsp
 (\s*)(<lb($atts)/>)(</($inline)>)([^ \p{L}<>]*) *	\4\6\1\2	<lb/></hi>.
-		
+
+—-	—
+‹[\-–—]	←
+[\-–—]›	→
+\.\.\.	…
+ ([»?!:;])	 $1
+([«–—§]) 	$1 
+'	’
+
+(http|xmlns)£	$1:
+‹	&lt;
+›	&gt;
 ＆	&amp;	restore entities
