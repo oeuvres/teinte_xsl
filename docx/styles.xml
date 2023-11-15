@@ -38,8 +38,9 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="appelnotedebasdep"/>
   <style level="0" name="appeldenotedefin"/>
   <style level="0" name="autres"/>
-  <style level="0" name="caractresdenotedebasdepage"/>
-  <style level="0" name="caractresdenotedefin"/>
+  <style level="0" name="caracteresdenotedebasdepage"/>
+  <style level="0" name="caracteresdenotedefin"/>
+  <style level="0" name="bodytext"/>
   <style level="0" name="corpsdetexte"/>
   <style level="0" name="corpsdetexte1"/>
   <style level="0" name="corpsdetexte2"/>

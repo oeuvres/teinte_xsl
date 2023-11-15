@@ -30,10 +30,10 @@
     match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/document.xml.rels']/pkg:xmlData/*/rels:Relationship" 
     use="@Id"/>
   <xsl:key name="footnotes.xml.rels" 
-    match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/ootnotes.xml.rels']/pkg:xmlData/*/rels:Relationship" 
+    match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/footnotes.xml.rels']/pkg:xmlData/*/rels:Relationship" 
     use="@Id"/>
   <xsl:key name="endnotes.xml.rels" 
-    match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/ndnotes.xml.rels']/pkg:xmlData/*/rels:Relationship" 
+    match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/endnotes.xml.rels']/pkg:xmlData/*/rels:Relationship" 
     use="@Id"/>
   <xsl:key name="w:style" 
     match="w:style" 
