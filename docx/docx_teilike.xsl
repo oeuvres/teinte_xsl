@@ -382,22 +382,19 @@ Seen
         
 -->
     <!-- style tag -->
-    <xsl:variable name="w:rStyle" select="w:rPr/w:rStyle/@w:val"/>
-    <xsl:variable name="w:style" select="key('w:style', $w:rStyle)"/>
+    <xsl:variable name="w:style" select="key('w:style', w:rPr/w:rStyle/@w:val)"/>
     <!-- normalize a style name -->
     <xsl:variable name="style_name">
-      <xsl:if test="$w:rStyle != ''">
-        <xsl:variable name="name" select="normalize-space(translate($w:style/w:name/@w:val, $idfrom, $idto))"/>
-        <xsl:variable name="oddchars" select="translate($name, $idchars, '')"/>
-        <xsl:variable name="id" select="translate($name, $oddchars, '')"/>
-        <xsl:variable name="char1" select="substring($id, 1, 1)"/>
-        <xsl:if test="$char1 != '' and contains('0123456789', $char1)">_</xsl:if>
-        <xsl:value-of select="$id"/>
-      </xsl:if>
+      <xsl:variable name="name" select="normalize-space(translate($w:style/w:name/@w:val, $idfrom, $idto))"/>
+      <xsl:variable name="oddchars" select="translate($name, $idchars, '')"/>
+      <xsl:variable name="id" select="translate($name, $oddchars, '')"/>
+      <xsl:variable name="char1" select="substring($id, 1, 1)"/>
+      <xsl:if test="$char1 != '' and contains('0123456789', $char1)">_</xsl:if>
+      <xsl:value-of select="$id"/>
     </xsl:variable>
     
     
-    <xsl:variable name="teinte_c" select="key('teinte_c', style_name)"/>
+    <xsl:variable name="teinte_c" select="key('teinte_c', $style_name)"/>
     
     <!--
     <xsl:comment>

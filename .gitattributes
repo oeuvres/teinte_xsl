@@ -1,4 +1,4 @@
 # https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/
 # 
 # git ls-files --eol
-* text=auto
+* text=lf
