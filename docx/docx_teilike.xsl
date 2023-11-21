@@ -51,6 +51,9 @@
   <xsl:key name="teinte_0" 
     match="teinte:style[@level='0']" 
     use="@name"/>
+  <xsl:key name="teinte_symbol" 
+    match="teinte:c" 
+    use="@symbol"/>
   <xsl:template match="node()|@*">
     <xsl:copy>
       <xsl:apply-templates select="node()|@*"/>
@@ -723,6 +726,19 @@ Seen
   </xsl:template>
   <xsl:template match="w:bookmarkStart"/>
   <xsl:template match="w:bookmarkEnd"/>
+  <!-- symbol 
+  <w:sym xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:font="Symbol" w:char="F0B4"/>
+  -->
+  <xsl:template match="w:sym">
+    <xsl:choose>
+      <xsl:when test="key('teinte_symbol', @w:char)">
+        <xsl:value-of select="key('teinte_symbol', @w:char)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <g style="font-family: {@w:font}" n="{@w:char}">□</g>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   <!-- fields -->
   <xsl:template match="w:fldChar"/>
   <xsl:template match="w:instrText">

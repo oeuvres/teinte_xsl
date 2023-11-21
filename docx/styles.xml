@@ -35,6 +35,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <!-- styles to filter -->
   <style level="0" name="ancredenotedebasdepage"/>
   <style level="0" name="ancredenotedefin"/>
+  <style level="0" name="annotationreference"/>
   <style level="0" name="appelnotedebasdep"/>
   <style level="0" name="appeldenotedefin"/>
   <style level="0" name="autres"/>
@@ -50,6 +51,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="freeform"/>
   <style level="0" name="jjnormal"/>
   <style level="0" name="jjnormalptsansretrait"/>
+  <style level="0" name="jjnormalhtpage"/>
+  <style level="0" name="jjnormalptgche"/>
   <style level="0" name="none"/>
   <style level="0" name="normal"/>
   <style level="0" name="normal1"/>
@@ -57,6 +60,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="notesdebasdepage"/>
   <style level="0" name="notedefin"/>
   <style level="0" name="notesdefin"/>
+  <style level="0" name="style"/>
   <style level="0" name="texteducorps"/>
   <style level="0" name="texteducorps0"/>
   <style level="0" name="texteducorps1"/>
@@ -154,8 +158,13 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="index" element="item" parent="index" doc="true"/>
   <style level="p" name="jjnormalpt" element="p" attribute="type" value="observation"/>
   <style level="p" name="jjnote" element="note"/>
+  <style level="p" name="jjnote1" element="note"/>
+  <style level="p" name="jjnote2" element="note"/>
+  <style level="p" name="jjnotea" element="note"/>
+  <style level="p" name="jjnoteb" element="note"/>
   <style level="p" name="jjtitre" element="label" attribute="type" value="head"/>
   <style level="p" name="jjcellule" element="p"/>
+  <style level="p" name="jjentete" element="fw"/>
   <style level="p" name="jjnormalcentre" element="label"/>
   <style level="p" name="l" element="l" rend="keep" doc="true"/>
   <style level="p" name="lindent" element="l" attribute="rend" value="indent"/>
