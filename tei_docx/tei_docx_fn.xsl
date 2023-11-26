@@ -9,7 +9,7 @@ exclude-result-prefixes="tei">
   <xsl:template match="/">
     <w:footnotes>
       <w:footnote w:type="separator" w:id="-1">
-        <w:p w14:paraId="703081DA" w14:textId="77777777" w:rsidR="002F4BC4" w:rsidRDefault="002F4BC4">
+        <w:p>
           <w:pPr>
             <w:rPr>
               <w:sz w:val="12"/>
@@ -21,7 +21,7 @@ exclude-result-prefixes="tei">
         </w:p>
       </w:footnote>
       <w:footnote w:type="continuationSeparator" w:id="0">
-        <w:p w14:paraId="62DB2BAB" w14:textId="77777777" w:rsidR="002F4BC4" w:rsidRDefault="002F4BC4">
+        <w:p>
           <w:pPr>
             <w:rPr>
               <w:sz w:val="12"/>

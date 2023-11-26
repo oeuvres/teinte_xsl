@@ -142,6 +142,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="exemple" element="quote" parent="entryFree"/>
   <style level="p" name="figure" element="figure"/>
   <style level="p" name="footnote" element="p"/><!-- in odt, used inside notes -->
+  <style level="p" name="footnotetext" element="note"/><!-- note as a block -->
   <style level="p" name="form" element="form" parent="entryFree"/>
   <style level="p" name="fw" element="fw" doc="true"/>
   <style level="p" name="genre" element="label" attribute="type" value="genus"/>
@@ -157,6 +158,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="h4sub" element="head" attribute="type" value="sub"/>
   <style level="p" name="index" element="item" parent="index" doc="true"/>
   <style level="p" name="jjnormalpt" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjobservations" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjobservationshtpag" element="p" attribute="type" value="observation"/>
   <style level="p" name="jjnote" element="note"/>
   <style level="p" name="jjnote1" element="note"/>
   <style level="p" name="jjnote2" element="note"/>
@@ -184,8 +187,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="listcontents" element="item" parent="dl"/>
   <style level="p" name="lg" element="l" parent="lg" doc="true"/>
   <style level="p" name="note" element="p" parent="notep"/>
-  <style level="p" name="obs" element="p" parent="quote" rend="keep"/>
-  <style level="p" name="observation" element="p" parent="quote" rend="keep"/>
+  <style level="p" name="obs" element="p" parent="quote" rend="keep" attribute="type" value="observation"/>
+  <style level="p" name="observation" element="p" parent="quote" rend="keep" attribute="type" value="observation"/>
   <style level="p" name="opener" element="opener" doc="true"/>
   <style level="p" name="p" element="p" rend="keep" doc="true"/>
   <style level="p" name="pb" element="pb" doc="true"/>

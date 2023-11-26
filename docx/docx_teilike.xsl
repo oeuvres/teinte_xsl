@@ -290,7 +290,7 @@
               <xsl:if test="$file != ''">
                 <xsl:text>zip://</xsl:text>
                 <xsl:value-of select="$file"/>
-                <xsl:text>#</xsl:text>
+                <xsl:text>#word/</xsl:text>
               </xsl:if>
               <xsl:call-template name="target">
                 <xsl:with-param name="id" select="v:shape/v:imagedata/@r:id"/>
@@ -305,7 +305,7 @@
               <xsl:if test="$file != ''">
                 <xsl:text>zip://</xsl:text>
                 <xsl:value-of select="$file"/>
-                <xsl:text>#</xsl:text>
+                <xsl:text>#word/</xsl:text>
               </xsl:if>
               <xsl:call-template name="target">
                 <xsl:with-param name="id" select="wp:*/a:graphic/a:graphicData/pic:pic/pic:blipFill/a:blip/@r:embed"/>

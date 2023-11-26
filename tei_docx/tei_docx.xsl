@@ -25,6 +25,8 @@
   <xsl:template match="/">
     <w:document xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" mc:Ignorable="w14 wp14">
       <w:body>
+        <xsl:apply-templates select="*"/>
+        <!--
         <xsl:choose>
           <xsl:when test="$templPath != ''">
             <xsl:variable name="templ" select="document($templPath)"/>
@@ -35,6 +37,7 @@
             <xsl:apply-templates select="*"/>
           </xsl:otherwise>
         </xsl:choose>
+        -->
       </w:body>
     </w:document>
   </xsl:template>
@@ -236,7 +239,7 @@
         <w:pStyle w:val="{$style}"/>
       </w:pPr>
       <w:r>
-        <w:t xml:space="preserve"><xsl:value-of select="$key"/> : </w:t>
+        <w:t><xsl:value-of select="$key"/> : </w:t>
       </w:r>
       <xsl:choose>
         <xsl:when test="@when">
@@ -488,6 +491,10 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <xsl:when test="$libreO">
           <xsl:choose>
             <xsl:when test="self::tei:p and parent::tei:note">Notedebasdepage</xsl:when>
+            <xsl:when test="self::tei:p and @type">
+              <xsl:value-of select="translate(substring(@type, 1, 1), $lc, $uc)"/>
+              <xsl:value-of select="substring(@type, 2)"/>
+            </xsl:when>
             <xsl:when test="self::tei:p and parent::tei:quote">Quote</xsl:when>
             <xsl:when test="self::tei:p and parent::tei:sp">Sp</xsl:when>
             <xsl:when test="self::tei:label and @type='head'">subhead</xsl:when>
@@ -500,12 +507,12 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="self::tei:p and parent::tei:note">Notedebasdepage</xsl:when>
-            <xsl:when test="self::tei:p and parent::tei:quote">quote</xsl:when>
-            <xsl:when test="self::tei:p and parent::tei:sp">sp</xsl:when>
-            <xsl:when test="self::tei:label and @type='head'">subhead</xsl:when>
             <xsl:when test="self::tei:p and @type">
               <xsl:value-of select="@type"/>
             </xsl:when>
+            <xsl:when test="self::tei:p and parent::tei:quote">quote</xsl:when>
+            <xsl:when test="self::tei:p and parent::tei:sp">sp</xsl:when>
+            <xsl:when test="self::tei:label and @type='head'">subhead</xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="local-name()"/>
             </xsl:otherwise>
@@ -661,7 +668,6 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
   <xsl:template match="tei:index">
     <w:fldChar w:fldCharType="begin"/>
     <w:instrText>
-      <xsl:attribute name="xml:space">preserve</xsl:attribute>
       <xsl:text>XE "</xsl:text>
       <xsl:if test="@indexName">
         <xsl:value-of select="@indexName"/>
@@ -865,7 +871,6 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
               </w:rPr>
               <w:br/>
               <w:t>
-                <xsl:attribute name="xml:space">preserve</xsl:attribute>
                 <xsl:text>[</xsl:text>
                 <xsl:value-of select="@n"/>
                 <xsl:text>] </xsl:text>
@@ -1003,7 +1008,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <w:ind w:left="2000"/>
       </xsl:when>
       <xsl:when test="contains($string, ' center ')">
+        <!-- Not seen in word
         <w:ind w:firstLine="0" w:left="0" w:right="0"/>
+        -->
         <w:jc w:val="center"/>
       </xsl:when>
       <xsl:when test="contains($string, ' right ')">
@@ -1023,7 +1030,6 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           <w:rStyle w:val="milestone"/>
         </w:rPr>
         <w:t>
-          <xsl:attribute name="xml:space">preserve</xsl:attribute>
           <xsl:text>[</xsl:text>
           <xsl:value-of select="@unit"/>
           <xsl:text>:</xsl:text>
@@ -1059,7 +1065,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
     <xsl:for-each select="node()">
       <xsl:variable name="rStyle">
         <xsl:choose>
-          <xsl:when test="self::tei:hi">
+          <xsl:when test="self::tei:hi | self::tei:surname">
             <xsl:value-of select="$style"/>
           </xsl:when>
           <xsl:when test="@type and @type != '' and not(contains(@type,  ' '))">
@@ -1092,11 +1098,25 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <xsl:if test="self::tei:title">i </xsl:if>
         <xsl:if test="self::tei:hi[not(@rend)]">i </xsl:if>
       </xsl:variable>
+      <xsl:variable name="hyperlink">
+        <xsl:if test="ancestor-or-self::tei:ref">
+          <w:color w:val="0000C0"/>
+          <!-- u after color, http://www.datypic.com/sc/ooxml/e-w_rPr-5.html -->
+          <w:u w:val="single"/>
+        </xsl:if>
+      </xsl:variable>
       <xsl:choose>
+        <xsl:when test="self::tei:graphic">
+          <xsl:call-template name="graphic"/>
+        </xsl:when>
+        <xsl:when test="self::tei:ref">
+          <xsl:call-template name="ref"/>
+        </xsl:when>
         <xsl:when test="self::tei:hi and contains($format, ' sup ') ">
           <w:r>
             <w:rPr>
               <w:vertAlign w:val="superscript"/>
+              <xsl:copy-of select="$hyperlink"/>
             </w:rPr>
             <w:t>
               <xsl:value-of select="normalize-space(.)"/>
@@ -1107,6 +1127,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           <w:r>
             <w:rPr>
               <w:vertAlign w:val="subscript"/>
+              <xsl:copy-of select="$hyperlink"/>
             </w:rPr>
             <w:t>
               <xsl:value-of select="normalize-space(.)"/>
@@ -1139,6 +1160,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
                 </xsl:choose>
               </xsl:when>
             </xsl:choose>
+            <xsl:if test="contains($format, ' b ') or contains($format, ' bold ') ">
+              <w:b/>
+            </xsl:if>
             <xsl:if test="contains($format, ' u ') or contains($format, ' under') ">
               <w:u w:val="single"/>
             </xsl:if>
@@ -1157,6 +1181,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
             <xsl:if test="@xml:lang">
               <w:lang w:val="{@xml:lang}"/>
             </xsl:if>
+            <xsl:copy-of select="$hyperlink"/>
           </xsl:variable>
           <!-- impossible to test variable with no string -->
           <w:r>
@@ -1164,7 +1189,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
               <xsl:copy-of select="$rPr"/>
             </w:rPr>
             <w:t>
-              <xsl:attribute name="xml:space">preserve</xsl:attribute>
+              <xsl:if test="normalize-space(.) != .">
+                <xsl:attribute name="xml:space">preserve</xsl:attribute>
+              </xsl:if>
               <xsl:value-of select="."/>
             </w:t>
           </w:r>
@@ -1200,8 +1227,86 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <!-- | *[@target] | *[@ref] -->
-  <xsl:template match="tei:ref | tei:graphic[@url]">
+  <!-- image -->
+  <xsl:template match="tei:graphic" name="graphic">
+    <w:r>
+      <xsl:value-of select="$lf"/>
+      <w:drawing>
+        <wp:inline>
+          <xsl:variable name="cx">
+            <xsl:choose>
+              <xsl:when test="contains(@width, 'mm')">
+                <xsl:value-of select="substring-before(@width, 'mm') * 36000"/>
+              </xsl:when>
+              <xsl:otherwise>6840000</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="cy">
+            <xsl:choose>
+              <xsl:when test="contains(@height, 'mm')">
+                <xsl:value-of select="substring-before(@height, 'mm') * 36000"/>
+              </xsl:when>
+              <xsl:otherwise>5130000</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <wp:extent cx="{$cx}" cy="{$cy}"/>
+          <wp:effectExtent l="0" t="0" r="0" b="0"/>
+          <xsl:variable name="image_id">
+            <xsl:number level="any"/>
+          </xsl:variable>
+          <xsl:variable name="image_name">
+            <xsl:call-template name="filename">
+              <xsl:with-param name="path" select="@url"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <wp:docPr id="{$image_id}" name="{$image_name}"/>
+          <a:graphic>
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+              <pic:pic>
+                <pic:nvPicPr>
+                  <pic:cNvPr id="{$image_id}" name="{$image_name}"/>
+                  <pic:cNvPicPr>
+                    <a:picLocks noChangeAspect="1" noChangeArrowheads="1"/>
+                  </pic:cNvPicPr>
+                </pic:nvPicPr>
+                <pic:blipFill>
+                  <a:blip>
+                    <xsl:attribute name="r:embed">
+                      <xsl:call-template name="id"/>
+                    </xsl:attribute>
+                  </a:blip>
+                  <a:stretch>
+                    <a:fillRect/>
+                  </a:stretch>
+                </pic:blipFill>
+                <pic:spPr bwMode="auto">
+                  <a:xfrm>
+                    <a:off x="0" y="0"/>
+                    <a:ext cx="{$cx}" cy="{$cy}"/>
+                  </a:xfrm>
+                  <a:prstGeom prst="rect">
+                    <a:avLst/>
+                  </a:prstGeom>
+                </pic:spPr>
+              </pic:pic>
+            </a:graphicData>
+          </a:graphic>
+        </wp:inline>
+      </w:drawing>
+      <xsl:value-of select="$lf"/>
+    </w:r>
+  </xsl:template>
+  <!-- 
+        <w:hyperlink r:id="rId2">
+        <w:r>
+          <w:rPr>
+            <w:rStyle w:val="Hyperlink"/>
+          </w:rPr>
+          <w:t>lien</w:t>
+        </w:r>
+      </w:hyperlink>
+  -->
+  <xsl:template name="ref">
     <!-- target is created with tei2docx-rels.xsl -->
     <xsl:variable name="target" select="(@target|@url|@ref)[1]"/>
     <w:hyperlink>
@@ -1221,7 +1326,8 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <xsl:when test=".=''">
           <w:r>
             <w:rPr>
-              <w:rStyle w:val="LienInternet"/>
+              <w:u w:val="single"/>
+              <w:color w:val="0000C0"/>
             </w:rPr>
             <w:t>
               <xsl:value-of select="$target"/>
@@ -1229,13 +1335,12 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           </w:r>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:call-template name="char">
-            <xsl:with-param name="style">LienInternet</xsl:with-param>
-          </xsl:call-template>
+          <xsl:call-template name="char"/>
         </xsl:otherwise>
       </xsl:choose>
     </w:hyperlink>
   </xsl:template>
+
   <xsl:template name="id">
     <xsl:choose>
       <xsl:when test="self::comment()">
@@ -1259,6 +1364,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
     <xsl:variable name="target">
       <!-- select="(@target|@ref|@corresp|@facs)[1]" -->
       <xsl:choose>
+        <xsl:when test="@url != ''">
+          <xsl:value-of select="normalize-space(@url)"/>
+        </xsl:when>
         <xsl:when test="@target != ''">
           <xsl:value-of select="normalize-space(@target)"/>
         </xsl:when>
@@ -1279,10 +1387,28 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
       <!-- No target -->
       <xsl:when test="$target = ''"/>
       <xsl:otherwise>
-        <Relationship Target="{$target}" TargetMode="External" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+        <Relationship Target="{$target}" xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
           <xsl:attribute name="Id">
             <xsl:call-template name="id"/>
           </xsl:attribute>
+          <xsl:choose>
+            <xsl:when test="self::tei:graphic">
+              <xsl:attribute name="Type">http://schemas.openxmlformats.org/officeDocument/2006/relationships/image</xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:attribute name="Type">http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink</xsl:attribute>
+              <xsl:choose>
+                <xsl:when test="starts-with($target, 'http')">
+                  <xsl:attribute name="TargetMode">External</xsl:attribute>
+                </xsl:when>
+                <xsl:when test="starts-with($target, '#')">
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="TargetMode">External</xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
         </Relationship>
       </xsl:otherwise>
     </xsl:choose>
@@ -1293,4 +1419,24 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
       <xsl:value-of select="."/>
     </xsl:comment>
   </xsl:template>
+  <xsl:template name="filename">
+    <xsl:param name="path"/>
+    <xsl:choose>
+      <xsl:when test="contains($path, '\')">
+        <xsl:call-template name="filename">
+          <xsl:with-param name="path" select="translate($path, '\', '/')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains($path, '/')">
+        <xsl:call-template name="filename">
+          <xsl:with-param name="path" select="substring-after($path, '/')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$path"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
 </xsl:transform>
