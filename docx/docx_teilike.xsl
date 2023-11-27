@@ -431,11 +431,9 @@ Seen
     <xsl:variable name="sc">
       <xsl:variable name="val" select="w:rPr/w:smallCaps/@w:val"/>
       <xsl:choose>
-        <xsl:when test="not(w:rPr/w:u)"/>
+        <xsl:when test="not(w:rPr/w:smallCaps)"/>
         <xsl:when test="$val = '0' or $val='false' or $val = 'off'"/>
-        <xsl:otherwise>
-          <xsl:value-of select="$val"/>
-        </xsl:otherwise>
+        <xsl:otherwise>sc</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <!-- italic -->
@@ -504,13 +502,13 @@ Seen
         <xsl:when test="$xml1 = ''">
            <xsl:copy-of select="$xml1"/>
         </xsl:when>
-        <xsl:when test="$sc = ''">
-          <xsl:copy-of select="$xml1"/>
-        </xsl:when>
-        <xsl:otherwise>
+        <xsl:when test="$sc != ''">
           <sc>
             <xsl:copy-of select="$xml1"/>
           </sc>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$xml1"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
