@@ -283,7 +283,6 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
   <!-- Page number -->
   <xsl:template match="tei:pb[text()]">
     <xsl:variable name="n" select="translate(., '[]p.  ', '')"/>
-    <!--  Marc : J'ajoute l'espace insécable  -->
     <xsl:choose>
       <xsl:when test="number($n) &gt; 0">
         <pb n="{$n}">
@@ -850,10 +849,32 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
     </xsl:variable>
     <xsl:copy>
       <xsl:copy-of select="@*"/>
+      <xsl:if test="tei:th|tei:p/tei:th">
+        <xsl:attribute name="role">label</xsl:attribute>
+      </xsl:if>
       <xsl:choose>
         <!-- if only one para in cell, go through -->
-        <xsl:when test="$mixed = '' and count(*) = 1 and tei:p">
-          <xsl:apply-templates select="*/node()"/>
+        <xsl:when test="$mixed = '' and count(*) = 1 and (tei:p|tei:th)">
+          <xsl:for-each select="*">
+            <xsl:choose>
+              <xsl:when test="tei:th">
+                <xsl:variable name="mix2">
+                  <xsl:call-template name="mixed"/>
+                </xsl:variable>
+                <xsl:choose>
+                  <xsl:when test="$mix2 = '' and count(*) = 1">
+                    <xsl:apply-templates select="tei:th/node()"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates/>

@@ -650,6 +650,18 @@ Seen
   <xsl:template match="w:tc">
     <xsl:text>&#10;    </xsl:text>
     <cell>
+      <xsl:variable name="jc" select="normalize-space(w:p/w:pPr/w:jc/@w:val)"/>
+      <xsl:choose>
+        <xsl:when test="$jc = ''"/>
+        <xsl:when test="$jc = 'both'"/>
+        <xsl:when test="$jc = 'left'"/>
+        <xsl:when test="$jc = 'right'"> right</xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="rend">
+            <xsl:value-of select="$jc"/>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:apply-templates/>
     <xsl:text>&#10;    </xsl:text>
     </cell>
