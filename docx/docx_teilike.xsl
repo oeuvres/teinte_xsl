@@ -60,12 +60,14 @@
     </xsl:copy>
   </xsl:template>
   <xsl:template match="/">
-    <xsl:apply-templates select="/pkg:package/pkg:part[@pkg:name = '/word/document.xml']/pkg:xmlData/w:document"/>
+    <xsl:apply-templates select="/pkg:package/pkg:part[@pkg:name = '/word/document.xml']/pkg:xmlData"/>
   </xsl:template>
   <!-- root element -->
   <xsl:template match="w:document">
-    <xsl:apply-templates/>
+    <!-- Caution w:background -->
+    <xsl:apply-templates select="w:body"/>
   </xsl:template>
+  <xsl:template match="w:background"/>
   <xsl:template match="w:body">
     <body>
       <!-- 1 page -->
