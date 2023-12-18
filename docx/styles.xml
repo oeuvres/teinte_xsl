@@ -90,6 +90,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="texteducorps30"/>
   <style level="0" name="texteducorps40"/>
   <style level="0" name="texteducorps50"/>
+  <style level="0" name="times105"/>
   <style level="0" name="titre1car"/>
   <style level="0" name="titre2car"/>
   <style level="0" name="titre3car"/>
@@ -355,6 +356,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="pagenum1" element="pb"/>
   <style level="c" name="pb" element="pb" doc="true"/>
   <style level="c" name="persname" element="persName" doc="true"/>
+  <style level="c" name="petitemajusc" element="sc"/>
   <style level="c" name="place" element="placeName"/>
   <style level="c" name="placename" element="placeName" doc="true"/>
   <style level="c" name="q" element="q"/>

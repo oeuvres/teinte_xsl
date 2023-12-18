@@ -455,18 +455,18 @@ Seen
       </xsl:choose>
     </xsl:variable>
     <!-- bold, dangerous in titles, to think -->
+    <xsl:variable name="bval" select="string(w:rPr/w:b/@w:val)"/>
+    <xsl:variable name="bCsval" select="string(w:rPr/w:bCs/@w:val)"/>
     <xsl:variable name="b">
-      <xsl:variable name="val1" select="w:rPr/w:b"/>
-      <xsl:variable name="val2" select="w:rPr/w:bCs"/>
       <xsl:choose>
         <xsl:when test="not(w:rPr/w:b) and not(w:rPr/w:bCs)"/>
-        <xsl:when test="$val1 = '0' or $val1 ='false' or $val1 = 'off'"/>
-        <xsl:when test="$val1 != ''">
-          <xsl:value-of select="$val1"/>
+        <xsl:when test="$bval = '0' or $bval ='false' or $bval = 'off'"/>
+        <xsl:when test="$bval != ''">
+          <xsl:value-of select="$bval"/>
         </xsl:when>
-        <xsl:when test="$val2 = '0' or $val2 ='false' or $val2 = 'off'"/>
-        <xsl:when test="$val2 != ''">
-          <xsl:value-of select="$val2"/>
+        <xsl:when test="$bCsval = '0' or $bCsval ='false' or $bCsval = 'off'"/>
+        <xsl:when test="$bCsval != ''">
+          <xsl:value-of select="$bCsval"/>
         </xsl:when>
         <!-- silent presence -->
         <xsl:when test="w:rPr/w:b">b</xsl:when>
