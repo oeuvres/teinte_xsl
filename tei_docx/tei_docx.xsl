@@ -772,7 +772,7 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
     </xsl:choose>
   </xsl:template>
   <!-- Style sémantique de niveau bloc ou caractère -->
-  <xsl:template match="tei:bibl | tei:stage">
+  <xsl:template match="tei:bibl | tei:formula | tei:stage">
     <xsl:value-of select="$lf"/>
     <xsl:choose>
       <!-- niveau bloc -->
@@ -781,6 +781,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           <w:pPr>
             <xsl:variable name="style">
               <xsl:choose>
+                <xsl:when test="self::tei:bibl">biblblock</xsl:when>
+                <xsl:when test="self::tei:formula">formulablock</xsl:when>
+                <xsl:when test="self::tei:stage">stageblock</xsl:when>
                 <xsl:when test="$libreO != ''">
                   <xsl:value-of select="translate(substring(local-name(), 1, 1), $lc, $uc)"/>
                   <xsl:value-of select="substring(local-name(), 2)"/>
@@ -802,8 +805,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
         <xsl:call-template name="char">
           <xsl:with-param name="style">
             <xsl:choose>
-              <xsl:when test="self::tei:bibl">bibl-c</xsl:when>
-              <xsl:when test="self::tei:stage">stage-c</xsl:when>
+              <xsl:when test="self::tei:bibl">biblchar</xsl:when>
+              <xsl:when test="self::tei:formula">formulachar</xsl:when>
+              <xsl:when test="self::tei:stage">stagechar</xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="local-name(.)"/>
               </xsl:otherwise>
@@ -817,6 +821,9 @@ ancestor::tei:p or ancestor::tei:l or parent::tei:cell
           <w:pPr>
             <xsl:variable name="style">
               <xsl:choose>
+                <xsl:when test="self::tei:bibl">biblblock</xsl:when>
+                <xsl:when test="self::tei:formula">formulablock</xsl:when>
+                <xsl:when test="self::tei:stage">stageblock</xsl:when>
                 <xsl:when test="$libreO != ''">
                   <xsl:value-of select="translate(substring(local-name(), 1, 1), $lc, $uc)"/>
                   <xsl:value-of select="substring(local-name(), 2)"/>

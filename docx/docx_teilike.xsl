@@ -134,7 +134,7 @@
     <xsl:variable name="rend" select="normalize-space($_rend)"/>
     <xsl:choose>
       <!-- Some normal style may have level set to 9 (?) -->
-      <xsl:when test="$style_name = '' or key('teinte_0', $style_name)">
+      <xsl:when test="$style_name = '' or key('teinte_0', $style_name) or key('teinte_0', translate($style_name, '0123456789', ''))">
         <p>
           <xsl:if test="$rend != ''">
             <xsl:attribute name="rend">
@@ -563,7 +563,7 @@ Seen
     </xsl:variable>
     <xsl:variable name="xml10">
       <xsl:choose>
-        <xsl:when test="$style_name = ''">
+        <xsl:when test="$style_name = '' or string($teinte_c/@element) = ''">
           <xsl:copy-of select="$xml5"/>
         </xsl:when>
         <!-- redundant -->
@@ -575,7 +575,7 @@ Seen
             <xsl:copy-of select="$xml5"/>
           </xsl:element>
         </xsl:when>
-        <xsl:when test="key('teinte_0', $style_name)">
+        <xsl:when test="key('teinte_0', $style_name) or key('teinte_0', translate($style_name, '0123456789', ''))">
           <xsl:copy-of select="$xml5"/>
         </xsl:when>
         <!-- auto style Calibre -->
@@ -594,7 +594,7 @@ Seen
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$style_name != ''">
+        <xsl:when test="$el != ''">
           <xsl:element name="{$el}">
             <xsl:copy-of select="$xml5"/>
           </xsl:element>

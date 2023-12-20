@@ -32,6 +32,106 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   >
 ]>
 <sheet xmlns="https://github.com/oeuvres/teinte_xsl">
+  <!-- JJ -->
+  <style level="p" name="jp68miartnotea" element="note"/>
+  <style level="p" name="jp68miartnoteb" element="note"/>
+  <style level="p" name="jp68miartsoustitre" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjcentre" element="p" attribute="rend" value="center"/>
+  <style level="p" name="jjcellule" element="p"/>
+  <style level="p" name="jjentete" element="fw"/>
+  <style level="p" name="jjentetegauche2011" element="fw"/>
+  <style level="p" name="jjentetegche" element="fw"/>
+  <style level="p" name="jjentetedroite2011" element="fw"/>
+  <style level="p" name="jjentetedte" element="fw"/>
+  <style level="p" name="jjentetedte6etudes" element="fw"/>
+  <style level="p" name="jjentetegche6etudes" element="fw"/>
+  <style level="p" name="jjentetejp67bc" element="fw"/>
+  <style level="p" name="jjentetepage" element="fw"/>
+  <style level="0" name="jjhtpage"/>
+  <style level="0" name="jjhtpagenormal"/>
+  <style level="0" name="jjhtpagesansretrait"/>
+  <style level="p" name="jjhtpge11pt" element="p" attribute="type" value="observation"/>
+  <style level="0" name="jjnormal"/>
+  <style level="0" name="jjnormal12ptavt"/>
+  <style level="0" name="jjnormal2011"/>
+  <style level="0" name="jjnormal6avt"/>
+  <style level="0" name="jjnormalb"/>
+  <style level="0" name="jjnormalretrait"/>
+  <style level="p" name="jjnormalcentre" element="p" attribute="rend" value="center"/>
+  <style level="p" name="jjnormalcentre2" element="p" attribute="rend" value="center"/>
+  <style level="p" name="jjnormalentete" element="fw"/>
+  <style level="p" name="jjnormalgcheliste" element="formula"/>
+  <style level="0" name="jjnormalhtpagept2011"/>
+  <style level="0" name="jjnormalhtpage"/>
+  <style level="0" name="jjnormalhtpage2011"/>
+  <style level="p" name="jjnormalhtpagept" element="p" attribute="type" value="observation"/>
+  <style level="0" name="jjnormalhtpge"/>
+  <style level="0" name="jjnormalhtpg"/>
+  <style level="p" name="jjnormalhtpgecentre" element="p" attribute="rend" value="center"/>
+  <style level="p" name="jjnormalhtpgepetit" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjnormalhtpgpetit" element="p" attribute="type" value="observation"/>
+  <style level="0" name="jjnormalitalic9pt"/>
+  <style level="p" name="jjnormalprotocole" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjnormalpt" element="p" attribute="type" value="observation"/>
+  <style level="0" name="jjnormalpt2011"/>
+  <style level="0" name="jjnormalptgche"/>
+  <style level="0" name="jjnormalptsansretrait"/>
+  <style level="p" name="jjnormaltitremilieu" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjnote" element="note"/>
+  <style level="p" name="jjnote0" element="note"/>
+  <style level="p" name="jjnote1" element="note"/>
+  <style level="p" name="jjnote2" element="note"/>
+  <style level="p" name="jjnote3" element="note"/>
+  <style level="p" name="jjnotea" element="note"/>
+  <style level="p" name="jjnoteb" element="note"/>
+  <style level="p" name="jjnotec" element="note"/>
+  <style level="p" name="jjnote2011a" element="note"/>
+  <style level="p" name="jjnote2011b" element="note"/>
+  <style level="p" name="jjnote2011c" element="note"/>
+  <style level="p" name="jjnotebaspage" element="note"/>
+  <style level="p" name="jjnote1gche" element="note"/>
+  <style level="p" name="jjobservations" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjobservationshtpag" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjpaginationgche" element="fw"/>
+  <style level="p" name="jjpaginationdte" element="fw"/>
+  <style level="p" name="jjparagraphecentre" element="p" attribute="rend" value="center"/>
+  <style level="p" name="jjpetit" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjpetitgche" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocole" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocolea" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocoleb" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocolealignegche" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocolegche" element="p" attribute="type" value="observation"/>
+  <style level="c" name="jjprocoleitalic" element="i"/>
+  <style level="p" name="jjprotocolehtpage" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjprotocolenormal" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjretrait1" element="p" attribute="type" value="observation"/>
+  <style level="p" name="jjsoussitre" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjsoustitre" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjsoustitre1" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjsoustitre2" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjsoustitrea" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjsoustitreb" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjsoustitrechapitre" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjsurtitre" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjtechnique1" element="p" attribute="type" value="technique"/>
+  <style level="p" name="jjtechnique2" element="p" attribute="type" value="technique"/>
+  <style level="p" name="jjtitre" element="head" attribute="level" value="1"/>
+  <style level="p" name="jjtitre1" element="head" attribute="level" value="1"/>
+  <style level="p" name="jjtitre2" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjtitre3" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjtitregche" element="head" attribute="level" value="2"/>
+  <style level="p" name="jjtitregchepetit" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjtitresection" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjtitresectionp180" element="head" attribute="level" value="3"/>
+  <style level="p" name="jjtitresoussection" element="head" attribute="level" value="3"/>
+  <style level="p" name="textenumpagedroite" element="fw"/>
+  <style level="p" name="textesansretraitnumpagegche" element="fw"/>
+  <style level="p" name="texte2" element="p"/>
+  <style level="p" name="textesansretrait" element="p"/>
+  <style level="p" name="textedenotedebasdepage2" element="note"/>
+  <style level="0" name="times105"/>
+  
   <!-- styles to filter -->
   <style level="0" name="aucun"/>
   <style level="0" name="ancredenotedebasdepage"/>
@@ -40,29 +140,16 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="appelnotedebasdep"/>
   <style level="0" name="appeldenotedefin"/>
   <style level="0" name="autres"/>
+  <style level="0" name="bodytext"/>
   <style level="0" name="caracteresdenotedebasdepage"/>
   <style level="0" name="caracteresdenotedefin"/>
-  <style level="0" name="bodytext"/>
+  <style level="0" name="corps"/>
   <style level="0" name="corpsdetexte"/>
-  <style level="0" name="corpsdetexte1"/>
-  <style level="0" name="corpsdetexte2"/>
-  <style level="0" name="corpsdetexte3"/>
+  <style level="0" name="corpsdutexte"/>
   <style level="0" name="defaultparagraphfont"/>
   <style level="0" name="footnotereference"/>
   <style level="0" name="freeform"/>
-  <style level="0" name="jjnormal"/>
-  <style level="0" name="jjnormal2011"/>
-  <style level="0" name="jjnormalpt2011"/>
-  <style level="0" name="jjnormalhtpagept2011"/>
-  <style level="0" name="jjnormalptsansretrait"/>
-  <style level="0" name="jjhtpagesansretrait"/>
-  <style level="0" name="jjnormalhtpage"/>
-  <style level="0" name="jjnormalhtpage2011"/>
-  <style level="0" name="jjnormalhtpge"/>
-  <style level="0" name="jjnormalptgche"/>
-  <style level="0" name="jjnormal12ptavt"/>
-  <style level="0" name="jjnormalitalic9pt"/>
-  <style level="0" name="jjhtpage"/>
+  <style level="0" name="legendedelimage"/>
   <style level="0" name="none"/>
   <style level="0" name="normal"/>
   <style level="0" name="normal1"/>
@@ -74,23 +161,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="style"/>
   <style level="0" name="texte"/>
   <style level="0" name="texteducorps"/>
-  <style level="0" name="texteducorps0"/>
-  <style level="0" name="texteducorps1"/>
-  <style level="0" name="texteducorps2"/>
-  <style level="0" name="texteducorps3"/>
-  <style level="0" name="texteducorps4"/>
-  <style level="0" name="texteducorps5"/>
-  <style level="0" name="texteducorps6"/>
-  <style level="0" name="texteducorps7"/>
-  <style level="0" name="texteducorps8"/>
-  <style level="0" name="texteducorps9"/>
-  <style level="0" name="texteducorps10"/>
-  <style level="0" name="texteducorps11"/>
-  <style level="0" name="texteducorps20"/>
-  <style level="0" name="texteducorps30"/>
-  <style level="0" name="texteducorps40"/>
-  <style level="0" name="texteducorps50"/>
-  <style level="0" name="times105"/>
+  <style level="0" name="titrecar"/>
   <style level="0" name="titre1car"/>
   <style level="0" name="titre2car"/>
   <style level="0" name="titre3car"/>
@@ -149,6 +220,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="epigraph" element="p" parent="epigraph" rend="keep" doc="true"/>
   <style level="p" name="epigraphl" element="l" parent="epigraph" doc="true"/>
   <style level="p" name="endnote" element="note"/>
+  <style level="p" name="enteteoupieddepage" element="fw"/>
   <style level="p" name="entry" element="entry" doc="true"/>
   <style level="p" name="espce" element="label" attribute="type" value="species"/>
   <style level="p" name="espece" element="label" attribute="type" value="species"/>
@@ -176,44 +248,6 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="heading5" element="head" attribute="level" value="5"/>
   <style level="p" name="heading6" element="head" attribute="level" value="6"/>
   <style level="p" name="index" element="item" parent="index" doc="true"/>
-  <style level="p" name="jjnormalpt" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjnormalhtpagept" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjnormalhtpgpetit" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjnormaltitremilieu" element="head" attribute="level" value="2"/>
-  <style level="p" name="jjnote" element="note"/>
-  <style level="p" name="jjnote0" element="note"/>
-  <style level="p" name="jjnote1" element="note"/>
-  <style level="p" name="jjnote2" element="note"/>
-  <style level="p" name="jjnote3" element="note"/>
-  <style level="p" name="jjnotea" element="note"/>
-  <style level="p" name="jjnoteb" element="note"/>
-  <style level="p" name="jjnotec" element="note"/>
-  <style level="p" name="jjnote2011a" element="note"/>
-  <style level="p" name="jjnote2011b" element="note"/>
-  <style level="p" name="jjnote2011c" element="note"/>
-  <style level="p" name="jjnotebaspage" element="note"/>
-  <style level="p" name="jjnote1gche" element="note"/>
-  <style level="p" name="jjobservations" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjobservationshtpag" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjpetit" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjpetitgche" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjprotocole" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjprotocolegche" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjprotocolehtpage" element="p" attribute="type" value="observation"/>
-  <style level="p" name="jjsurtitre" element="head" attribute="level" value="1"/>
-  <style level="p" name="jjtitre" element="head" attribute="level" value="1"/>
-  <style level="p" name="jjcellule" element="p"/>
-  <style level="p" name="jjentete" element="fw"/>
-  <style level="p" name="jjentetegche" element="fw"/>
-  <style level="p" name="jjentetegauche2011" element="fw"/>
-  <style level="p" name="jjentetedroite2011" element="fw"/>
-  <style level="p" name="jjentetedte" element="fw"/>
-  <style level="p" name="jjnormalcentre" element="label"/>
-  <style level="p" name="jjparagraphecentre" element="p" attribute="rend" value="center"/>
-  <style level="p" name="jjsoustitre" element="head" attribute="level" value="2"/>
-  <style level="p" name="jjtitre1" element="head" attribute="level" value="1"/>
-  <style level="p" name="jjtitre2" element="head" attribute="level" value="2"/>
-  <style level="p" name="jjtitre3" element="head" attribute="level" value="3"/>
   <style level="p" name="l" element="l" rend="keep" doc="true"/>
   <style level="p" name="lindent" element="l" attribute="rend" value="indent"/>
   <style level="p" name="legend" element="legend"/>
@@ -288,6 +322,12 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="texteenvers" element="l" parent="lg"/>
   <style level="p" name="textedenotedebasdepage" element="note"/>
   <style level="p" name="term" element="term" parent="index" doc="true"/>
+  <style level="p" name="titre1" element="head" attribute="level" value="1"/>
+  <style level="p" name="titre2" element="head" attribute="level" value="2"/>
+  <style level="p" name="titre3" element="head" attribute="level" value="3"/>
+  <style level="p" name="titre4" element="head" attribute="level" value="4"/>
+  <style level="p" name="titre5" element="head" attribute="level" value="5"/>
+  <style level="p" name="titre6" element="head" attribute="level" value="6"/>
   <style level="p" name="trailer" element="trailer" doc="true"/>
   <style level="p" name="var" element="label" attribute="type" value="variety"/>
   <style level="p" name="vers" element="l"/>
@@ -342,6 +382,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="idno" element="idno"/>
   <style level="c" name="italic" element="i"/>
   <style level="c" name="italic1" element="i"/>
+  <style level="c" name="italique" element="i"/>
   <style level="c" name="label" element="label" doc="true"/>
   <style level="c" name="lienhypertexte" element="ref"/>
   <style level="c" name="lieninternet" element="ref"/>
@@ -357,6 +398,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="pb" element="pb" doc="true"/>
   <style level="c" name="persname" element="persName" doc="true"/>
   <style level="c" name="petitemajusc" element="sc"/>
+  <style level="c" name="ptemajusc" element="sc"/>
+  <style level="c" name="ptemajuscules" element="sc"/>
   <style level="c" name="place" element="placeName"/>
   <style level="c" name="placename" element="placeName" doc="true"/>
   <style level="c" name="q" element="q"/>
@@ -381,7 +424,28 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="teletype" element="code"/>
   <style level="c" name="term" element="term"/>
   <style level="c" name="title" element="title" doc="true"/>
-  <style level="c" name="title0" element="title"/>
+  <style level="c" name="title0"/>
+  <style level="c" name="title1"/>
+  <style level="c" name="title2"/>
+  <style level="c" name="title3"/>
+  <style level="c" name="title4"/>
+  <style level="c" name="title5"/>
+  <style level="c" name="title6"/>
+  <style level="c" name="title7"/>
+  <style level="c" name="title8"/>
+  <style level="c" name="title9"/>
+  <style level="c" name="title10"/>
+  <style level="c" name="titre0"/>
+  <style level="c" name="titre1"/>
+  <style level="c" name="titre2"/>
+  <style level="c" name="titre3"/>
+  <style level="c" name="titre4"/>
+  <style level="c" name="titre5"/>
+  <style level="c" name="titre6"/>
+  <style level="c" name="titre7"/>
+  <style level="c" name="titre8"/>
+  <style level="c" name="titre9"/>
+  <style level="c" name="titre10"/>
   <style level="c" name="titlec" element="title"/>
   <style level="c" name="userentry" element="code"/>
   <style level="c" name="variable" element="term"/>
