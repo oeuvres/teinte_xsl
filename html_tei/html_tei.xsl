@@ -17,11 +17,51 @@
   >
 
   <xsl:output indent="yes" encoding="UTF-8" method="xml" omit-xml-declaration="yes"/>
+  <!-- strip empty spaces from sections, to loop better on nodes -->
+  <xsl:strip-space elements="html:article html:footer html:header html:section"/>
   <xsl:variable name="lf" select="'&#10;'"/>
   <!-- 1234567890 -->
   <xsl:variable name="ÂBC">ABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÆÇÉÈÊËÎÏÑÔÖŒÙÛÜ _-,</xsl:variable>
   <xsl:variable name="âbc">abcdefghijklmnopqrstuvwxyzàâäæçéèêëîïñôöœùûü </xsl:variable>
   <xsl:variable name="abc">abcdefghijklmnopqrstuvwxyzaaaeceeeeiinooeuuu _-</xsl:variable>
+  <!-- names should be separated by spaces -->
+  <xsl:variable name="blocks">
+    address 
+    aside 
+    article 
+    blockquote 
+    br 
+    dd 
+    details 
+    dialog 
+    div 
+    dl 
+    dt 
+    fieldset 
+    figcaption 
+    figure 
+    footer 
+    form 
+    img 
+    h1 
+    h2 
+    h3 
+    h4 
+    h5 
+    h6 
+    header 
+    hgroup 
+    hr 
+    li 
+    nav 
+    ol 
+    p 
+    pre 
+    section 
+    table 
+    ul 
+    
+  </xsl:variable>
   <!-- A key maybe used on styles for perfs -->
   <xsl:variable name="sheet" select="document('styles.xml', document(''))/*"/>
   <xsl:key name="teinte_p" 
@@ -104,7 +144,7 @@ STRUCTURE
     <xsl:value-of select="$text"/>
   </xsl:template>
 
-  <xsl:template match="html:section | html:article">
+  <xsl:template match="html:article | html:footer | html:header | html:section">
     <div type="{local-name()}">
       <xsl:apply-templates select="@*"/>
       <xsl:variable name="mixed">
@@ -114,12 +154,72 @@ STRUCTURE
         <xsl:when test="$mixed = '' and count(*) = 1 and html:div">
           <xsl:apply-templates select="html:div/node()"/>
         </xsl:when>
+        <!-- <div> with mixed is bad for docx, try to group -->
+        <xsl:when test="$mixed != ''">
+          <xsl:for-each select="node()">
+            <xsl:variable name="current-name">
+              <xsl:if test="self::*">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="local-name()"/>
+                <xsl:text> </xsl:text>
+              </xsl:if>
+            </xsl:variable>
+            <xsl:variable name="previous" select="preceding-sibling::node()[self::text() or self::*][1]"/>
+            <xsl:variable name="previous-name">
+              <xsl:if test="local-name($previous) != ''">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="local-name($previous)"/>
+                <xsl:text> </xsl:text>
+              </xsl:if>
+            </xsl:variable>
+            <xsl:choose>
+              <!-- blocks -->
+              <xsl:when test="$current-name != '' and contains($blocks, $current-name)">
+                <xsl:text>&#10;</xsl:text>
+                <xsl:apply-templates select="."/>
+              </xsl:when>
+              <!-- first non empty node -->
+              <xsl:when test="not($previous)">
+                <xsl:text>&#10;</xsl:text>
+                <p>
+                  <xsl:apply-templates select="." mode="grouping"/>
+                </p>
+              </xsl:when>
+              <!-- first node after a block -->
+              <xsl:when test="$previous-name != ''  and contains($blocks, $previous-name)">
+                <xsl:text>&#10;</xsl:text>
+                <p>
+                  <xsl:apply-templates select="." mode="grouping"/>
+                </p>
+              </xsl:when>
+            </xsl:choose>
+          </xsl:for-each>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates/>
         </xsl:otherwise>
       </xsl:choose>
     </div>
   </xsl:template>
+  
+  <xsl:template match="node()" mode="grouping">
+    <xsl:variable name="current-name">
+      <xsl:if test="self::*">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="local-name()"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <!-- stop here -->
+      <xsl:when test="$current-name != '' and contains($blocks, $current-name)"/>
+      <xsl:otherwise>
+        <xsl:apply-templates select="."/>
+        <xsl:apply-templates select="following-sibling::node()[1]" mode="grouping"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <xsl:template match="html:img">
     <graphic>
       <xsl:copy-of select="@*"/>

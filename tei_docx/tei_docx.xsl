@@ -96,6 +96,7 @@
     <xsl:value-of select="$lf"/>
     <xsl:comment> <xsl:value-of select="$forged"/> </xsl:comment>
     <xsl:value-of select="$lf"/>
+    <!-- bad TEI, coming from conversion, may have inline here -->
     <xsl:apply-templates select="*|comment()"/>
   </xsl:template>
   <!-- forged title -->
