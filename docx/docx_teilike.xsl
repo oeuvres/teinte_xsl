@@ -487,9 +487,9 @@ Seen
           </sup>
         </xsl:when>
         <xsl:when test="$subsup = 'subscript'">
-          <sup>
+          <sub>
             <xsl:copy-of select="$t"/>
-          </sup>
+          </sub>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="$t"/>
