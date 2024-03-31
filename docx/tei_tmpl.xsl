@@ -253,8 +253,8 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
   <xsl:template match="tei:sub">
     <xsl:choose>
       <!-- Specific to "Classiques des Sciences Sociales", original page number -->
-      <xsl:when test="translate(., ' .0123456789IVXLC', '')='p'">
-        <xsl:variable name="n" select="normalize-space(translate(., ' .p', ''))"/>
+      <xsl:when test="translate(., '  .0123456789IVXLC', '')='p'">
+        <xsl:variable name="n" select="normalize-space(translate(., ' .p', ' '))"/>
         <pb ana="src" n="{$n}">
           <xsl:attribute name="xml:id">
             <xsl:text>p</xsl:text>
@@ -291,6 +291,9 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
             <xsl:value-of select="concat('p', $n)"/>
           </xsl:attribute>
         </pb>
+      </xsl:when>
+      <xsl:when test="contains(., '###')">
+        <pb n="###"/>
       </xsl:when>
       <xsl:otherwise>
         <pb n="{normalize-space(translate(., '[]', ''))}"/>
