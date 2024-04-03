@@ -48,6 +48,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="corpsdetexte"/>
   <style level="0" name="corpsdutexte"/>
   <style level="0" name="defaultparagraphfont"/>
+  <style level="0" name="footnotecharacters"/>
   <style level="0" name="footnotereference"/>
   <style level="0" name="freeform"/>
   <style level="0" name="legendedelimage"/>

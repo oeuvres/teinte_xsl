@@ -85,6 +85,20 @@
     <xsl:apply-templates select="*[1]"/>
   </xsl:template>
   <xsl:template match="mc:Fallback"/>
+  <!-- Recursive search for title level -->
+  <xsl:template name="lvl">
+    <xsl:param name="w:style" select="nonode"/>
+    <xsl:choose>
+      <xsl:when test="$w:style/w:pPr/w:outlineLvl/@w:val">
+        <xsl:value-of select="$w:style/w:pPr/w:outlineLvl/@w:val"/>
+      </xsl:when>
+      <xsl:when test="$w:style/w:basedOn">
+        <xsl:call-template name="lvl">
+          <xsl:with-param name="w:style" select="key('w:style', $w:style/w:basedOn)"/>
+        </xsl:call-template>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
   <!-- block -->
   <xsl:template match="w:p">
     <xsl:variable name="w:style" select="key('w:style', w:pPr/w:pStyle/@w:val)"/>
@@ -98,7 +112,9 @@
       <xsl:value-of select="$id"/>
     </xsl:variable>
     <xsl:variable name="teinte_p" select="key('teinte_p', $style_name)"/>
-    <xsl:variable name="lvl" select="$w:style/w:pPr/w:outlineLvl/@w:val"/>
+    <xsl:variable name="lvl">
+      <xsl:call-template name="lvl"/>
+    </xsl:variable>
     <xsl:choose>
       <!-- para in table cell -->
       <xsl:when test="ancestor::w:tc">
@@ -144,7 +160,13 @@
           <xsl:apply-templates select="w:hyperlink | w:r"/>
         </p>
       </xsl:when>
-      <!-- known semantic style names, should not be structuring heading -->
+      <!-- known semantic style names, should not be structuring heading (?) -->
+      <!-- Bug lev -->
+      <xsl:when test="number($lvl) &gt; 0 and number($lvl) &lt; 9 and not(ancestor::w:tc|ancestor::w:footnote)">
+        <head level="{$lvl+1}">
+          <xsl:apply-templates select="w:hyperlink | w:r"/>
+        </head>
+      </xsl:when>
       <xsl:when test="$teinte_p/@parent != ''">
         <xsl:element name="{$teinte_p/@parent}">
           <!-- atts on parent -->
@@ -175,12 +197,6 @@
           </xsl:if>
           <xsl:apply-templates select="w:hyperlink | w:r"/>
         </xsl:element>
-      </xsl:when>
-      <!-- Bug lev -->
-      <xsl:when test="number($lvl) &gt; 0 and number($lvl) &lt; 9 and not(ancestor::w:tc|ancestor::w:footnote)">
-        <head level="{$lvl+1}">
-          <xsl:apply-templates select="w:hyperlink | w:r"/>
-        </head>
       </xsl:when>
       <!-- some heading may hav set list item, TODO listStyle, see in w:pPr/w:numPr/w:numId/@w:val -->
       <xsl:when test="w:pPr/w:numPr">
