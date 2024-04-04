@@ -597,6 +597,34 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- Generate who value candidate -->
+  <xsl:template name="who">
+    <!-- No note -->
+    <xsl:variable name="text" select="text()"/>
+    <xsl:variable name="who">
+      <xsl:choose>
+        <xsl:when test="contains($text, ',')">
+          <xsl:value-of select="substring-before(., ',')"/>
+        </xsl:when>
+        <xsl:when test="contains($text, '.')">
+          <xsl:value-of select="substring-before(., '.')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$text"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="translate(normalize-space($who),$ABC ,$abc)"/>
+  </xsl:template>
+  <!-- role, id for speaker -->
+  <xsl:template match="tei:role">
+    <xsl:copy>
+      <xsl:attribute name="xml:id">
+        <xsl:call-template name="who"/>
+      </xsl:attribute>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
   <!--  -->
   <xsl:template match="tei:div">
     <xsl:variable name="head" select="translate(normalize-space(tei:head), $ABC, $abc)"/>
@@ -622,31 +650,20 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
           <xsl:variable name="first" select="generate-id(tei:speaker[1])"/>
           <xsl:apply-templates select="*[following-sibling::*[generate-id()=$first]]"/>
           <xsl:for-each select="tei:speaker">
+            <xsl:text>&#10;</xsl:text>
             <sp>
               <xsl:attribute name="who">
-                <!-- No note -->
-                <xsl:variable name="text" select="text()"/>
-                <xsl:variable name="who">
-                  <xsl:choose>
-                    <xsl:when test="contains($text, ',')">
-                      <xsl:value-of select="substring-before(., ',')"/>
-                    </xsl:when>
-                    <xsl:when test="contains($text, '.')">
-                      <xsl:value-of select="substring-before(., '.')"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="$text"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:variable>
-                <xsl:value-of select="translate(normalize-space($who),$ABC ,$abc)"/>
+                <xsl:call-template name="who"/>
               </xsl:attribute>
               <xsl:copy-of select="tei:anchor[1]/@xml:id"/>
+              <xsl:text>&#10;</xsl:text>
               <xsl:apply-templates select="."/>
               <xsl:for-each select="following-sibling::*[1]">
                 <xsl:call-template name="sp"/>
               </xsl:for-each>
+              <xsl:text>&#10;</xsl:text>
             </sp>
+            <xsl:text>&#10;</xsl:text>
           </xsl:for-each>
         </xsl:copy>
       </xsl:when>

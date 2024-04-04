@@ -87,14 +87,16 @@
   <xsl:template match="mc:Fallback"/>
   <!-- Recursive search for title level -->
   <xsl:template name="lvl">
-    <xsl:param name="w:style" select="nonode"/>
+    <xsl:param name="style-name"/>
+    <xsl:variable name="w:style" select="key('w:style', $style-name)"/>
     <xsl:choose>
+      <xsl:when test="not($w:style)"/>
       <xsl:when test="$w:style/w:pPr/w:outlineLvl/@w:val">
         <xsl:value-of select="$w:style/w:pPr/w:outlineLvl/@w:val"/>
       </xsl:when>
       <xsl:when test="$w:style/w:basedOn">
         <xsl:call-template name="lvl">
-          <xsl:with-param name="w:style" select="key('w:style', $w:style/w:basedOn)"/>
+          <xsl:with-param name="style-name" select="$w:style/w:basedOn/@w:val"/>
         </xsl:call-template>
       </xsl:when>
     </xsl:choose>
@@ -113,7 +115,9 @@
     </xsl:variable>
     <xsl:variable name="teinte_p" select="key('teinte_p', $style_name)"/>
     <xsl:variable name="lvl">
-      <xsl:call-template name="lvl"/>
+      <xsl:call-template name="lvl">
+        <xsl:with-param name="style-name" select="w:pPr/w:pStyle/@w:val"/>
+      </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
       <!-- para in table cell -->
@@ -162,7 +166,7 @@
       </xsl:when>
       <!-- known semantic style names, should not be structuring heading (?) -->
       <!-- Bug lev -->
-      <xsl:when test="number($lvl) &gt; 0 and number($lvl) &lt; 9 and not(ancestor::w:tc|ancestor::w:footnote)">
+      <xsl:when test="number($lvl) &gt;= 0 and number($lvl) &lt; 9 and not(ancestor::w:tc|ancestor::w:footnote)">
         <head level="{$lvl+1}">
           <xsl:apply-templates select="w:hyperlink | w:r"/>
         </head>
@@ -640,9 +644,7 @@ Seen
   <xsl:template match="w:sectPr"/>
   <!-- spaces -->
   <xsl:template match="w:tab">
-    <space rend="tab">
-      <xsl:text>    </xsl:text>
-    </space>
+    <xsl:text>    </xsl:text>
   </xsl:template>
   <!-- 
       <w:tblGrid>

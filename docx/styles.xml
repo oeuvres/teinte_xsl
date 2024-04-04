@@ -60,6 +60,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="notesdebasdepage"/>
   <style level="0" name="notedefin"/>
   <style level="0" name="notesdefin"/>
+  <style level="0" name="standard"/>
   <style level="0" name="style"/>
   <style level="0" name="texte"/>
   <style level="0" name="texteducorps"/>
@@ -202,7 +203,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="signed" element="signed" doc="true"/>
   <style level="p" name="signature" element="signed"/>
   <style level="p" name="soustitre" element="head" attribute="type" value="sub"/>
-  <style level="p" name="speaker"  element="speaker" doc="true"/>
+  <style level="p" name="speaker" element="speaker" doc="true"/>
   <style level="p" name="stage" element="stage" doc="true"/>
   <style level="p" name="stageromain" element="stage" attribute="rend" value="not-i"/>
   <style level="p" name="stageitaliquecourt" element="stage" attribute="rend" value="right"/>  
