@@ -585,15 +585,23 @@ Seen
     </xsl:variable>
     <xsl:variable name="xml10">
       <xsl:choose>
+        <!-- allow unknown styles
         <xsl:when test="$style_name = '' or string($teinte_c/@element) = ''">
           <xsl:copy-of select="$xml5"/>
         </xsl:when>
+        -->
         <!-- redundant -->
         <xsl:when test="ancestor::w:hyperlink">
           <xsl:copy-of select="$xml5"/>
         </xsl:when>
         <xsl:when test="$teinte_c/@element != ''">
           <xsl:element name="{$teinte_c/@element}">
+            <!-- bad for reconnect -->
+            <xsl:if test="$teinte_c/@attribute">
+              <xsl:attribute name="{$teinte_c/@attribute}">
+                <xsl:value-of select="$teinte_c/@value"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:copy-of select="$xml5"/>
           </xsl:element>
         </xsl:when>
