@@ -279,9 +279,17 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="example" element="q"/>
   <style level="c" name="exposant" element="sup"/>
   <style level="c" name="foreign" element="foreign"/>
+  <style level="c" name="foreignara" element="foreign" attribute="xml:lang" value="ara"/>
+  <style level="c" name="foreigngrc" element="foreign" attribute="xml:lang" value="grc"/>
+  <style level="c" name="foreignheb" element="foreign" attribute="xml:lang" value="heb"/>
+  <style level="c" name="foreignita" element="foreign" attribute="xml:lang" value="ita"/>
+  <style level="c" name="foreignlat" element="foreign" attribute="xml:lang" value="lat"/>
+  <style level="c" name="foreignper" element="foreign" attribute="xml:lang" value="per"/>
+  <style level="c" name="form" element="form"/>
   <style level="c" name="geogname" element="geogName" doc="true"/>
   <style level="c" name="geographie" element="geogName"/>
   <style level="c" name="gloss" element="gloss" doc="true"/>
+  <style level="c" name="gram" element="gram"/>
   <style level="c" name="htmlcite" element="title"/>
   <style level="c" name="id" element="id"/>
   <style level="c" name="ident" element="ident"/>
@@ -314,6 +322,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="quote" element="quote"/>
   <style level="c" name="quotec" element="quote"/>
   <style level="c" name="quotecar" element="quote"/>
+  <style level="c" name="ref" element="ref"/>
   <style level="c" name="refletter" element="ref" attribute="type" value="letter"/>
   <style level="c" name="rswork" element="rs" attribute="type" value="work"/>
   <style level="c" name="s" element="s"/>

@@ -26,6 +26,9 @@
   <xsl:variable name="idchars">abcdefghijklmnopqrstuvwxyz0123456789</xsl:variable>
   <xsl:key name="footnotes" match="//w:footnotes/w:footnote" use="@w:id"/>
   <xsl:key name="endnotes" match="//w:endnotes/w:endnote" use="@w:id"/>
+  <xsl:key name="comments" 
+    match="/pkg:package/pkg:part[@pkg:name = '/word/comments.xml']/pkg:xmlData/*/w:comment" 
+    use="@w:id"/>
   <xsl:key name="document.xml.rels" 
     match="/pkg:package/pkg:part[@pkg:name = '/word/_rels/document.xml.rels']/pkg:xmlData/*/rels:Relationship" 
     use="@Id"/>
@@ -802,6 +805,15 @@ Seen
     </xsl:choose>
   </xsl:template>
   <!-- Comments -->
-  <xsl:template match="w:commentReference"/>
+  <xsl:template match="w:commentRangeStart"/>
+  <xsl:template match="w:commentRangeEnd"/>
+  <xsl:template match="w:commentReference">
+    <xsl:variable name="comment" select="key('comments', @w:id)"/>
+    <xsl:comment>
+      <xsl:value-of select="$comment/@w:author"/>
+      <xsl:text> — </xsl:text>
+      <xsl:apply-templates select="$comment/*"/>
+    </xsl:comment>
+  </xsl:template>
   <xsl:template match="w:object">[MS:object]</xsl:template>
 </xsl:transform>
