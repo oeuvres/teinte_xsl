@@ -180,6 +180,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="poem" element="lg"/>
   <style level="p" name="postscript" element="p" parent="postscript" doc="true"/>
   <style level="p" name="pre" element="eg"/>
+  <style level="p" name="ps" element="p" parent="postscript"/>
   <style level="p" name="preformattedtext" element="eg"/>
   <style level="p" name="ptop" element="p" rend="keep"/>
   <style level="p" name="q" element="q" doc="true"/>
