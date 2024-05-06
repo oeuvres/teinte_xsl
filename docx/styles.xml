@@ -173,6 +173,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="note" element="p" parent="notep"/>
   <style level="p" name="obs" element="p" parent="quote" rend="keep" attribute="type" value="observation"/>
   <style level="p" name="observation" element="p" parent="quote" rend="keep" attribute="type" value="observation"/>
+  <style level="p" name="observations" element="p" parent="quote" rend="keep" attribute="type" value="observation"/>
   <style level="p" name="opener" element="opener" doc="true"/>
   <style level="p" name="p" element="p" rend="keep" doc="true"/>
   <style level="p" name="pb" element="pb" doc="true"/>
@@ -286,7 +287,9 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="foreignita" element="foreign" attribute="xml:lang" value="ita"/>
   <style level="c" name="foreignlat" element="foreign" attribute="xml:lang" value="lat"/>
   <style level="c" name="foreignper" element="foreign" attribute="xml:lang" value="per"/>
-  <style level="c" name="form" element="form"/>
+  <style level="c" name="form" element="form" doc="true"/>
+  <style level="c" name="formula" element="formula" doc="true"/>
+  <style level="c" name="formulachar" element="formula"/>
   <style level="c" name="geogname" element="geogName" doc="true"/>
   <style level="c" name="geographie" element="geogName"/>
   <style level="c" name="gloss" element="gloss" doc="true"/>

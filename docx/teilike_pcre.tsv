@@ -1,7 +1,7 @@
 search	replace	?comment
 # Variables		
 
-($inline)	(author|b|bg_\w+|emph|foreign|em|hi|i|id|orth|phr|ref|sc|seg|strong|sup|tech|term|th|title|u)	
+($inline)	(author|b|bg_\w+|emph|foreign|em|formula|hi|i|id|orth|phr|ref|sc|seg|strong|sup|tech|term|th|title|u)	
 ($atts)	( [^>]*)?	
 ($pun)	([,;:\.!?—–  \s]+)	keep () or [] in inlines
 ($block)	(head|note|p)	

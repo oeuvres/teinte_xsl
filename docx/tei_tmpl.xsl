@@ -787,11 +787,11 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
-  <!-- figure with a generated id -->
+  <!-- figure, no more generated id -->
+  <!--
   <xsl:template match="tei:figure">
     <xsl:variable name="prev" select="local-name(preceding-sibling::*[1])"/>
     <xsl:copy>
-      <!-- auto id -->
       <xsl:attribute name="xml:id">
         <xsl:text>fig</xsl:text>
         <xsl:choose>
@@ -808,6 +808,7 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
+-->
   <!-- Wash some inline typo in headings -->
   <xsl:template match="tei:head">
     <!-- Put page breaks before titles -->
