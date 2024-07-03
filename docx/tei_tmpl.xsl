@@ -292,33 +292,26 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="n" select="number(translate($value, '[]p.  ', ''))"/>
-    <xsl:choose>
-      <xsl:when test="$n &gt; 0">
-        <pb>
-          <xsl:copy-of select="@*"/>
-          <xsl:attribute name="xml:id">
-            <xsl:value-of select="concat('p', $n)"/>
-          </xsl:attribute>
-          <xsl:attribute name="n">
-            <xsl:value-of select="$n"/>
-          </xsl:attribute>
-        </pb>
-      </xsl:when>
-      <xsl:when test="contains(., '###')">
-        <pb n="###"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <pb>
-          <xsl:copy-of select="@*"/>
-          <xsl:if test="not(@n) and $value != ''">
-            <xsl:attribute name="n">
-              <xsl:value-of select="$value"/>
-            </xsl:attribute>
-          </xsl:if>
-        </pb>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="norm" select="normalize-space(translate($value, ' []{}()', ' '))"/>
+    <xsl:variable name="n">
+      <xsl:choose>
+        <xsl:when test="starts-with($norm, 'p.')">
+          <xsl:value-of select="normalize-space(substring($norm, 3))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$norm"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <pb>
+      <xsl:copy-of select="@*"/>
+      <xsl:attribute name="xml:id">
+        <xsl:value-of select="concat('p', $n)"/>
+      </xsl:attribute>
+      <xsl:attribute name="n">
+        <xsl:value-of select="$n"/>
+      </xsl:attribute>
+    </pb>
   </xsl:template>
   <!-- Notes candidates -->
   <xsl:template match="tei:ref[translate(., '[]()1234567890', '')=''][starts-with(@target, '#Footnote')]">
