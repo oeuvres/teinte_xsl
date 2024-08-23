@@ -83,6 +83,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="adcitationrom" element="p" parent="quote" rend="keep"/>
   <style level="p" name="adlocalcitationrom" element="p" parent="quote" rend="keep"/>
   <style level="p" name="adresume" element="p" parent="argument"/>
+  <style level="p" name="annotationtext" element="p" parent="quote" rend="keep" attribute="type" value="story"/>
   <style level="p" name="argument" element="p" parent="argument" doc="true"/>
   <style level="p" name="auteur" element="byline"/>
   <style level="p" name="author" element="byline"/>
@@ -135,6 +136,8 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="p" name="footnote" element="p"/><!-- in odt, used inside notes -->
   <style level="p" name="footnotetext" element="note"/><!-- note as a block -->
   <style level="p" name="form" element="form" parent="entryFree"/>
+  <style level="p" name="formula" element="formula" doc="true"/>
+  <style level="p" name="formulapar" element="formula"/>
   <style level="p" name="fw" element="fw" doc="true"/>
   <style level="p" name="genre" element="label" attribute="type" value="genus"/>
   <style level="p" name="heading" element="label" attribute="type" value="head"/>

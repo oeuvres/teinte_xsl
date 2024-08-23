@@ -1060,9 +1060,8 @@ Tables
     </xsl:choose>
   </xsl:template>
   <!--
-<h2>Caractères</h2>
+<h2>Char level</h2>
 
-<p>Balises de niveau mot, à l'intérieur d'un paragraphe.</p>
 
 <h3>HTML</h3>
 
@@ -1137,6 +1136,14 @@ Tables
             <xsl:with-param name="from" select="$from"/>
           </xsl:apply-templates>
         </sup>
+      </xsl:when>
+      <xsl:when test="starts-with($rend, 'var')">
+        <var>
+          <xsl:call-template name="atts"/>
+          <xsl:apply-templates>
+            <xsl:with-param name="from" select="$from"/>
+          </xsl:apply-templates>
+        </var>
       </xsl:when>
       <!-- generated from docx, keep it ? -->
       <xsl:when test="contains($rend, 'bg_')">
