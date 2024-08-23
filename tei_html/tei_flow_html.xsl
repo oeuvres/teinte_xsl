@@ -1202,6 +1202,32 @@ Tables
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <xsl:template match="tei:formula">
+    <xsl:param name="from"/>
+    <xsl:variable name="inline">
+      <xsl:call-template name="tei:isInline"/>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$inline != ''">
+        <span>
+          <xsl:call-template name="atts"/>
+          <xsl:apply-templates>
+            <xsl:with-param name="from" select="$from"/>
+          </xsl:apply-templates>
+        </span>
+      </xsl:when>
+      <xsl:otherwise>
+        <p>
+          <xsl:call-template name="atts"/>
+          <xsl:apply-templates>
+            <xsl:with-param name="from" select="$from"/>
+          </xsl:apply-templates>
+        </p>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!--
     use the @scheme for a link ? TEI, Docbook…
 

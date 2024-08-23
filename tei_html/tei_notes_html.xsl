@@ -83,9 +83,6 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
     </xsl:choose>
   </xsl:template>
   
-  <xsl:template match="tei:note" mode="fn">
-    <xsl:call-template name="note"/>
-  </xsl:template>
   
 
   <xsl:template name="footnotes-old">
@@ -1020,7 +1017,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       <xsl:value-of select="$class"/>
       <xsl:text> </xsl:text>
       <!-- Name of the element (except from a list where TEI info will be redundant with HTML name) -->
-      <xsl:if test="not(contains( ' abbr add cell code del eg emph hi item list q ref row seg table ' , concat(' ', local-name(), ' ')))">
+      <xsl:if test="not(contains( ' abbr add cell code del eg emph hi item list note q ref row seg table ' , concat(' ', local-name(), ' ')))">
         <xsl:value-of select="local-name()"/>
       </xsl:if>
       <xsl:text> </xsl:text>
