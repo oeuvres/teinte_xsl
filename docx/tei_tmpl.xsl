@@ -135,7 +135,7 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
     <xsl:apply-templates/>
   </xsl:template>
   <!-- typo inlines -->
-  <xsl:template match="tei:b | tei:strong | tei:sup | tei:sc | tei:u">
+  <xsl:template match="tei:b | tei:overline | tei:sc | tei:strong | tei:sup  | tei:u | tei:underline">
     <hi>
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="rend">

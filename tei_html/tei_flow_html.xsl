@@ -1073,21 +1073,13 @@ Tables
     <xsl:choose>
       <xsl:when test=". =''"/>
       <!-- si @rend est un nom d'élément HTML -->
-      <xsl:when test="contains( ' b big em i s small strike strong sub sup tt u ', concat(' ', $rend, ' '))">
+      <xsl:when test="contains( ' b big em i s small strike strong sub sup tt u var ', concat(' ', $rend, ' '))">
         <xsl:element name="{$rend}" namespace="http://www.w3.org/1999/xhtml">
           <xsl:call-template name="atts"/>
           <xsl:apply-templates>
             <xsl:with-param name="from" select="$from"/>
           </xsl:apply-templates>
         </xsl:element>
-      </xsl:when>
-      <xsl:when test="contains($rend, 'initial')">
-        <span>
-          <xsl:call-template name="atts"/>
-          <xsl:apply-templates>
-            <xsl:with-param name="from" select="$from"/>
-          </xsl:apply-templates>
-        </span>
       </xsl:when>
       <xsl:when test="$rend = ''">
         <i>
@@ -1121,7 +1113,7 @@ Tables
           </xsl:apply-templates>
         </sub>
       </xsl:when>
-      <xsl:when test="starts-with($rend, 'sc')">
+      <xsl:when test="contains($rend, 'initial') or starts-with($rend, 'over') or starts-with($rend, 'sc') or starts-with($rend, 'under')">
         <span>
           <xsl:call-template name="atts"/>
           <xsl:apply-templates>
@@ -1159,7 +1151,7 @@ Tables
           </xsl:apply-templates>
         </span>
       </xsl:when>
-      <!-- maybe tei genrated from html mess, thing like <i rend="t15"></i> -->
+      <!-- maybe tei generated from html mess, thing like <i rend="t15"></i> -->
       <xsl:otherwise>
         <i>
           <xsl:call-template name="atts"/>

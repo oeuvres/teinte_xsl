@@ -315,6 +315,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="c" name="num" element="num" doc="true"/>
   <style level="c" name="orth" element="orth" doc="true"/>
   <style level="c" name="orthital" element="orth" attribute="rend" value="i"/>
+  <style level="c" name="overline" element="overline"/>
   <style level="c" name="pagenumber" element="num"/>
   <style level="c" name="pagination" element="pb"/>
   <style level="c" name="pagenum" element="pb"/>
