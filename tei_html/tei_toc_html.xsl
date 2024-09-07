@@ -248,7 +248,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       <xsl:attribute name="href">
         <xsl:call-template name="href"/>
       </xsl:attribute>
-      <xsl:if test="$class">
+      <xsl:if test="$class != ''">
         <xsl:attribute name="class">
           <xsl:value-of select="$class"/>
         </xsl:attribute>
@@ -419,7 +419,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
         <xsl:when test="count($children) &gt; 0">
           <xsl:call-template name="a"/>
           <ol>
-            <xsl:if test="$class">
+            <xsl:if test="$class != ''">
               <xsl:attribute name="class">
                 <xsl:value-of select="$class"/>
               </xsl:attribute>

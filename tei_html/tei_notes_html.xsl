@@ -71,7 +71,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
     <xsl:apply-templates mode="fn"/>
   </xsl:template>
 
-  <!-- Le template principal affichant des notes hors flux -->
+  <!-- note mode foot, only for inline notes, not block notes -->
   <xsl:template match="tei:note" mode="fn" name="fn">
     <xsl:param name="resp"/>
     <xsl:choose>
@@ -82,8 +82,6 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
-  
 
   <xsl:template name="footnotes-old">
     <xsl:param name="from" select="."/>
@@ -1017,7 +1015,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       <xsl:value-of select="$class"/>
       <xsl:text> </xsl:text>
       <!-- Name of the element (except from a list where TEI info will be redundant with HTML name) -->
-      <xsl:if test="not(contains( ' abbr add cell code del eg emph hi item list note q ref row seg table ' , concat(' ', local-name(), ' ')))">
+      <xsl:if test="not(contains( ' abbr add cell code del eg emph hi item list q ref row seg table ' , concat(' ', local-name(), ' ')))">
         <xsl:value-of select="local-name()"/>
       </xsl:if>
       <xsl:text> </xsl:text>
