@@ -445,13 +445,13 @@ Seen
       <xsl:variable name="val" select="w:rPr/w:u/@w:val"/>
       <xsl:choose>
         <xsl:when test="not(w:rPr/w:u)"/>
-        <xsl:when test="not($w:style) and not($w:style/w:rPr/w:u)"/>
         <xsl:when test="$val = '0' or $val='false' or $val = 'off' or $val = 'none'"/>
         <xsl:when test="$val != ''">
           <xsl:value-of select="$val"/>
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
+
     <!-- small caps -->
     <xsl:variable name="sc">
       <xsl:variable name="val" select="w:rPr/w:smallCaps/@w:val"/>
@@ -479,7 +479,7 @@ Seen
         <xsl:when test="w:rPr/w:i">i</xsl:when>
       </xsl:choose>
     </xsl:variable>
-    <!-- bold, dangerous in titles, to think -->
+    <!-- bold -->
     <xsl:variable name="bval" select="string(w:rPr/w:b/@w:val)"/>
     <xsl:variable name="bCsval" select="string(w:rPr/w:bCs/@w:val)"/>
     <xsl:variable name="b">

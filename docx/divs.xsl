@@ -108,6 +108,11 @@
 
   <xsl:template match="tei:item/@level"/>
   
+  <xsl:template match="tei:pb">
+    <pb>
+      <xsl:value-of select="normalize-space(.)"/>
+    </pb>
+  </xsl:template>
 
   <xsl:template match="tei:head[@level]">
     <xsl:choose>
