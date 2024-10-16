@@ -794,6 +794,11 @@ s#</(bg|color|font|mark)_[^>]+>#</hi>#g
       <xsl:apply-templates/>
     </xsl:copy>
   </xsl:template>
+  <xsl:template match="tei:note/tei:note">
+    <p>
+      <xsl:apply-templates select="node()|@*"/>
+    </p>
+  </xsl:template>
   <!-- figure, no more generated id -->
   <!--
   <xsl:template match="tei:figure">

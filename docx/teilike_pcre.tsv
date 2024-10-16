@@ -11,8 +11,8 @@ search	replace	?comment
 
 # Page breaks
 \[([pf]\.[  ][^<>\]]+)\]	<pb>\1</pb>	Page break with no style
-</pb><pb>		broken pb
 <pb>([  \n]*)</pb>	 	normalize space 
+</pb><pb>		broken pb
 <([a-z]+)>(<pb>[^<>]+</pb>)</\1>	\2	false para, doubles <pb> upper, inlines
 <([a-z]+)>(<pb>[^<>]+</pb>)</\1>	\2	…
 <([a-z]+)>(<pb>[^<>]+</pb>)</\1>	\2	…
