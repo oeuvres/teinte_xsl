@@ -5,11 +5,12 @@
 ![Teinte xsl graph](https://oeuvres.github.io/teinte/docs/teinte_xsl.png)
 
 This pack is compatible with xsltproc and other XSLT engines. Tested with
+
  * PHP: [teinte_php](https://github.com/oeuvres/teinte_php)
  * Java: [alix](https://github.com/oeuvres/alix)
- * Python: a command line pilot for Python is planned, needs support [teinte_py](https://github.com/oeuvres/teinte_py)
  * Javascript: direct transformation in browser (see below)
  * Bash: (see below)
+ * Python: a command line pilot for Python is planned, needs support [teinte_py](https://github.com/oeuvres/teinte_py)
 
 # Browser
 
