@@ -19,7 +19,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   xmlns:tei="http://www.tei-c.org/ns/1.0"
   exclude-result-prefixes="tei" 
   >
-  <xsl:import href="../tei_common.xsl"/>
+  <xsl:import href="tei_common.xsl"/>
     
   <!-- Generate a relative tree, for example in a section -->
   <xsl:template name="tocrel">
@@ -120,13 +120,14 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
           <xsl:otherwise>collateral</xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
+      <xsl:variable name="generate-id" select="generate-id()"/>
       <!-- link only on last split child -->
       <xsl:choose>
-        <xsl:when test="key('split', generate-id())">
+        <xsl:when test="key('split', $generate-id)">
           <a>
             <xsl:attribute name="href">
               <xsl:choose>
-                <xsl:when test="generate-id() = $localid">#</xsl:when>
+                <xsl:when test="$generate-id = $localid">#</xsl:when>
                 <xsl:otherwise>
                   <xsl:call-template name="href"/>
                 </xsl:otherwise>
@@ -140,6 +141,16 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
           <div>
             <xsl:call-template name="title"/>
           </div>
+        </xsl:when>
+        <!-- in local tree, no more localid, local anchor -->
+        <xsl:when test="not($localid)">
+          <a>
+            <xsl:attribute name="href">
+              <xsl:text>#</xsl:text>
+              <xsl:call-template name="id"/>
+            </xsl:attribute>
+            <xsl:call-template name="title"/>
+          </a>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="a"/>
@@ -156,19 +167,18 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
             </xsl:apply-templates>
           </ol>
         </xsl:when>
-        <!-- local tree, go in, forget localid -->
-        <xsl:when test="generate-id() = $localid">
-          <ol>
-            <xsl:apply-templates select="$children" mode="toclocal"/>
-          </ol>
-        </xsl:when>
-        <!-- in local tree -->
+        <!-- in local tree, no more localid -->
         <xsl:when test="not($localid)">
           <ol>
             <xsl:apply-templates select="$children" mode="toclocal"/>
           </ol>
         </xsl:when>
-        <!-- Should ne  -->
+        <!-- local tree, go in, forget localid -->
+        <xsl:when test="$generate-id = $localid">
+          <ol>
+            <xsl:apply-templates select="$children" mode="toclocal"/>
+          </ol>
+        </xsl:when>
       </xsl:choose>
     </li>
   </xsl:template>
@@ -325,11 +335,6 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
     <xsl:variable name="children" select="tei:group | tei:text | tei:div 
       | tei:div0 | tei:div1 | tei:div2 | tei:div3 | tei:div4 | tei:div5 | tei:div6 | tei:div7 "/>
     <xsl:choose>
-      <xsl:when test="self::tei:body and count($children) &lt; 1">
-        <li>
-          <xsl:call-template name="a"/>
-        </li>
-      </xsl:when>
       <xsl:when test="count($children) = 1">
         <li>
           <xsl:variable name="title">
@@ -349,6 +354,12 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
           </xsl:for-each>
         </li>
       </xsl:when>
+      <xsl:when test="count($children) &gt; 0">
+        <xsl:apply-templates select="tei:group | tei:text | tei:div 
+      | tei:div0 | tei:div1" mode="li"/>
+      </xsl:when>
+      <!-- body without parts, do nothing ? castList ? titlePage ? -->
+      <xsl:when test="self::tei:body"/>
       <!-- simple content ? -->
       <xsl:when test="not(tei:castList | tei:div | tei:div1)">
         <li>
@@ -372,9 +383,6 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
             </xsl:for-each>
           </ol>
         </li>
-      </xsl:when>
-      <xsl:when test="self::tei:body">
-        <xsl:apply-templates select="tei:castList | tei:div | tei:div1 | tei:titlePage" mode="li"/>
       </xsl:when>
       <!-- div content -->
       <xsl:otherwise>
@@ -400,7 +408,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   </xsl:template>
   <!-- sectionnement, traverser -->
   <xsl:template match=" tei:div | tei:div0 | tei:div1 | tei:div2 | tei:div3 | tei:div4 | tei:div5 | tei:div6 | tei:div7 | tei:group " mode="li">
-    <xsl:param name="class">tree</xsl:param>
+    <xsl:param name="class"/>
     <!-- un truc pour pouvoir maintenir ouvert des niveaux de table des matières -->
     <xsl:param name="less" select="0"/>
     <!-- limit depth -->
