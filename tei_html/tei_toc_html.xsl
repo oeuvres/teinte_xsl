@@ -19,7 +19,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   xmlns:tei="http://www.tei-c.org/ns/1.0"
   exclude-result-prefixes="tei" 
   >
-  <xsl:import href="tei_common.xsl"/>
+  <xsl:import href="../tei_common.xsl"/>
     
   <!-- Generate a relative tree, for example in a section -->
   <xsl:template name="tocrel">
