@@ -78,6 +78,7 @@ LGPL  http://www.gnu.org/licenses/lgpl.html
   <style level="0" name="titre9car"/>
   <!-- styles paragraph level -->
   <style level="p" name="ab" element="ab" attribute="type" value="ornament" doc="true"/>
+  <style level="p" name="abstract" element="p" parent="argument" attribute="rend" value="abstract"/>
   <style level="p" name="address" element="addrLine" parent="address" doc="true"/>
   <style level="p" name="addrline" element="addrLine" parent="address"/>
   <style level="p" name="adcitationrom" element="p" parent="quote" rend="keep"/>
