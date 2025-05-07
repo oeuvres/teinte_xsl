@@ -35,7 +35,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
               <xsl:apply-templates select="$biblStruct/tei:analytic/tei:title/node()"/>
             </xsl:when>
             <xsl:when test="$biblStruct/tei:monogr">
-              <xsl:apply-templates select="$biblStruct/tei:analytic/tei:title/node()"/>
+              <xsl:apply-templates select="$biblStruct/tei:monogr/tei:title/node()"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title/node()"/>

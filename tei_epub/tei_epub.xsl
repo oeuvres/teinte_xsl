@@ -265,7 +265,7 @@ https://kdp.amazon.com/self-publishing/help?topicId=A1JPUWCSD6F59O
   <xsl:template match="tei:back | tei:body | tei:front" mode="epub">
     <xsl:choose>
       <!-- simple content -->
-      <xsl:when test="tei:p|tei:l|tei:list|tei:argument|tei:table|tei:docTitle|tei:docAuthor">
+      <xsl:when test="tei:p[2]|tei:l|tei:list|tei:lg|tei:argument|tei:table|tei:docTitle|tei:docAuthor">
         <xsl:call-template name="document"/>
       </xsl:when>
       <!-- Sections, blocks will be lost -->

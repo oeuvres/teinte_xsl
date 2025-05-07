@@ -44,7 +44,6 @@ http://wiki.mobileread.com/wiki/Adobe_Digital_Editions#Page-map
   <xsl:template match="opf:metadata" mode="opf:template">
     <metadata>
       <dc:format>application/epub+zip</dc:format>
-      <xsl:apply-templates mode="opf:template"/>
       <dc:identifier id="dcidid">
         <xsl:value-of select="$identifier"/>
       </dc:identifier>
@@ -55,13 +54,14 @@ http://wiki.mobileread.com/wiki/Adobe_Digital_Editions#Page-map
         <xsl:value-of select="$lang"/>
       </dc:language>
       <xsl:choose>
-        <xsl:when test="dc:publisher"/>
         <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher">
           <dc:publisher>
             <xsl:value-of select="normalize-space(/*/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:publisher)"/>
           </dc:publisher>
         </xsl:when>
-        <!-- ?? fallback value ? -->
+        <xsl:otherwise>
+          <xsl:apply-templates select="dc:publisher" mode="opf:template"/>
+        </xsl:otherwise>
       </xsl:choose>
       <!-- A good date -->
       <xsl:if test="$docdate != ''">
@@ -172,7 +172,7 @@ http://wiki.mobileread.com/wiki/Adobe_Digital_Editions#Page-map
     <xsl:param name="type"/>
     <xsl:choose>
       <!-- simple content -->
-      <xsl:when test="tei:p | tei:l | tei:list | tei:argument | tei:table | tei:docTitle | tei:docAuthor">
+      <xsl:when test="tei:p[2] | tei:l | tei:list | tei:argument | tei:table | tei:docTitle | tei:docAuthor">
         <xsl:call-template name="item">
           <xsl:with-param name="type" select="$type"/>
         </xsl:call-template>
