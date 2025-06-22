@@ -27,10 +27,11 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   <!-- Call this template to get all the notes from the current node with their links -->
   
   <xsl:template name="footnotes">
+    <xsl:param name="tei" select="."/>
     <xsl:choose>
       <xsl:when test="function-available('exslt:node-set')">
         <xsl:variable name="notes">
-          <xsl:apply-templates mode="fn"/>
+          <xsl:apply-templates select="$tei" mode="fn"/>
         </xsl:variable>
         <xsl:if test="$notes != ''">
           <section class="footnotes">
@@ -54,7 +55,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="fns">
-          <xsl:apply-templates mode="fn"/>
+          <xsl:apply-templates select="$tei" mode="fn"/>
         </xsl:variable>
         <xsl:if test="$fns != ''">
           <section class="footnotes">
@@ -275,22 +276,22 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   </xsl:template>
   <!-- Note, ref link in flow -->
   <xsl:template name="noteref">
-    <xsl:param name="from"/>
     <xsl:param name="class">noteref</xsl:param>
-    <xsl:variable name="id">
-      <xsl:call-template name="id"/>
+    <xsl:variable name="n">
+      <xsl:apply-templates select="." mode="n"/>
     </xsl:variable>
+    <xsl:variable name="id">
+      <xsl:text>fnref</xsl:text>
+      <xsl:value-of select="$n"/>
+    </xsl:variable>
+    <xsl:variable name="last" select="preceding-sibling::node()[1]"/>
+    <xsl:variable name="lastchar" select="substring($last, string-length($last))"/>
     <xsl:choose>
       <!-- In that case, links are already provided in the source -->
       <xsl:when test="parent::tei:seg[contains(@rendition, '#interval')]">
         <a id="{$id}_">&#x200c;</a>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:variable name="n">
-          <xsl:call-template name="note-n">
-            <xsl:with-param name="from" select="$from"/>
-          </xsl:call-template>
-        </xsl:variable>
         <!-- TODO, multi cibles -->
         <xsl:variable name="target">
           <xsl:choose>
@@ -298,86 +299,179 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
               <xsl:value-of select="substring-before(concat(@target, ' '), ' ')"/>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:call-template name="href">
-                <xsl:with-param name="class" select="$class"/>
-              </xsl:call-template>
+              <xsl:call-template name="notepage"/>
+              <xsl:text>#fn</xsl:text>
+              <xsl:value-of select="$n"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <!-- FBRreader -->
-        <a class="{$class}" href="{$target}" id="{$id}_" epub:type="noteref">
-          <xsl:value-of select="$n"/>
+        <xsl:if test="translate($lastchar, '  &#9;&#10;&#13;', '') != ''"> </xsl:if>
+        <a class="{$class}" role="doc-noteref" epub:type="noteref" href="{$target}" id="{$id}">
+          <sup>
+            <xsl:value-of select="$n"/>
+          </sup>
         </a>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   <!-- Display note number -->
-  <xsl:template name="note-n">
+  
+  <xsl:template match="tei:note" mode="n">
     <xsl:variable name="resp" select="@resp"/>
     <xsl:variable name="hasformat" select="@rend != '' and boolean(translate(substring-before(concat(@rend, ' '), ' '), '1AaIi', '') = '')"/>
     <xsl:choose>
       <xsl:when test="@n">
         <xsl:value-of select="@n"/>
       </xsl:when>
-      <!-- Renvoi à une note -->
+      <!-- direct link to a note [???] -->
+      <!--
       <xsl:when test="self::tei:ref[@type='note']">
         <xsl:for-each select="key('id', substring-after(@target, '#'))[1]">
           <xsl:call-template name="n"/>
         </xsl:for-each>
       </xsl:when>
-      <!--
-      <xsl:when test="self::tei:app">
-        <xsl:number count="tei:app" format="a" level="any" from="*[key('split', generate-id())]"/>
-      </xsl:when>
-      note number by book, not by chapter
-      <xsl:when test="$hasformat and ancestor::*[key('split', generate-id())] and $fnpage = ''">
-        <xsl:number count="tei:note[@rend=$hasformat]" level="any" from="*[key('split', generate-id())]" format="{@rend}"/>
-      </xsl:when>
       -->
-      <xsl:when test="$hasformat">
-        <xsl:number count="tei:note[@rend=$hasformat]" format="{@rend}" from="tei:text" level="any"/>
+      <!-- blocknote -->
+      <xsl:when test="
+           parent::tei:app 
+        or parent::tei:back 
+        or parent::tei:div 
+        or parent::tei:div1 
+        or parent::tei:div2 
+        or parent::tei:div3 
+        or parent::tei:front 
+        or parent::tei:notesStmt 
+        or parent::tei:sp"
+        >
+        <xsl:choose>
+          <xsl:when test="not($split)">
+            <xsl:number count="tei:note[parent::tei:div]"/>
+          </xsl:when>
+          <xsl:when test="ancestor::*[@type = 'chapter']">
+            <xsl:number count="tei:note[parent::tei:div]" from="tei:*[@type = 'chapter']"/>
+          </xsl:when>
+          <!-- Introductive part containing chapters -->
+          <xsl:otherwise>
+            <xsl:number count="tei:note[parent::tei:div]" from="tei:div"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
-      <xsl:when test="@type='app'">
-        <xsl:number count="tei:note[@type='app']" format="I" from="tei:text" level="any"/>
-      </xsl:when>
-      <xsl:when test="@resp='editor'">
-        <xsl:number count="tei:note[@resp=$resp]" format="a" from="tei:text" level="any"/>
-      </xsl:when>
-      <xsl:when test="@resp">
-        <xsl:number count="tei:note[@resp=$resp]" from="tei:text" level="any"/>
-      </xsl:when>
+      <!-- Should be a footnote. Because of <number> syntax, there are repetitions -->
       <xsl:otherwise>
-        <xsl:number count="tei:note[not(@resp) and not(@rend) and not(@place='margin') and not(parent::tei:div) and not(parent::tei:notesStmt)]" from="tei:text" level="any"/>
+        <xsl:choose>
+          <!-- Full document -->
+          <xsl:when test="not($split)">
+            <xsl:choose>
+              <xsl:when test="$hasformat">
+                <xsl:number count="tei:note[@rend=$hasformat]" format="{@rend}" from="tei:text" level="any"/>
+              </xsl:when>
+              <xsl:when test="@type='app'">
+                <xsl:number count="tei:note[@type='app']" format="I" from="tei:text" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp='editor'">
+                <xsl:number count="tei:note[@resp=$resp]" format="a" from="tei:text" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp">
+                <xsl:number count="tei:note[@resp=$resp]" from="tei:text" level="any"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:number count="tei:note[
+                  not(@resp) 
+                  and not(@rend) 
+                  and not(@place='margin') 
+                  and not(parent::tei:div) 
+                  and not(parent::tei:notesStmt)
+                 ]" from="tei:text" level="any"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <!-- Inside a split section, start numerotation from container -->
+          <xsl:when test="ancestor::*[@type = 'chapter']">
+            <xsl:choose>
+              <xsl:when test="$hasformat">
+                <xsl:number count="tei:note[@rend=$hasformat]" format="{@rend}" from="tei:*[@type = 'chapter']" level="any"/>
+              </xsl:when>
+              <xsl:when test="@type='app'">
+                <xsl:number count="tei:note[@type='app']" format="I" from="tei:*[@type = 'chapter']" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp='editor'">
+                <xsl:number count="tei:note[@resp=$resp]" format="a" from="tei:*[@type = 'chapter']" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp">
+                <xsl:number count="tei:note[@resp=$resp]" from="tei:*[@type = 'chapter']" level="any"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:number count="tei:note[
+                  not(@resp) 
+                  and not(@rend) 
+                  and not(@place='margin') 
+                  and not(parent::tei:div) 
+                  and not(parent::tei:notesStmt)
+                 ]" from="tei:*[@type = 'chapter']" level="any"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <!-- Introductive part containing chapters  -->
+          <xsl:otherwise>
+            <xsl:choose>
+              <xsl:when test="$hasformat">
+                <xsl:number count="tei:note[@rend=$hasformat]" format="{@rend}" from="tei:div[parent::tei:body] | tei:front | tei:back" level="any"/>
+              </xsl:when>
+              <xsl:when test="@type='app'">
+                <xsl:number count="tei:note[@type='app']" format="I" from="tei:div[parent::tei:body] | tei:front | tei:back" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp='editor'">
+                <xsl:number count="tei:note[@resp=$resp]" format="a" from="tei:div[parent::tei:body] | tei:front | tei:back" level="any"/>
+              </xsl:when>
+              <xsl:when test="@resp">
+                <xsl:number count="tei:note[@resp=$resp]" from="tei:div[parent::tei:body] | tei:front | tei:back" level="any"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:number count="tei:note[
+                  not(@resp) 
+                  and not(@rend) 
+                  and not(@place='margin') 
+                  and not(parent::tei:div) 
+                  and not(parent::tei:notesStmt)
+                 ]" from="tei:div[parent::tei:body] | tei:front | tei:back" level="any"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template name="notepage">
+    <xsl:choose>
+      <!-- For a deported page of notes (site or epub) -->
+      <xsl:when test="$fnpage != ''">
+        <xsl:value-of select="$fnpage"/>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
   <!-- Note, link to return to anchor -->
   <xsl:template name="noteback">
     <xsl:param name="from"/>
     <xsl:param name="class">noteback</xsl:param>
-    <xsl:variable name="id">
-      <xsl:call-template name="id"/>
+    <xsl:variable name="n">
+      <xsl:apply-templates select="." mode="n"/>
     </xsl:variable>
-    <a class="{$class}">
+    <a class="{$class}" role="doc-backlink">
       <xsl:attribute name="href">
         <xsl:choose>
           <xsl:when test="@target">
             <xsl:value-of select="substring-before(concat(@target, ' '), ' ')"/>
           </xsl:when>
           <xsl:otherwise>
-            <!-- Call a centralized note href template, for epub deported notes -->
-            <xsl:call-template name="href">
-              <xsl:with-param name="class">
-                <xsl:value-of select="$class"/>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:text>_</xsl:text>
+            <xsl:call-template name="notepage"/>
+            <xsl:text>#fnref</xsl:text>
+            <xsl:value-of select="$n"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:call-template name="note-n">
-        <xsl:with-param name="from" select="$from"/>
-      </xsl:call-template>
+      <xsl:value-of select="$n"/>
       <xsl:if test="$class = 'noteback'">
         <xsl:text>. </xsl:text>
       </xsl:if>
@@ -404,28 +498,30 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
     <xsl:param name="from"/>
     <!-- identifiant de la note -->
     <xsl:variable name="id">
-      <xsl:call-template name="id"/>
+      <xsl:text>fn</xsl:text>
+      <xsl:apply-templates select="." mode="n"/>
     </xsl:variable>
     <xsl:variable name="text">
       <xsl:for-each select="text()">
         <xsl:value-of select="normalize-space(.)"/>
       </xsl:for-each>
     </xsl:variable>
-    <aside>
+    <!-- 
+    DPUB-ARIA 1.0 Recommendation
+01-Dec-2023: Removed the requirements to imply list items descendants of doc-bibliography 
+and doc-endnotes are doc-biblioentry and doc-endnote.
+    -->
+    <aside role="doc-footnote">
       <xsl:call-template name="noteatts">
         <xsl:with-param name="class">
           <xsl:choose>
             <xsl:when test="@resp='author'">1</xsl:when>
             <xsl:when test="@resp='editor'">a</xsl:when>
-            <xsl:otherwise>_</xsl:otherwise>
           </xsl:choose>
         </xsl:with-param>
       </xsl:call-template>
       <xsl:attribute name="id">
         <xsl:value-of select="$id"/>
-      </xsl:attribute>
-      <xsl:attribute name="role">
-        <xsl:text>note</xsl:text>
       </xsl:attribute>
       <xsl:attribute name="epub:type">note</xsl:attribute>
       <xsl:variable name="noteback">

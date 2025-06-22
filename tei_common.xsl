@@ -240,6 +240,42 @@ Gobal TEI parameters and variables are divided in different categories
       </xsl:when>
     </xsl:choose>
   </xsl:template>
+  <xsl:param name="bibl">
+    <xsl:call-template name="bibl"/>
+  </xsl:param>
+  <!-- an html bibliographic line -->
+  <xsl:template name="bibl">
+    <xsl:choose>
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl[@type = 'html:title']">
+        <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl[@type = 'html:title']/node()"/>
+      </xsl:when>
+      <xsl:when test="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl[@type = 'zotero']">
+        <xsl:apply-templates select="/*/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:bibl[@type = 'zotero']/node()"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:if test="$byline != ''">
+          <span class="byline">
+            <xsl:copy-of select="$byline"/>
+          </span>
+        </xsl:if>
+        <xsl:if test="$doctitle != ''">
+          <xsl:text> </xsl:text>
+          <em class="title">
+            <xsl:copy-of select="$doctitle"/>
+          </em>
+        </xsl:if>
+        <xsl:variable name="year" select="substring($docdate, 1, 4)"/>
+        <xsl:if test="string(number($year)) != 'NaN'">
+          <xsl:text> </xsl:text>
+          <span class="year">
+            <xsl:text>(</xsl:text>
+            <xsl:value-of select="$year"/>
+            <xsl:text>)</xsl:text>
+          </span>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   <!-- Publication date -->
   <xsl:variable name="issued">
     <xsl:choose>
@@ -335,30 +371,6 @@ Gobal TEI parameters and variables are divided in different categories
   <!-- To produce a normalised id without diacritics translate("Déjà vu, 4", $idfrom, $idto) = "dejavu4"  To produce a normalised id -->
   <xsl:variable name="idfrom">ABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊÏÎÔÖÛÜÇàâäéèêëïîöôüû_ ,.'’ #</xsl:variable>
   <xsl:variable name="idto"  >abcdefghijklmnopqrstuvwxyzaaaeeeiioouucaaaeeeeiioouu_</xsl:variable>
-  <!-- Lower case without diacritics -->
-  <!-- A normalized bibliographic reference -->
-  <xsl:variable name="bibl">
-    <xsl:if test="$byline != ''">
-      <span class="byline">
-        <xsl:copy-of select="$byline"/>
-      </span>
-    </xsl:if>
-    <xsl:variable name="year" select="substring($docdate, 1, 4)"/>
-    <xsl:if test="string(number($year)) != 'NaN'">
-      <xsl:text> </xsl:text>
-      <span class="year">
-        <xsl:text>(</xsl:text>
-        <xsl:value-of select="$year"/>
-        <xsl:text>)</xsl:text>
-      </span>
-    </xsl:if>
-    <xsl:if test="$doctitle != ''">
-      <xsl:text> </xsl:text>
-      <em class="title">
-        <xsl:copy-of select="$doctitle"/>
-      </em>
-    </xsl:if>
-  </xsl:variable>
   
   <!-- A key to handle identified elements -->
   <xsl:key match="*" name="id" use="@xml:id"/>
@@ -647,32 +659,6 @@ Gobal TEI parameters and variables are divided in different categories
   </xsl:template>
   
   
-  <!-- A template to get a descent bibliographic to display -->
-  <xsl:template name="bibl">
-    <xsl:param name="book" select="$bibl"/>
-    <xsl:copy-of select="$book"/>
-    <xsl:variable name="pages">
-      <xsl:call-template name="pages"/>
-    </xsl:variable>
-    <xsl:variable name="analytic">
-      <xsl:call-template name="analytic"/>
-    </xsl:variable>
-    <xsl:if test="$analytic != ''">
-      <xsl:text> « </xsl:text>
-      <span class="analytic">
-        <xsl:copy-of select="$analytic"/>
-      </span>
-      <xsl:text> »</xsl:text>
-    </xsl:if>
-    <xsl:if test="$pages != ''">
-      <xsl:text> </xsl:text>
-      <span class="pages">
-        <xsl:value-of select="$pages"/>
-      </span>
-      <xsl:text> </xsl:text>
-    </xsl:if>
-  </xsl:template>
-  
   <xsl:template name="analytic">
     <xsl:for-each select="ancestor-or-self::*[not(self::tei:TEI)][not(self::tei:text)][not(self::tei:body)]">
       <xsl:if test="position() != 1"> — </xsl:if>
@@ -699,6 +685,90 @@ Gobal TEI parameters and variables are divided in different categories
   <xsl:template name="id">
     <xsl:apply-templates select="." mode="id"/>
   </xsl:template>
+
+  <!-- slugify -->
+  <xsl:template match="tei:head" mode="id">
+    <xsl:call-template name="slugify">
+      <xsl:with-param name="text">
+        <xsl:apply-templates select="." mode="title"/>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- 
+  Generate a slug from the content of an heading.
+  If the string provided exceed 50 chars, the slug is truncated at the end of the last word containing the 50st char.
+  
+  Ex input: § 9. La surestimation du petit côté et la sous-estimation du grand côté du trapèze.
+    output: #_9-la-surestimation-du-petit-cote-et-la-sous-estimation
+  -->
+  <xsl:template name="slugify">
+    <xsl:param name="text"/>
+    <xsl:variable name="max-length" select="50"/>
+    <xsl:variable name="slugfrom">ABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÇÉÈÊÏÎÔÖÛÜàâäçéèêëïîöôüû_-#'’, ;:.?!«»““"§</xsl:variable>
+    <xsl:variable name="slugto"  >abcdefghijklmnopqrstuvwxyzaaaceeeiioouuaaaceeeeiioouu                 </xsl:variable>
+    <!-- Lowercase, remove accents, replace delimiters with spaces, in one translate() -->
+    <xsl:variable name="lc" select="normalize-space(translate($text, $slugfrom, $slugto))"/>
+    <!-- Truncate string before the expensive template of next step -->
+    <xsl:variable name="truncate">
+      <xsl:value-of select="substring($lc, 1, $max-length)"/>
+      <!-- avoid word broken by max-length, take letters before the first delimiter after max-length -->
+      <xsl:value-of select="substring-before(concat(substring($lc, $max-length + 1), ' '), ' ')"/>
+    </xsl:variable>
+    <!-- Strip non slug chars -->
+    <xsl:variable name="strip">
+      <xsl:call-template name="strip-non-alphanum">
+        <xsl:with-param name="text" select="$truncate"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <!-- Last collapse whitespace  -->
+    <xsl:variable name="norm" select="normalize-space($strip)"/>
+    <!-- Hyphenate spaces -->
+    <xsl:variable name="hyphens" select="translate($norm, ' ', '-')"/>
+    <!-- Avoid id starting by a number -->
+    <xsl:if test="contains('0123456789-', substring($hyphens, 1, 1))">_</xsl:if>
+    <xsl:value-of select="$hyphens"/>
+  </xsl:template>
+
+
+
+  <xsl:template name="strip-non-alphanum">
+    <xsl:param name="text"/>
+    <xsl:variable name="alphanum">abcdefghijklmnopqrstuvwxyz1234567890- </xsl:variable>
+    <xsl:variable name="length" select="string-length($text)"/>
+    <xsl:variable name="c" select="substring($text, 1, 1)"/>
+    <xsl:choose>
+      <xsl:when test="$length = 0"/>
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="$c = 'æ'">ae</xsl:when>
+          <xsl:when test="$c = 'œ'">oe</xsl:when>
+          <xsl:when test="$c = 'Æ'">ae</xsl:when>
+          <xsl:when test="$c = 'Œ'">oe</xsl:when>
+          <xsl:when test="contains($alphanum, $c)">
+            <xsl:value-of select="$c"/>
+          </xsl:when>
+        </xsl:choose>
+        <xsl:call-template name="strip-non-alphanum">
+          <xsl:with-param name="text" select="substring($text, 2)"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="tei:note" mode="id">
+    <xsl:choose>
+      <!-- blocknote -->
+      <xsl:when test="parent::tei:app or parent::tei:back or parent::tei:div or parent::tei:div1 or parent::tei:div2 or parent::tei:div3 or parent::tei:front or parent::tei:notesStmt or parent::tei:sp">
+        <xsl:text>note</xsl:text>
+        <xsl:apply-templates select="." mode="n"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>fn</xsl:text>
+        <xsl:apply-templates select="." mode="n"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
     
   <xsl:template match="tei:persName" mode="id">
     <xsl:variable name="id0"> '":,; /\</xsl:variable>
@@ -712,6 +782,8 @@ Gobal TEI parameters and variables are divided in different categories
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <!-- numbering footnotes -->
 
   <!-- Shared template to get an id -->
   <xsl:template match="*" mode="id">
@@ -809,38 +881,13 @@ Gobal TEI parameters and variables are divided in different categories
         <xsl:text>img</xsl:text>
         <xsl:number level="any"/>
       </xsl:when>
+
       <!-- Default -->
       <xsl:when test="true()">
         <xsl:value-of select="local-name()"/>
         <xsl:if test="count(key('qname', local-name())) &gt; 1">
           <xsl:number level="any"/>
         </xsl:if>
-      </xsl:when>
-      <!-- numérotation des notes, préfixées par la section -->
-      <xsl:when test="self::tei:note or self::tei:app or self::tei:cit[@n]">
-        <xsl:choose>
-          <xsl:when test="ancestor::*[@xml:id]">
-            <xsl:value-of select="ancestor::*[@xml:id][1]/@xml:id"/>
-            <xsl:text>-</xsl:text>
-          </xsl:when>
-          <xsl:when test="ancestor::tei:text[parent::tei:group]">
-            <xsl:for-each select="ancestor::tei:text[1]">
-              <xsl:call-template name="n"/>
-            </xsl:for-each>
-            <xsl:text>-</xsl:text>
-          </xsl:when>
-          <xsl:when test="ancestor::*[key('split', generate-id())]">
-            <xsl:for-each select="ancestor::*[key('split', generate-id())][1]">
-              <xsl:call-template name="id"/>
-            </xsl:for-each>
-            <xsl:text>-</xsl:text>
-          </xsl:when>
-        </xsl:choose>
-        <xsl:text>fn</xsl:text>
-        <xsl:variable name="n">
-          <xsl:call-template name="n"/>
-        </xsl:variable>
-        <xsl:value-of select="translate($n, '()-', '')"/>
       </xsl:when>
       <!-- Où ?
       <xsl:when test="@n and ancestor::*[@xml:id][local-name() != local-name(/*)]">
@@ -871,14 +918,19 @@ Un tel numéro peut etre très utile pour
 </p>
 
 -->
+  <xsl:template name="n">
+    <xsl:apply-templates select="." mode="n"/>
+  </xsl:template>
+  
+
   <!-- Numéro élément, priorité aux indications de l'auteur (en général) -->
-  <xsl:template match="node()" mode="n" name="n">
+  <xsl:template match="node()" mode="n">
     <xsl:variable name="id" select="translate((@xml:id | @id), 'abcdefghijklmnopqrstuvwxyz', '')"/>
     <xsl:choose>
       <xsl:when test="@n">
         <xsl:value-of select="@n"/>
       </xsl:when>
-      <!-- numérotation hiérarchique des sections -->
+      <!-- hierarchical numbering of sections -->
       <xsl:when test="self::tei:div">
         <xsl:number format="1-1" level="multiple"/>
       </xsl:when>
@@ -1411,14 +1463,6 @@ Could be correct for a text only version in <xsl:value-of select=""/>
     <xsl:choose>
       <!-- When transform is called from monopage  -->
       <xsl:when test="not($split)">
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$id"/>
-      </xsl:when>
-      <!-- For a deported page of notes (site or epub) -->
-      <xsl:when test="$class = 'noteref' and $fnpage != ''">
-        <xsl:value-of select="$base"/>
-        <xsl:value-of select="$fnpage"/>
-        <xsl:value-of select="$_ext"/>
         <xsl:text>#</xsl:text>
         <xsl:value-of select="$id"/>
       </xsl:when>

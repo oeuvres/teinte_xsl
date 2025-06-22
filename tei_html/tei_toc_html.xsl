@@ -110,6 +110,16 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
   <xsl:template match="*" mode="toclocal"/>
   <xsl:template match="tei:div" mode="toclocal">
     <xsl:param name="localid"/>
+    <xsl:variable name="slug">
+      <xsl:choose>
+        <xsl:when test="tei:head">
+          <xsl:apply-templates select="tei:head" mode="id"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="id"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="children" select="tei:castList | tei:div | tei:titlePage"/>
     <li>
       <xsl:attribute name="class">
@@ -126,28 +136,48 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
         <xsl:when test="key('split', $generate-id)">
           <a>
             <xsl:attribute name="href">
-              <xsl:choose>
-                <xsl:when test="$generate-id = $localid">#</xsl:when>
-                <xsl:otherwise>
-                  <xsl:call-template name="href"/>
-                </xsl:otherwise>
-              </xsl:choose>
+              <!-- not in the same file -->
+              <xsl:if test="$generate-id != $localid">
+                <xsl:call-template name="id"/>
+                <xsl:value-of select="$_ext"/>
+              </xsl:if>
+              <xsl:text>#</xsl:text>
+              <xsl:value-of select="$slug"/>
             </xsl:attribute>
             <xsl:call-template name="title"/>
           </a>
         </xsl:when>
         <!-- no link when no split -->
         <xsl:when test="descendant::*[key('split', generate-id())]">
-          <div>
-            <xsl:call-template name="title"/>
-          </div>
+          <xsl:choose>
+            <!-- part may be a target -->
+            <xsl:when test="(tei:p | tei:list) and @xml:id">
+              <a>
+                <xsl:attribute name="href">
+                  <!-- not in the same file -->
+                  <xsl:if test="$generate-id != $localid">
+                    <xsl:call-template name="id"/>
+                    <xsl:value-of select="$_ext"/>
+                  </xsl:if>
+                  <xsl:text>#</xsl:text>
+                  <xsl:value-of select="$slug"/>
+                </xsl:attribute>
+                <xsl:call-template name="title"/>
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <div>
+                <xsl:call-template name="title"/>
+              </div>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:when>
         <!-- in local tree, no more localid, local anchor -->
         <xsl:when test="not($localid)">
           <a>
             <xsl:attribute name="href">
               <xsl:text>#</xsl:text>
-              <xsl:call-template name="id"/>
+              <xsl:value-of select="$slug"/>
             </xsl:attribute>
             <xsl:call-template name="title"/>
           </a>
@@ -170,13 +200,17 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
         <!-- in local tree, no more localid -->
         <xsl:when test="not($localid)">
           <ol>
-            <xsl:apply-templates select="$children" mode="toclocal"/>
+            <xsl:apply-templates select="$children" mode="toclocal">
+              <xsl:with-param name="localid" select="$localid"/>
+            </xsl:apply-templates>
           </ol>
         </xsl:when>
         <!-- local tree, go in, forget localid -->
         <xsl:when test="$generate-id = $localid">
           <ol>
-            <xsl:apply-templates select="$children" mode="toclocal"/>
+            <xsl:apply-templates select="$children" mode="toclocal">
+              <xsl:with-param name="localid" select="$localid"/>
+            </xsl:apply-templates>
           </ol>
         </xsl:when>
       </xsl:choose>

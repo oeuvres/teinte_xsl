@@ -118,9 +118,7 @@ Sections
     <xsl:param name="from"/>
     <xsl:param name="level" select="count(ancestor::*) - 2"/>
     <section>
-      <xsl:attribute name="id">
-        <xsl:call-template name="id"/>
-      </xsl:attribute>
+      <!-- do not identify section, but titles -->
       <xsl:call-template name="atts">
         <xsl:with-param name="rend">
           <xsl:value-of select="@rend"/>
@@ -208,14 +206,13 @@ Sections
         or self::tei:salute
         or self::tei:signed
         ]">
-        <xsl:text> </xsl:text>
         <header>
           <xsl:apply-templates select="$first/preceding-sibling::node()">
             <xsl:with-param name="level" select="$level"/>
             <xsl:with-param name="from" select="$from"/>
           </xsl:apply-templates>
         </header>
-        <xsl:text>&#10;</xsl:text>
+        <!-- Do no insert spacing here, this will break auto indent -->
         <xsl:apply-templates select="$first | $first/following-sibling::node()">
           <xsl:with-param name="level" select="$level + 1"/>
           <xsl:with-param name="from" select="$from"/>
@@ -285,10 +282,9 @@ Sections
   <xsl:template match="tei:head">
     <xsl:param name="from"/>
     <xsl:param name="level" select="count(ancestor::*[tei:head])"/>
+    <!-- get a slug for an idea -->
     <xsl:variable name="id">
-      <xsl:for-each select="parent::*">
-        <xsl:call-template name="id"/>
-      </xsl:for-each>
+      <xsl:apply-templates select="." mode="id"/>
     </xsl:variable>
     <xsl:variable name="name">
       <xsl:choose>
@@ -310,6 +306,10 @@ Sections
             <xsl:value-of select="../@type"/>
           </xsl:with-param>
         </xsl:call-template>
+        <xsl:attribute name="id">
+          <xsl:value-of select="$id"/>
+        </xsl:attribute>
+        <xsl:attribute name="tabindex">-1</xsl:attribute>
         <xsl:for-each select="preceding-sibling::tei:head[1][@type = 'kicker']">
           <xsl:apply-templates/>
           <br/>
@@ -317,9 +317,7 @@ Sections
         <xsl:apply-templates select="node()[not(self::tei:pb)]">
           <xsl:with-param name="from" select="$from"/>
         </xsl:apply-templates>
-        <a class="bookmark" href="#{$id}">
-          <xsl:text> </xsl:text>
-        </a>
+        <a class="bookmark" aria-hidden="true" href="#{$id}">🔗</a>
       </xsl:element>
     </xsl:if>
   </xsl:template>
@@ -1306,7 +1304,7 @@ Tables
         <xsl:if test="$mixed != ''">
           <xsl:value-of select="$lf"/>
         </xsl:if>
-        <a class="{normalize-space($class)}">
+        <a class="{normalize-space($class)}" role="doc-pagebreak" aria-hidden="true" tabindex="-1">
           <xsl:choose>
             <!-- @xml:base ? -->
             <xsl:when test="@facs">

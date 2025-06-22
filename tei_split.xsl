@@ -33,7 +33,7 @@ tei:*[self::tei:div or self::tei:div1 or self::tei:div2][normalize-space(.) != '
     or contains(@type, 'letter')
 ] 
 | tei:group/tei:text 
-| tei:TEI/tei:text/tei:*/tei:*[self::tei:div or self::tei:div1 or self::tei:group or self::tei:titlePage  or self::tei:castList][normalize-space(.) != '']" 
+" 
 use="generate-id(.)"/>
   <!-- Source file name (without extension) -->
   <xsl:param name="src_name"/>
@@ -53,7 +53,18 @@ use="generate-id(.)"/>
 
   <!-- Process root -->
   <xsl:template match="/*" name="split">
-    <xsl:apply-templates select="." mode="split"/>
+    <!--There are chapters -->
+    <xsl:choose>
+      <xsl:when test=".//tei:div[key('split', generate-id())]">
+        <xsl:apply-templates select="." mode="split"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="document">
+          <xsl:with-param name="tei" select="/tei:TEI/tei:text/*/*[local-name() != 'head']"/>
+          <xsl:with-param name="id" select="$docid"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   
   <!-- Default, go through -->
@@ -89,19 +100,13 @@ use="generate-id(.)"/>
           </xsl:if>
         </xsl:variable>
         
-        <!-- TO synchronize with tei2opf.xsl -->
         <xsl:choose>
-          <xsl:when test="$blocks[tei:*[local-name()!='head'][local-name()!='pb'][local-name()!='index']]">
+          <xsl:when test="$blocks[local-name()!='head' and local-name()!='pb' and local-name()!='index']">
             <xsl:call-template name="document">
               <xsl:with-param name="tei" select="$blocks"/>
               <xsl:with-param name="subtoc" select="true()"/>
             </xsl:call-template>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="navigation">
-              <xsl:with-param name="tei" select="$blocks"/>
-            </xsl:call-template>
-          </xsl:otherwise>
         </xsl:choose>
         <xsl:apply-templates select="
           tei:back | tei:body | tei:front
@@ -115,7 +120,7 @@ use="generate-id(.)"/>
           <xsl:message>tei2split.xsl, split problem for: <xsl:call-template name="id"/>, <xsl:call-template name="title"/></xsl:message>
         </xsl:if>
         <xsl:call-template name="document">
-          <xsl:with-param name="tei" select="*"/>
+          <xsl:with-param name="tei" select="*[local-name()!='head']"/>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -199,12 +204,13 @@ Process prev/next element
     </xsl:param>
     <xsl:param name="href">
       <xsl:value-of select="$dst_dir"/>
-      <!-- An anchor mybe needed -->
-      <xsl:call-template name="href">
-        <xsl:with-param name="id" select="$id"/>
-        <!-- no base for such links -->
-        <xsl:with-param name="base"/>
-      </xsl:call-template>
+      <xsl:if test="not(starts-with($id, $docid))">
+        <xsl:text>_</xsl:text>
+        <xsl:value-of select="$docid"/>
+        <xsl:text>_</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$id"/>
+      <xsl:value-of select="$_ext"/>
     </xsl:param>
     <!-- Log something -->
     <document>
