@@ -563,7 +563,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
-  <xsl:template match="tei:teiHeader//tei:author">
+  <xsl:template match="tei:teiHeader//tei:author | tei:biblStruct//tei:author">
     <span>
       <xsl:call-template name="headatts"/>
       <xsl:choose>

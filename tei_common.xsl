@@ -1453,6 +1453,23 @@ Could be correct for a text only version in <xsl:value-of select=""/>
     This template will choose if link should stay an anchor or will be rewritten according to the split
     policy.
   -->
+  <xsl:template match="/" mode="href">
+    <xsl:call-template name="href">
+      <xsl:with-param name="id">
+        <xsl:choose>
+          <xsl:when test="$docid">
+            <xsl:value-of select="$docid"/>
+          </xsl:when>
+          <xsl:when test="/*/@xml:id">
+            <xsl:value-of select="/*/@xml:id"/>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+  <xsl:template match="node()" mode="href">
+    <xsl:call-template name="href"/>
+  </xsl:template>
   <xsl:template name="href">
     <xsl:param name="base" select="$base"/>
     <xsl:param name="class"/>
@@ -1460,11 +1477,22 @@ Could be correct for a text only version in <xsl:value-of select=""/>
     <xsl:param name="id">
       <xsl:call-template name="id"/>
     </xsl:param>
+    <xsl:param name="anchor">
+      <xsl:choose>
+        <!-- if tei:div, get a slug -->
+        <xsl:when test="tei:head">
+          <xsl:apply-templates select="tei:head[1]" mode="id"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="id"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
     <xsl:choose>
       <!-- When transform is called from monopage  -->
       <xsl:when test="not($split)">
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="$id"/>
+        <xsl:value-of select="$anchor"/>
       </xsl:when>
       <!-- is a splitted section -->
       <xsl:when test="self::*[key('split', generate-id())]">
@@ -1486,7 +1514,7 @@ Could be correct for a text only version in <xsl:value-of select=""/>
           <xsl:value-of select="$_ext"/>
         </xsl:for-each>
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="$id"/>
+        <xsl:value-of select="$anchor"/>
       </xsl:when>
       <!-- ??
       <xsl:when test="ancestor-or-self::tei:body[count(.| /*/tei:text/tei:body) = 1]">
@@ -1506,19 +1534,10 @@ Could be correct for a text only version in <xsl:value-of select=""/>
         <xsl:value-of select="$_html"/>
       </xsl:when>
       -->
-      <!-- ???? -->
-      <xsl:when test="ancestor::tei:*[local-name(../..)='TEI']">
-        <xsl:for-each select="ancestor::tei:*[local-name(../..)='TEI'][1]">
-          <xsl:call-template name="id"/>
-          <xsl:value-of select="$_ext"/>
-        </xsl:for-each>
-        <xsl:text>#</xsl:text>
-        <xsl:value-of select="$id"/>
-      </xsl:when>
       <!-- No split, just anchor -->
       <xsl:otherwise>
         <xsl:text>#</xsl:text>
-        <xsl:value-of select="$id"/>
+        <xsl:value-of select="$anchor"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

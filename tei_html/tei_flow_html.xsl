@@ -214,13 +214,13 @@ Sections
         </header>
         <!-- Do no insert spacing here, this will break auto indent -->
         <xsl:apply-templates select="$first | $first/following-sibling::node()">
-          <xsl:with-param name="level" select="$level + 1"/>
+          <xsl:with-param name="level" select="$level"/>
           <xsl:with-param name="from" select="$from"/>
         </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates>
-          <xsl:with-param name="level" select="$level + 1"/>
+          <xsl:with-param name="level" select="$level"/>
           <xsl:with-param name="from" select="$from"/>
         </xsl:apply-templates>
       </xsl:otherwise>
@@ -2288,16 +2288,8 @@ Elements block or inline level
           <xsl:call-template name="atts">
             <xsl:with-param name="rend">
               <xsl:value-of select="@rend"/>
-              <xsl:text> </xsl:text>
-              <xsl:value-of select="translate($key, $idfrom, $idto)"/>
             </xsl:with-param>
           </xsl:call-template>
-          <xsl:attribute name="data-key">
-            <xsl:value-of select="translate($key, $idfrom, $idto)"/>
-          </xsl:attribute>
-          <xsl:attribute name="id">
-            <xsl:call-template name="id"/>
-          </xsl:attribute>
           <xsl:apply-templates/>
         </span>
       </xsl:otherwise>

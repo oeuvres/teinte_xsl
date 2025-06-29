@@ -511,7 +511,7 @@ BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
 01-Dec-2023: Removed the requirements to imply list items descendants of doc-bibliography 
 and doc-endnotes are doc-biblioentry and doc-endnote.
     -->
-    <aside role="doc-footnote">
+    <aside role="note">
       <xsl:call-template name="noteatts">
         <xsl:with-param name="class">
           <xsl:choose>
