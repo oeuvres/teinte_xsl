@@ -2162,11 +2162,11 @@ Elements block or inline level
       <xsl:otherwise>
         <xsl:variable name="el">
           <xsl:choose>
-            <xsl:when test="self::tei:label and parent::tei:figure">div</xsl:when>
+            <xsl:when test="self::tei:label and parent::tei:figure">figcaption</xsl:when>
             <xsl:when test="self::tei:label">p</xsl:when>
             <xsl:when test="self::tei:q">blockquote</xsl:when>
             <xsl:when test="self::tei:quote">blockquote</xsl:when>
-            <xsl:otherwise>div</xsl:otherwise>
+            <xsl:otherwise>p</xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
         <xsl:element name="{$el}" namespace="http://www.w3.org/1999/xhtml">
